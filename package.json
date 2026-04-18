@@ -7,7 +7,8 @@
     "app:dev": "bun run --cwd app dev",
     "app:build": "bun run --cwd app build",
     "app:start": "bun run --cwd app start",
-    "app:lint": "bun run --cwd app lint"
+    "app:lint": "bun run --cwd app lint",
+    "app:deploy": "npx vercel --prod --cwd app"
   },
   "devDependencies": {
     "@types/bun": "latest"
