@@ -10,6 +10,10 @@
 - **No speculative features**: implement only what the current task requires. No future-proofing, feature flags, or backwards-compat shims.
 - **Validate at boundaries only**: trust internal code and framework guarantees. Only validate/sanitise at system edges (user input, external APIs).
 
+## Workflow
+
+- Commit directly to `main` — no pull requests, no worktrees, no feature branches.
+
 ## TypeScript
 
 - Prefer `type` over `interface`; avoid `any` and `as` casts.
