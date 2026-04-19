@@ -23,3 +23,9 @@
 - Prefer `type` over `interface`; avoid `any` and `as` casts.
 - Derive types from data rather than maintaining parallel type hierarchies.
 - Use `const` by default; `let` only when reassignment is unavoidable.
+
+## Components
+
+- Use the **Neobrutalism** component library (https://www.neobrutalism.dev) — a shadcn/ui-based copy-paste library.
+- Install components via the shadcn CLI when available, otherwise copy manually into `src/components/ui/`.
+- The library uses CSS variables exclusively — paste the chosen theme from the `/styling` page into `globals.css`, replacing existing shadcn variable blocks.

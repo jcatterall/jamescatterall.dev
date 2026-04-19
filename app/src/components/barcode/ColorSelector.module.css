@@ -1,0 +1,22 @@
+.grid {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-base);
+  border: none;
+  background-color: var(--swatch-color);
+  cursor: pointer;
+  flex-shrink: 0;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.swatch.active {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}

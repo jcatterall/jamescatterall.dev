@@ -1,7 +1,5 @@
 - Custom Barcode builder, predefined shapes
 - Push up reminder vscode extension
 - Pomodoro timer with keyboard shortcuts and desktop notifications
-- Local-first markdown journal with tag filtering and search
 - CLI tool to generate a weekly summary from git commits across repos
 - Colour palette generator from an uploaded image
-- Random daily wallpaper switcher from Unsplash (CLI or tray app)

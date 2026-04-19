@@ -1,0 +1,30 @@
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-base);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-base);
+  background-color: var(--color-secondary-background);
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+  box-shadow: var(--shadow-shadow);
+}
+
+.chip:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0px 0px var(--color-border);
+}
+
+.chip.active {
+  background-color: var(--color-main);
+  color: var(--color-main-foreground);
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0px 0px var(--color-border);
+}
