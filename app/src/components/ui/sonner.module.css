@@ -1,0 +1,44 @@
+.toast {
+  font-weight: var(--font-weight-base);
+  border: 2px solid var(--color-border);
+  background-color: var(--color-secondary-background);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-shadow);
+  border-radius: var(--radius-base);
+}
+
+.success {
+  background-color: #16a34a;
+  color: #ffffff;
+  border-color: var(--color-border);
+}
+
+.error {
+  background-color: #dc2626;
+  color: #ffffff;
+  border-color: var(--color-border);
+}
+
+.warning {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: var(--color-border);
+}
+
+.description {
+  opacity: 0.85;
+}
+
+.actionButton {
+  background-color: var(--color-main);
+  color: var(--color-main-foreground);
+  border: 2px solid var(--color-border);
+  font-weight: var(--font-weight-base);
+}
+
+.cancelButton {
+  background-color: var(--color-secondary-background);
+  color: var(--color-foreground);
+  border: 2px solid var(--color-border);
+  font-weight: var(--font-weight-base);
+}

@@ -1,0 +1,27 @@
+.page {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: var(--font-weight-heading);
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 1rem;
+  font-weight: var(--font-weight-base);
+  color: var(--color-foreground);
+  opacity: 0.7;
+}

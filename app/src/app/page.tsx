@@ -1,65 +1,141 @@
-import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Github, Mail, ExternalLink, ArrowUpRight } from "lucide-react";
+
+const projects = [
+  {
+    title: "Project One",
+    description:
+      "A full-stack web application built with Next.js and TypeScript. Handles real-time data and complex state management.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL"],
+    href: "#",
+  },
+  {
+    title: "Project Two",
+    description:
+      "Open-source CLI tool for automating repetitive development tasks. 500+ stars on GitHub.",
+    tags: ["Node.js", "CLI", "Open Source"],
+    href: "#",
+  },
+  {
+    title: "Project Three",
+    description:
+      "Mobile-first e-commerce storefront with custom CMS integration and a perfect Lighthouse score.",
+    tags: ["React", "Tailwind", "Shopify"],
+    href: "#",
+  },
+];
+
+const skills = [
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Node.js",
+  "PostgreSQL",
+  "Docker",
+  "AWS",
+  "GraphQL",
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="max-w-3xl mx-auto px-6 py-16 space-y-20">
+
+      <section className="space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-heading font-bold">James Catterall</h1>
+          <p className="text-xl font-base text-foreground/80">
+            Software Developer
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+        <p className="font-base leading-relaxed max-w-xl">
+          I build thoughtful, well-crafted software. Focused on clean
+          architecture, great developer experience, and products that are
+          genuinely useful.
+        </p>
+        <div className="flex gap-3 flex-wrap">
+          <Button asChild>
+            <a
+              href="https://github.com/jcatterall"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Github className="w-4 h-4" />
+              GitHub
+            </a>
+          </Button>
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-heading font-bold">Work</h2>
+        <div className="grid gap-4">
+          {projects.map((project) => (
+            <Card key={project.title}>
+              <CardHeader>
+                <div className="flex items-start justify-between gap-4">
+                  <CardTitle>{project.title}</CardTitle>
+                  <a
+                    href={project.href}
+                    className="text-foreground hover:text-foreground/70 transition-colors flex-shrink-0"
+                  >
+                    <ArrowUpRight className="w-5 h-5" />
+                  </a>
+                </div>
+                <CardDescription>{project.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <Badge key={tag}>{tag}</Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-heading font-bold">Skills</h2>
+        <div className="flex flex-wrap gap-2">
+          {skills.map((skill) => (
+            <Badge key={skill} variant="neutral">
+              {skill}
+            </Badge>
+          ))}
+        </div>
+      </section>
+
+      <footer className="border-t-2 border-border pt-8 flex items-center justify-between gap-4 flex-wrap">
+        <p className="font-base text-sm">© {new Date().getFullYear()} James Catterall</p>
+        <div className="flex gap-4">
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:james.catterall92@gmail.com"
+            className="font-base text-sm font-bold hover:text-foreground/70 transition-colors flex items-center gap-1"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
+            <Mail className="w-4 h-4" />
+            Email
           </a>
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
+            className="font-base text-sm font-bold hover:text-foreground/70 transition-colors flex items-center gap-1"
           >
-            Documentation
+            <ExternalLink className="w-4 h-4" />
+            GitHub
           </a>
         </div>
-      </main>
-    </div>
+      </footer>
+
+    </main>
   );
 }
