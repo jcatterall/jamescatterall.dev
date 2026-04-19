@@ -12,6 +12,12 @@
 
 - Unstage changed on `main` — no pull requests, no worktrees, no feature branches.
 
+## CSS
+
+- Use vanilla CSS — no Sass, SCSS, or CSS-in-JS.
+- Use CSS Modules (`.module.css`) for component-scoped styles.
+- Use CSS custom properties for design tokens.
+
 ## TypeScript
 
 - Prefer `type` over `interface`; avoid `any` and `as` casts.
