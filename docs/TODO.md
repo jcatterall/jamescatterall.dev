@@ -1,5 +1,4 @@
 - Custom Barcode builder, predefined shapes
-- Basic design system
 - Push up reminder vscode extension
 - Pomodoro timer with keyboard shortcuts and desktop notifications
 - Local-first markdown journal with tag filtering and search

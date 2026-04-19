@@ -1,92 +1,38 @@
 import * as React from "react"
+import { clsx } from "clsx"
 
-import { cn } from "@/lib/utils"
+import styles from "./card.module.css"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card"
-      className={cn(
-        "rounded-base flex flex-col shadow-shadow border-2 gap-6 py-6 border-border bg-background text-foreground font-base",
-        className,
-      )}
-      {...props}
-    />
-  )
+type SlotName =
+  | "card"
+  | "card-header"
+  | "card-title"
+  | "card-description"
+  | "card-action"
+  | "card-content"
+  | "card-footer"
+
+function makeSlot(slot: SlotName) {
+  function Slot({ className, ...props }: React.ComponentProps<"div">) {
+    return (
+      <div
+        data-slot={slot}
+        className={clsx(styles[slot], className)}
+        {...props}
+      />
+    )
+  }
+  Slot.displayName = slot
+    .split("-")
+    .map((s) => s[0].toUpperCase() + s.slice(1))
+    .join("")
+  return Slot
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-header"
-      className={cn(
-        "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-[data-slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6",
-        className,
-      )}
-      {...props}
-    />
-  )
-}
-
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-title"
-      className={cn("font-heading leading-none", className)}
-      {...props}
-    />
-  )
-}
-
-function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-description"
-      className={cn("text-sm font-base", className)}
-      {...props}
-    />
-  )
-}
-
-function CardAction({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-action"
-      className={cn(
-        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
-        className,
-      )}
-      {...props}
-    />
-  )
-}
-
-function CardContent({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-content"
-      className={cn("px-6", className)}
-      {...props}
-    />
-  )
-}
-
-function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-footer"
-      className={cn("flex items-center px-6 [.border-t]:pt-6", className)}
-      {...props}
-    />
-  )
-}
-
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardAction,
-}
+export const Card           = makeSlot("card")
+export const CardHeader     = makeSlot("card-header")
+export const CardTitle      = makeSlot("card-title")
+export const CardDescription = makeSlot("card-description")
+export const CardAction     = makeSlot("card-action")
+export const CardContent    = makeSlot("card-content")
+export const CardFooter     = makeSlot("card-footer")

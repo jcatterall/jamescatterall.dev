@@ -63,14 +63,8 @@ export default function Home() {
         </p>
         <div className="flex gap-3 flex-wrap">
           <Button asChild>
-            <a href="mailto:james.catterall92@gmail.com">
-              <Mail className="w-4 h-4" />
-              Get in touch
-            </a>
-          </Button>
-          <Button variant="neutral" asChild>
             <a
-              href="https://github.com"
+              href="https://github.com/jcatterall"
               target="_blank"
               rel="noopener noreferrer"
             >
