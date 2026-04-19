@@ -8,6 +8,10 @@
 - **Comments only where absolutely necessary**: only add a comment when the *why* is non-obvious (hidden constraint, subtle invariant, third-party workaround). Never describe what the code does.
 - **Validate at boundaries only**: trust internal code and framework guarantees. Only validate/sanitise at system edges (user input, external APIs).
 
+## Workflow
+
+- Commit directly to `main` — no pull requests, no worktrees, no feature branches.
+
 ## TypeScript
 
 - Prefer `type` over `interface`; avoid `any` and `as` casts.
