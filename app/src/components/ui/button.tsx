@@ -2,12 +2,12 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 import { clsx } from "clsx"
 
-import styles from "./button.module.css"
+import styles from "./button.module.scss"
 
 type Variant = "default" | "noShadow" | "neutral" | "reverse"
 type Size = "default" | "sm" | "lg" | "icon"
 
-interface ButtonProps extends React.ComponentProps<"button"> {
+type ButtonProps = React.ComponentProps<"button"> & {
   variant?: Variant
   size?: Size
   asChild?: boolean

@@ -48,7 +48,6 @@ export default function Home() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-16 space-y-20">
 
-      {/* Hero */}
       <section className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-4xl font-heading font-bold">James Catterall</h1>
@@ -75,7 +74,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Projects */}
       <section className="space-y-6">
         <h2 className="text-2xl font-heading font-bold">Work</h2>
         <div className="grid gap-4">
@@ -105,7 +103,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Skills */}
       <section className="space-y-6">
         <h2 className="text-2xl font-heading font-bold">Skills</h2>
         <div className="flex flex-wrap gap-2">
@@ -117,9 +114,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t-2 border-border pt-8 flex items-center justify-between gap-4 flex-wrap">
-        <p className="font-base text-sm">© 2026 James Catterall</p>
+        <p className="font-base text-sm">© {new Date().getFullYear()} James Catterall</p>
         <div className="flex gap-4">
           <a
             href="mailto:james.catterall92@gmail.com"

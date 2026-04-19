@@ -2,11 +2,11 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 import { clsx } from "clsx"
 
-import styles from "./badge.module.css"
+import styles from "./badge.module.scss"
 
 type Variant = "default" | "neutral"
 
-interface BadgeProps extends React.ComponentProps<"span"> {
+type BadgeProps = React.ComponentProps<"span"> & {
   variant?: Variant
   asChild?: boolean
 }

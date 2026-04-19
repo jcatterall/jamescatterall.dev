@@ -10,7 +10,7 @@
 
 ## Workflow
 
-- Commit directly to `main` — no pull requests, no worktrees, no feature branches.
+- Unstage changed on `main` — no pull requests, no worktrees, no feature branches.
 
 ## TypeScript
 
