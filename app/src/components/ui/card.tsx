@@ -1,7 +1,7 @@
 import * as React from "react"
 import { clsx } from "clsx"
 
-import styles from "./card.module.scss"
+import styles from "./card.module.css"
 
 type SlotName =
   | "card"

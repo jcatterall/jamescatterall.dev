@@ -12,20 +12,18 @@
   flex-shrink: 0;
   overflow: hidden;
   gap: 0.25rem;
-
-  svg {
-    width: 0.75rem;
-    height: 0.75rem;
-    pointer-events: none;
-  }
-
-  &:focus-visible {
-    outline: 3px solid var(--color-border);
-    outline-offset: 2px;
-  }
 }
 
-// ─── Variants ─────────────────────────────────────────────────────────────────
+.badge svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  pointer-events: none;
+}
+
+.badge:focus-visible {
+  outline: 3px solid var(--color-border);
+  outline-offset: 2px;
+}
 
 .variant-default {
   background-color: var(--color-main);

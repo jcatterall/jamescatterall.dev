@@ -2,7 +2,7 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 import { clsx } from "clsx"
 
-import styles from "./badge.module.scss"
+import styles from "./badge.module.css"
 
 type Variant = "default" | "neutral"
 

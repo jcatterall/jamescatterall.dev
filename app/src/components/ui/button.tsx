@@ -2,7 +2,7 @@ import { Slot } from "@radix-ui/react-slot"
 import * as React from "react"
 import { clsx } from "clsx"
 
-import styles from "./button.module.scss"
+import styles from "./button.module.css"
 
 type Variant = "default" | "noShadow" | "neutral" | "reverse"
 type Size = "default" | "sm" | "lg" | "icon"
