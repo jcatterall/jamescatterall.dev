@@ -1,27 +1,31 @@
 .page {
   max-width: 64rem;
   margin: 0 auto;
-  padding: 4rem 1.5rem;
+  padding: var(--nd-space-3xl) var(--nd-space-lg);
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: var(--nd-space-2xl);
 }
 
 .header {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 6px;
 }
 
 .title {
-  font-size: 2.25rem;
-  font-weight: var(--font-weight-heading);
-  line-height: 1.2;
+  font-family: var(--font-doto), monospace;
+  font-size: 48px; /* display heading — outside --nd-text-* monospace label scale */
+  font-weight: 400;
+  line-height: var(--nd-leading-none);
+  letter-spacing: -0.02em; /* display tuning for Doto font */
+  color: var(--nd-text-display);
 }
 
 .subtitle {
-  font-size: 1rem;
-  font-weight: var(--font-weight-base);
-  color: var(--color-foreground);
-  opacity: 0.7;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-base);
+  letter-spacing: var(--nd-tracking-widest);
+  text-transform: uppercase;
+  color: var(--nd-text-secondary);
 }

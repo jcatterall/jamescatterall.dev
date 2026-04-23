@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; padding: 24px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .card {
+    background: #111; border: 1px solid #333; border-radius: 12px;
+    padding: 24px; width: 280px;
+    transition: border-color 200ms ease-out;
+  }
+  .card:hover { border-color: #666; }
+  .card-header { margin-bottom: 16px; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+  .card-desc  { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 300; color: #999; line-height: 1.5; }
+  .card-meta  { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: #666; margin-top: 16px; }
+  .label { font-family: 'Space Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: #444; margin-bottom: 8px; }
+  .tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .tag { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #999; border: 1px solid #333; border-radius: 999px; padding: 2px 10px; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="label">DEFAULT</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Oxide Compiler</div>
+        <div class="card-desc">A systems-level compiler targeting WebAssembly with zero-cost abstractions.</div>
+      </div>
+      <div class="tags">
+        <span class="tag">Rust</span>
+        <span class="tag">WASM</span>
+        <span class="tag">Compiler</span>
+      </div>
+      <div class="card-meta">2024 — OPEN SOURCE</div>
+    </div>
+  </div>
+  <div>
+    <div class="label">HOVER STATE</div>
+    <div class="card" style="border-color:#666">
+      <div class="card-header">
+        <div class="card-title">Signal Protocol</div>
+        <div class="card-desc">Minimal pub/sub for embedded systems. Written in no_std Rust.</div>
+      </div>
+      <div class="tags">
+        <span class="tag">Embedded</span>
+        <span class="tag">No-std</span>
+      </div>
+      <div class="card-meta">2023 — MIT LICENSE</div>
+    </div>
+  </div>
+</body>
+</html>

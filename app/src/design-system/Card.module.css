@@ -1,0 +1,41 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--nd-surface);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-xl);
+  padding: 0;
+  overflow: hidden;
+  transition: border-color var(--nd-duration-base);
+}
+
+.card:hover {
+  border-color: var(--nd-text-disabled);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px var(--nd-space-lg) 0;
+}
+
+.title {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  font-size: var(--nd-text-2xl);
+  font-weight: 500;
+  color: var(--nd-text-display);
+  line-height: var(--nd-leading-compact);
+}
+
+.description {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  font-size: var(--nd-text-xl);
+  font-weight: 300;
+  color: var(--nd-text-secondary);
+  line-height: var(--nd-leading-normal);
+}
+
+.content {
+  padding: var(--nd-space-md) var(--nd-space-lg) 20px;
+}

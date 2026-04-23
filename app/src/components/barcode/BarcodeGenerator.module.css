@@ -1,7 +1,7 @@
 .layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: var(--nd-space-xl);
 }
 
 @media (min-width: 768px) {
@@ -14,33 +14,54 @@
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem;
-  background-color: white;
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-base);
-  box-shadow: var(--shadow-shadow);
+  gap: var(--nd-space-lg);
+  padding: var(--nd-space-lg);
+  background-color: var(--nd-surface);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-xl);
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--nd-space-sm);
 }
 
 .label {
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-heading);
-  color: var(--color-foreground);
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-base);
+  letter-spacing: var(--nd-tracking-widest);
+  text-transform: uppercase;
+  color: var(--nd-text-secondary);
+}
+
+.input {
+  height: 40px;
+  width: 100%;
+  background-color: var(--nd-surface-raised);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-md);
+  padding: 0 calc(var(--nd-space-sm) + var(--nd-space-xs));
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xl);
+  color: var(--nd-text-primary);
+  outline: none;
+  transition: border-color var(--nd-duration-fast);
+}
+
+.input:focus {
+  border-color: var(--nd-text-secondary);
+}
+
+.input::placeholder {
+  color: var(--nd-text-disabled);
 }
 
 .hint {
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-base);
-  color: var(--color-foreground);
-  opacity: 0.6;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-base);
+  color: var(--nd-text-disabled);
 }
-
 
 .downloadBtn {
   width: 100%;
@@ -50,22 +71,4 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-}
-
-.animatedPreview {
-  width: 100%;
-}
-
-.placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 280px;
-  border: 2px dashed var(--color-border);
-  border-radius: var(--radius-base);
-  color: var(--color-foreground);
-  opacity: 0.4;
-  font-weight: var(--font-weight-base);
-  font-size: 0.875rem;
 }

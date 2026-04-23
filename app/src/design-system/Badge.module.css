@@ -1,0 +1,27 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-base);
+  font-weight: 400;
+  letter-spacing: var(--nd-tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: var(--nd-space-xs) calc(var(--nd-space-sm) + var(--nd-space-xs));
+  border-radius: var(--nd-radius-pill);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  color: var(--nd-text-secondary);
+  background: transparent;
+  transition: border-color var(--nd-duration-fast), color var(--nd-duration-fast);
+}
+
+.badge:hover {
+  border-color: var(--nd-text-primary);
+  color: var(--nd-text-primary);
+}
+
+.active {
+  border-color: var(--nd-text-display);
+  color: var(--nd-text-display);
+}

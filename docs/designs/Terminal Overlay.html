@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal Overlay — Nothing Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a0a0a; font-family: 'Space Mono', monospace; }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  @keyframes konamiIn {
+    0% { opacity: 0; letter-spacing: 0.5em; }
+    100% { opacity: 1; letter-spacing: 0.06em; }
+  }
+  @keyframes konamiSub {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+/* ── SHARED NOTHING TOKENS ── */
+const T = {
+  black: '#000000',
+  surface: '#111111',
+  surfaceRaised: '#1a1a1a',
+  border: '#222222',
+  borderVisible: '#333333',
+  textDisabled: '#444444',
+  textSecondary: '#999999',
+  textPrimary: '#e8e8e8',
+  textDisplay: '#ffffff',
+  accent: '#d71921',
+  interactive: '#5b9bf6',
+  success: '#4a9e5c',
+  mono: "'Space Mono', monospace",
+  grotesk: "'Space Grotesk', sans-serif",
+  doto: "'Doto', monospace",
+};
+
+/* ── MOCK PAGE: HOMEPAGE ── */
+const HomepageMock = () => (
+  <div style={{
+    width: '100%', height: '100%',
+    background: T.black,
+    backgroundImage: 'radial-gradient(circle, #1a1a1a 1px, transparent 1px)',
+    backgroundSize: '16px 16px',
+    position: 'relative',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: '40px 48px',
+    fontFamily: T.mono,
+  }}>
+    {/* Scanline overlay */}
+    <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 3px)', pointerEvents: 'none', zIndex: 0 }} />
+    <div style={{ position: 'relative', zIndex: 1 }}>
+      <div style={{ fontFamily: T.doto, fontSize: 36, fontWeight: 400, color: T.textDisplay, lineHeight: 1.05, letterSpacing: '0.02em', marginBottom: 20 }}>
+        JAMES<br />CATTERALL
+      </div>
+      <div style={{ borderTop: `1px solid ${T.border}`, marginBottom: 14 }} />
+      {[['STATUS','ONLINE','#4a9e5c'],['ROLE','SOFTWARE DEVELOPER',T.textSecondary],['LOC','LONDON, UK',T.textSecondary]].map(([l,v,c]) => (
+        <div key={l} style={{ display: 'flex', gap: 16, marginBottom: 6 }}>
+          <span style={{ fontSize: 9, color: T.textDisabled, letterSpacing: '0.07em', minWidth: 48 }}>{l}</span>
+          <span style={{ fontSize: 9, color: c, letterSpacing: '0.04em' }}>{v}</span>
+        </div>
+      ))}
+      <div style={{ borderTop: `1px solid ${T.border}`, margin: '12px 0' }} />
+      <div style={{ fontSize: 9, color: T.textSecondary, marginBottom: 4 }}>✉ james.catterall92@gmail.com</div>
+      <div style={{ fontSize: 9, color: T.textSecondary }}>⌥ github.com/jcatterall</div>
+    </div>
+
+    {/* Right: projects stub */}
+    <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '55%', borderLeft: `1px solid ${T.border}`, padding: '40px 32px', zIndex: 1 }}>
+      <div style={{ fontSize: 10, color: T.accent, marginBottom: 16 }}>{'>'} <span style={{ color: T.textPrimary }}>./projects</span></div>
+      {['Jobber Clone','Dev Dashboard','CLI Toolkit'].map((p,i) => (
+        <div key={p} style={{ padding: '10px 0', borderBottom: `1px solid ${T.border}`, display: 'flex', justifyContent: 'space-between' }}>
+          <span style={{ fontSize: 10, color: T.textPrimary }}>{p}</span>
+          <span style={{ fontSize: 9, color: T.textDisabled }}>{2024-i}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+/* ── MOCK PAGE: BARCODE STUDIO ── */
+const BarcodeMock = () => (
+  <div style={{
+    width: '100%', height: '100%',
+    background: T.black,
+    position: 'relative',
+    overflow: 'hidden',
+    fontFamily: T.mono,
+  }}>
+    {/* Nav */}
+    <div style={{ height: 40, borderBottom: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', padding: '0 24px', justifyContent: 'space-between' }}>
+      <span style={{ fontSize: 10, color: T.textDisabled, letterSpacing: '0.06em' }}><span style={{ color: T.accent }}>{'>'}</span> jcatterall</span>
+      <span style={{ fontSize: 9, color: T.textDisabled, letterSpacing: '0.06em' }}>./barcode-studio</span>
+    </div>
+
+    <div style={{ display: 'flex', height: 'calc(100% - 40px)' }}>
+      {/* Left: controls */}
+      <div style={{ width: 160, borderRight: `1px solid ${T.border}`, padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ fontSize: 9, color: T.textDisabled, letterSpacing: '0.07em', marginBottom: 4 }}>CONFIG</div>
+        {['FORMAT','CONTENT','SCALE','QUIET ZONE'].map(label => (
+          <div key={label}>
+            <div style={{ fontSize: 8, color: T.textDisabled, letterSpacing: '0.06em', marginBottom: 4 }}>{label}</div>
+            <div style={{ height: 22, background: T.surface, border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', padding: '0 8px' }}>
+              <span style={{ fontSize: 9, color: T.textSecondary }}>{label === 'FORMAT' ? 'EAN-13' : label === 'CONTENT' ? '978316148...' : label === 'SCALE' ? '2×' : '4px'}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Center: barcode preview */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
+        {/* Barcode bars */}
+        <div style={{ display: 'flex', gap: '1px', alignItems: 'stretch', height: 60 }}>
+          {Array.from({ length: 60 }, (_, i) => {
+            const w = [1,1,2,1,2,1,1,2,1,2,1,1,2,1,1,2,2,1,1,2,1,2,1,1,2,2,1,1,2,1,2,1,1,2,1,1,2,2,1,2,1,1,2,1,2,1,1,2,2,1,1,2,1,2,1,1,2,1,1,2][i] || 1;
+            const dark = i % 3 !== 2;
+            return dark ? <div key={i} style={{ width: w * 2, background: T.textDisplay, flexShrink: 0 }} /> : <div key={i} style={{ width: w * 2, background: T.black, flexShrink: 0 }} />;
+          })}
+        </div>
+        <div style={{ fontSize: 9, color: T.textSecondary, letterSpacing: '0.2em' }}>9 783161 484100</div>
+        <div style={{ fontSize: 8, color: T.textDisabled }}>EAN-13 · 2× · VALID</div>
+      </div>
+
+      {/* Right: output */}
+      <div style={{ width: 140, borderLeft: `1px solid ${T.border}`, padding: '20px 16px' }}>
+        <div style={{ fontSize: 9, color: T.textDisabled, letterSpacing: '0.07em', marginBottom: 12 }}>EXPORT</div>
+        {['SVG','PNG','PDF'].map(f => (
+          <div key={f} style={{ height: 24, border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 6, cursor: 'pointer' }}>
+            <span style={{ fontSize: 9, color: T.textSecondary, letterSpacing: '0.06em' }}>↓ {f}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+/* ── TERMINAL INDICATOR (closed) ── */
+const TerminalIndicator = () => (
+  <div style={{
+    position: 'absolute', bottom: 20, right: 20,
+    display: 'flex', alignItems: 'center', gap: 7,
+    background: T.surface,
+    border: `1px solid ${T.borderVisible}`,
+    padding: '6px 12px 6px 10px',
+    cursor: 'pointer',
+    userSelect: 'none',
+  }}>
+    {/* Blinking dot */}
+    <div style={{
+      width: 5, height: 5,
+      background: T.interactive,
+      borderRadius: '50%',
+      animation: 'pulseGlow 2s ease-in-out infinite',
+    }} />
+    <span style={{
+      fontFamily: T.mono,
+      fontSize: 10, color: T.textSecondary,
+      letterSpacing: '0.07em', textTransform: 'uppercase',
+    }}>TERM</span>
+    {/* Keyboard hint */}
+    <span style={{
+      fontFamily: T.mono, fontSize: 9,
+      color: T.textDisabled,
+      border: `1px solid ${T.border}`,
+      padding: '1px 5px',
+      letterSpacing: '0.04em',
+    }}>⌘K</span>
+  </div>
+);
+
+/* ── TERMINAL PANEL (open) ── */
+const TerminalPanel = ({ lines }) => {
+  const defaultLines = lines || [
+    { type: 'input',  text: 'help' },
+    { type: 'output', text: 'available commands: help, nav, clear, whoami, projects' },
+    { type: 'input',  text: 'nav /barcode' },
+    { type: 'system', text: 'navigating to /barcode...' },
+    { type: 'input',  text: 'foo' },
+    { type: 'error',  text: 'command not found: "foo" — try `help`' },
+    { type: 'input',  text: 'whoami' },
+    { type: 'output', text: 'james catterall — software developer, london uk' },
+  ];
+
+  const lineColor = (type) => ({
+    input:  T.textPrimary,
+    output: T.textSecondary,
+    system: T.interactive,
+    error:  T.accent,
+  }[type] || T.textSecondary);
+
+  const linePrefix = (type) => ({
+    input:  null,
+    output: '  ',
+    system: '  ',
+    error:  '  ',
+  }[type]);
+
+  return (
+    <div style={{
+      position: 'absolute', bottom: 20, right: 20,
+      width: 480, height: 320,
+      background: T.surface,
+      border: `1px solid ${T.borderVisible}`,
+      display: 'flex', flexDirection: 'column',
+      fontFamily: T.mono,
+      /* deep shadow to lift off page */
+      boxShadow: '0 24px 64px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.03)',
+    }}>
+      {/* ── Header ── */}
+      <div style={{
+        height: 36,
+        borderBottom: `1px solid ${T.border}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 14px',
+        background: T.surfaceRaised,
+        flexShrink: 0,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* traffic-light style dots */}
+          <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#d71921', opacity: 0.8 }} />
+          <div style={{ width: 7, height: 7, borderRadius: '50%', background: T.border }} />
+          <div style={{ width: 7, height: 7, borderRadius: '50%', background: T.border }} />
+          <span style={{ fontSize: 10, color: T.textSecondary, letterSpacing: '0.1em', textTransform: 'uppercase', marginLeft: 6 }}>TERMINAL</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 9, color: T.textDisabled, letterSpacing: '0.06em' }}>jcatterall@portfolio</span>
+          <span style={{ fontSize: 12, color: T.textDisabled, cursor: 'pointer', lineHeight: 1 }}>✕</span>
+        </div>
+      </div>
+
+      {/* ── Output area ── */}
+      <div style={{
+        flex: 1, overflowY: 'auto',
+        padding: '12px 14px',
+        display: 'flex', flexDirection: 'column', gap: 3,
+      }}>
+        {/* Session start */}
+        <div style={{ fontSize: 10, color: T.textDisabled, marginBottom: 6, letterSpacing: '0.04em' }}>
+          jcatterall@portfolio ~ % <span style={{ color: T.interactive }}>session started</span>
+        </div>
+        <div style={{ borderTop: `1px solid ${T.border}`, marginBottom: 8 }} />
+
+        {defaultLines.map((line, i) => (
+          <div key={i} style={{ fontSize: 11, lineHeight: 1.6, color: lineColor(line.type), letterSpacing: '0.02em' }}>
+            {line.type === 'input' && (
+              <span>
+                <span style={{ color: T.interactive, marginRight: 6 }}>{'>'}</span>
+                {line.text}
+              </span>
+            )}
+            {line.type !== 'input' && (
+              <span style={{ paddingLeft: 14 }}>{line.text}</span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* ── Input row ── */}
+      <div style={{
+        height: 36,
+        borderTop: `1px solid ${T.border}`,
+        display: 'flex', alignItems: 'center',
+        padding: '0 14px', gap: 6,
+        background: T.black,
+        flexShrink: 0,
+      }}>
+        <span style={{ color: T.interactive, fontSize: 12, letterSpacing: '0.04em' }}>{'>'}</span>
+        <span style={{
+          display: 'inline-block', fontSize: 12, color: T.textPrimary,
+          letterSpacing: '0.04em', flex: 1,
+        }}>&nbsp;</span>
+        {/* Blinking cursor */}
+        <span style={{
+          display: 'inline-block', width: 7, height: 14,
+          background: T.interactive,
+          animation: 'blink 900ms step-end infinite',
+          verticalAlign: 'middle',
+          position: 'absolute',
+          left: 'calc(14px + 18px)',
+          bottom: 11,
+        }} />
+      </div>
+    </div>
+  );
+};
+
+/* ── KONAMI OVERLAY ── */
+const KonamiOverlay = () => (
+  <div style={{
+    position: 'absolute', inset: 0,
+    background: 'rgba(0,0,0,0.96)',
+    display: 'flex', flexDirection: 'column',
+    alignItems: 'center', justifyContent: 'center',
+    zIndex: 10,
+    fontFamily: T.mono,
+  }}>
+    {/* Scanline sweep */}
+    <div style={{
+      position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none',
+    }}>
+      <div style={{
+        position: 'absolute', left: 0, right: 0,
+        height: '30%',
+        background: 'linear-gradient(0deg, transparent, rgba(215,25,33,0.04), transparent)',
+        animation: 'scanline 3s linear infinite',
+      }} />
+    </div>
+
+    {/* Sequence */}
+    <div style={{
+      fontFamily: T.doto,
+      fontSize: 13,
+      color: T.accent,
+      letterSpacing: '0.3em',
+      marginBottom: 28,
+      opacity: 0.5,
+      animation: 'konamiSub 400ms ease-out both',
+      animationDelay: '100ms',
+      textTransform: 'uppercase',
+    }}>↑ ↑ ↓ ↓ ← → ← → B A</div>
+
+    {/* Main text */}
+    <div style={{
+      fontFamily: T.doto,
+      fontSize: 42,
+      fontWeight: 700,
+      color: T.accent,
+      letterSpacing: '0.06em',
+      textAlign: 'center',
+      lineHeight: 1.1,
+      animation: 'konamiIn 600ms ease-out both',
+      animationDelay: '50ms',
+    }}>ACHIEVEMENT<br />UNLOCKED</div>
+
+    {/* Sub label */}
+    <div style={{
+      fontFamily: T.mono,
+      fontSize: 10, color: T.textDisabled,
+      letterSpacing: '0.12em', textTransform: 'uppercase',
+      marginTop: 28,
+      animation: 'konamiSub 400ms ease-out both',
+      animationDelay: '400ms',
+    }}>you found the konami code</div>
+
+    {/* Dismiss hint */}
+    <div style={{
+      fontFamily: T.mono,
+      fontSize: 9, color: T.textDisabled,
+      letterSpacing: '0.08em',
+      marginTop: 40,
+      opacity: 0.5,
+      animation: 'konamiSub 400ms ease-out both',
+      animationDelay: '900ms',
+    }}>press any key to dismiss</div>
+
+    {/* Corner markers — crosshair aesthetic */}
+    {[['0 0','top left'],['0 auto','top right'],['auto 0','bottom left'],['auto auto','bottom right']].map(([pos,label], i) => {
+      const [t,b] = pos.split(' ');
+      const isTop = label.includes('top');
+      const isLeft = label.includes('left');
+      return (
+        <div key={i} style={{
+          position: 'absolute',
+          top: isTop ? 24 : 'auto', bottom: !isTop ? 24 : 'auto',
+          left: isLeft ? 24 : 'auto', right: !isLeft ? 24 : 'auto',
+          width: 20, height: 20,
+          borderTop: isTop ? `1px solid ${T.borderVisible}` : 'none',
+          borderBottom: !isTop ? `1px solid ${T.borderVisible}` : 'none',
+          borderLeft: isLeft ? `1px solid ${T.borderVisible}` : 'none',
+          borderRight: !isLeft ? `1px solid ${T.borderVisible}` : 'none',
+        }} />
+      );
+    })}
+  </div>
+);
+
+/* ── ANNOTATION LABEL ── */
+const Ann = ({ x, y, text, line = 'right' }) => (
+  <div style={{ position: 'absolute', left: x, top: y, pointerEvents: 'none', zIndex: 20 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      {line === 'left' && <div style={{ width: 24, height: 1, background: '#444' }} />}
+      <span style={{ fontFamily: T.mono, fontSize: 9, color: '#666', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{text}</span>
+      {line === 'right' && <div style={{ width: 24, height: 1, background: '#444' }} />}
+    </div>
+  </div>
+);
+
+/* ── APP ── */
+const App = () => (
+  <DesignCanvas>
+    <DCSection id="states" title="Terminal Overlay — Nothing Design System">
+
+      {/* 01 Closed */}
+      <DCArtboard id="closed" label="01 — Closed State" width={800} height={500}>
+        <div style={{ width: '100%', height: '100%', position: 'relative', background: T.black }}>
+          <HomepageMock />
+          <TerminalIndicator />
+          {/* Annotation */}
+          <div style={{
+            position: 'absolute', bottom: 56, right: 20,
+            fontFamily: T.mono, fontSize: 9, color: '#555', letterSpacing: '0.06em',
+            whiteSpace: 'nowrap',
+          }}>
+            pill indicator · ⌘K shortcut hint · blue pulse dot
+          </div>
+        </div>
+      </DCArtboard>
+
+      {/* 02 Open over homepage */}
+      <DCArtboard id="open-home" label="02 — Open · Homepage" width={800} height={500}>
+        <div style={{ width: '100%', height: '100%', position: 'relative', background: T.black }}>
+          <HomepageMock />
+          {/* dim backdrop */}
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', pointerEvents: 'none' }} />
+          <TerminalPanel />
+        </div>
+      </DCArtboard>
+
+      {/* 03 Open over barcode */}
+      <DCArtboard id="open-barcode" label="03 — Open · Barcode Studio" width={800} height={500}>
+        <div style={{ width: '100%', height: '100%', position: 'relative', background: T.black }}>
+          <BarcodeMock />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', pointerEvents: 'none' }} />
+          <TerminalPanel lines={[
+            { type: 'input',  text: 'nav /barcode' },
+            { type: 'system', text: 'navigating to /barcode...' },
+            { type: 'output', text: 'loaded barcode-studio v1.0.0' },
+            { type: 'input',  text: 'set format EAN-13' },
+            { type: 'output', text: 'format → EAN-13' },
+            { type: 'input',  text: 'set content 9783161484100' },
+            { type: 'output', text: 'content → 9783161484100 · valid checksum' },
+          ]} />
+        </div>
+      </DCArtboard>
+
+      {/* 04 Konami */}
+      <DCArtboard id="konami" label="04 — Konami Burst" width={800} height={500}>
+        <div style={{ width: '100%', height: '100%', position: 'relative', background: T.black }}>
+          <HomepageMock />
+          <KonamiOverlay />
+        </div>
+      </DCArtboard>
+
+      {/* 05 Anatomy */}
+      <DCArtboard id="anatomy" label="05 — Component Anatomy" width={800} height={500}>
+        <div style={{ width: '100%', height: '100%', background: '#080808', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', fontFamily: T.mono }}>
+          {/* Isolated panel */}
+          <div style={{ position: 'relative' }}>
+            {/* Leader lines & labels */}
+            <div style={{ position: 'absolute', top: -28, left: 0, right: 0, display: 'flex', justifyContent: 'space-between', fontFamily: T.mono, fontSize: 9, color: '#555', letterSpacing: '0.06em' }}>
+              <span>w: 480px</span>
+              <span style={{ color: T.accent }}>↑ header · 36px</span>
+              <span>border: 1px #333</span>
+            </div>
+
+            {/* Panel */}
+            <div style={{ width: 480, background: T.surface, border: `1px solid ${T.borderVisible}`, fontFamily: T.mono, boxShadow: '0 24px 64px rgba(0,0,0,0.9)' }}>
+              {/* Header */}
+              <div style={{ height: 36, borderBottom: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 14px', background: T.surfaceRaised }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: T.accent, opacity: 0.8 }} />
+                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: T.border }} />
+                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: T.border }} />
+                  <span style={{ fontSize: 10, color: T.textSecondary, letterSpacing: '0.1em', textTransform: 'uppercase', marginLeft: 6 }}>TERMINAL</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontSize: 9, color: T.textDisabled }}>jcatterall@portfolio</span>
+                  <span style={{ fontSize: 12, color: T.textDisabled }}>✕</span>
+                </div>
+              </div>
+
+              {/* Output — partial */}
+              <div style={{ padding: '10px 14px', height: 160, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <div style={{ fontSize: 10, color: T.textDisabled, marginBottom: 4 }}>jcatterall@portfolio ~ % <span style={{ color: T.interactive }}>session started</span></div>
+                <div style={{ borderTop: `1px solid ${T.border}`, marginBottom: 6 }} />
+                {[
+                  { t: 'input', txt: 'whoami' },
+                  { t: 'output', txt: 'james catterall — software developer, london uk' },
+                  { t: 'input', txt: 'foo' },
+                  { t: 'error', txt: 'command not found: "foo" — try `help`' },
+                ].map((l, i) => (
+                  <div key={i} style={{ fontSize: 11, lineHeight: 1.5, color: { input: T.textPrimary, output: T.textSecondary, error: T.accent }[l.t] }}>
+                    {l.t === 'input' ? <><span style={{ color: T.interactive, marginRight: 6 }}>{'>'}</span>{l.txt}</> : <span style={{ paddingLeft: 14 }}>{l.txt}</span>}
+                  </div>
+                ))}
+              </div>
+
+              {/* Input */}
+              <div style={{ height: 36, borderTop: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 6, background: T.black }}>
+                <span style={{ color: T.interactive, fontSize: 12 }}>{'>'}</span>
+                <span style={{ display: 'inline-block', width: 7, height: 14, background: T.interactive, animation: 'blink 900ms step-end infinite' }} />
+              </div>
+            </div>
+
+            {/* Bottom annotations */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, fontFamily: T.mono, fontSize: 9, color: '#555', letterSpacing: '0.06em' }}>
+              <span style={{ color: T.interactive }}>{'>'} prompt · #5b9bf6</span>
+              <span>input row · 36px · bg #000</span>
+              <span>h: 320px</span>
+            </div>
+
+            {/* Right annotations */}
+            <div style={{ position: 'absolute', left: 490, top: 0, display: 'flex', flexDirection: 'column', gap: 8, fontFamily: T.mono, fontSize: 9, color: '#555', letterSpacing: '0.06em' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 16, height: 1, background: '#333' }} />
+                <span>bg: #1a1a1a</span>
+              </div>
+              <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 16, height: 1, background: '#333' }} />
+                <span>output · 11px · line-h 1.6</span>
+              </div>
+              <div style={{ marginTop: 76, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 16, height: 1, background: '#333' }} />
+                <span style={{ color: T.accent }}>error · #d71921</span>
+              </div>
+              <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ width: 16, height: 1, background: '#333' }} />
+                <span style={{ color: T.interactive }}>cursor · #5b9bf6 · blink 900ms</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DCArtboard>
+
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

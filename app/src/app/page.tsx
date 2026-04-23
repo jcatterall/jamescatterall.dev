@@ -1,141 +1,119 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Github, Mail, ExternalLink, ArrowUpRight } from "lucide-react";
+import styles from "./page.module.css"
 
 const projects = [
   {
-    title: "Project One",
-    description:
-      "A full-stack web application built with Next.js and TypeScript. Handles real-time data and complex state management.",
-    tags: ["Next.js", "TypeScript", "PostgreSQL"],
+    title: "Barcode Studio",
+    desc: "Generate artistic EAN-13 barcodes clipped to custom shapes and export as SVG.",
+    tags: ["SVG", "TypeScript"],
+    year: "2025",
+    href: "/barcode",
+  },
+  {
+    title: "Dev Dashboard",
+    desc: "Internal engineering metrics platform. Build times, deploy frequency, incident tracking.",
+    tags: ["Next.js", "GraphQL", "Docker"],
+    year: "2024",
     href: "#",
   },
   {
-    title: "Project Two",
-    description:
-      "Open-source CLI tool for automating repetitive development tasks. 500+ stars on GitHub.",
-    tags: ["Node.js", "CLI", "Open Source"],
+    title: "CLI Toolkit",
+    desc: "Developer tooling suite for project scaffolding and environment bootstrapping. 12 templates.",
+    tags: ["Node.js", "TypeScript", "Bash"],
+    year: "2023",
     href: "#",
   },
   {
-    title: "Project Three",
-    description:
-      "Mobile-first e-commerce storefront with custom CMS integration and a perfect Lighthouse score.",
-    tags: ["React", "Tailwind", "Shopify"],
+    title: "Auth Service",
+    desc: "Stateless JWT microservice with refresh token rotation and OAuth2 provider integration.",
+    tags: ["Node.js", "Redis", "Docker", "AWS"],
+    year: "2023",
     href: "#",
   },
-];
-
-const skills = [
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Node.js",
-  "PostgreSQL",
-  "Docker",
-  "AWS",
-  "GraphQL",
-];
+  {
+    title: "Data Pipeline",
+    desc: "Event-driven ETL pipeline processing 50k+ records daily. Schema validation, error queues.",
+    tags: ["TypeScript", "PostgreSQL", "AWS"],
+    year: "2022",
+    href: "#",
+  },
+]
 
 export default function Home() {
   return (
-    <main className="max-w-3xl mx-auto px-6 py-16 space-y-20">
+    <main className={styles.layout}>
 
-      <section className="space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-heading font-bold">James Catterall</h1>
-          <p className="text-xl font-base text-foreground/80">
-            Software Developer
-          </p>
-        </div>
-        <p className="font-base leading-relaxed max-w-xl">
-          I build thoughtful, well-crafted software. Focused on clean
-          architecture, great developer experience, and products that are
-          genuinely useful.
-        </p>
-        <div className="flex gap-3 flex-wrap">
-          <Button asChild>
-            <a
-              href="https://github.com/jcatterall"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Github className="w-4 h-4" />
-              GitHub
+      {/* ── LEFT: Identity ── */}
+      <aside className={styles.leftCol}>
+        <div className={styles.fadeOverlay} />
+        <div className={styles.identity}>
+          <h1 className={styles.heroName}>
+            JAMES<br />CATTERALL
+          </h1>
+          <div className={styles.divider} />
+          <div className={styles.statusRows}>
+            <div className={styles.statusRow}>
+              <span className={styles.statusLabel}>STATUS</span>
+              <span className={styles.statusOnline}>ONLINE</span>
+            </div>
+            <div className={styles.statusRow}>
+              <span className={styles.statusLabel}>ROLE</span>
+              <span className={styles.statusValue}>SOFTWARE DEVELOPER</span>
+            </div>
+            <div className={styles.statusRow}>
+              <span className={styles.statusLabel}>LOC</span>
+              <span className={styles.statusValue}>LONDON, UK</span>
+            </div>
+          </div>
+          <div className={styles.dividerThin} />
+          <div className={styles.contactRows}>
+            <a href="mailto:james.catterall92@gmail.com" className={styles.contactLink}>
+              <span className={styles.contactIcon}>✉</span>
+              <span className={styles.contactValue}>james.catterall92@gmail.com</span>
+              <span className={styles.contactArrow}>↗</span>
             </a>
-          </Button>
+            <a href="https://github.com/jcatterall" target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
+              <span className={styles.contactIcon}>⌥</span>
+              <span className={styles.contactValue}>github.com/jcatterall</span>
+              <span className={styles.contactArrow}>↗</span>
+            </a>
+          </div>
         </div>
-      </section>
+        <div className={styles.copyright}>© 2025 JAMES CATTERALL</div>
+      </aside>
 
-      <section className="space-y-6">
-        <h2 className="text-2xl font-heading font-bold">Work</h2>
-        <div className="grid gap-4">
-          {projects.map((project) => (
-            <Card key={project.title}>
-              <CardHeader>
-                <div className="flex items-start justify-between gap-4">
-                  <CardTitle>{project.title}</CardTitle>
-                  <a
-                    href={project.href}
-                    className="text-foreground hover:text-foreground/70 transition-colors flex-shrink-0"
-                  >
-                    <ArrowUpRight className="w-5 h-5" />
-                  </a>
-                </div>
-                <CardDescription>{project.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <Badge key={tag}>{tag}</Badge>
+      {/* ── RIGHT: Work ── */}
+      <div className={styles.rightCol}>
+        <div className={styles.prompt}>
+          <span className={styles.promptCaret}>{">"}</span>
+          <span className={styles.promptPath}>./projects</span>
+        </div>
+        <div className={styles.tableHeader}>
+          <span className={styles.tableHeaderLabel}>PROJECTS</span>
+          <span className={styles.tableHeaderLabel}>YEAR</span>
+        </div>
+        <div className={styles.workList}>
+          {projects.map((p) => (
+            <a key={p.title} href={p.href} className={styles.workRow}>
+              <div className={styles.rowAccent} />
+              <div className={styles.rowBody}>
+                <div className={styles.rowTitle}>{p.title}</div>
+                <div className={styles.rowDesc}>{p.desc}</div>
+                <div className={styles.tagRow}>
+                  {p.tags.map((t) => (
+                    <span key={t} className={styles.tag}>[{t}]</span>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <div className={styles.rowMeta}>
+                <span className={styles.rowYear}>{p.year}</span>
+                <span className={styles.rowArrow}>↗</span>
+              </div>
+            </a>
           ))}
+          <div className={styles.eof}>{projects.length} entries — EOF</div>
         </div>
-      </section>
-
-      <section className="space-y-6">
-        <h2 className="text-2xl font-heading font-bold">Skills</h2>
-        <div className="flex flex-wrap gap-2">
-          {skills.map((skill) => (
-            <Badge key={skill} variant="neutral">
-              {skill}
-            </Badge>
-          ))}
-        </div>
-      </section>
-
-      <footer className="border-t-2 border-border pt-8 flex items-center justify-between gap-4 flex-wrap">
-        <p className="font-base text-sm">© {new Date().getFullYear()} James Catterall</p>
-        <div className="flex gap-4">
-          <a
-            href="mailto:james.catterall92@gmail.com"
-            className="font-base text-sm font-bold hover:text-foreground/70 transition-colors flex items-center gap-1"
-          >
-            <Mail className="w-4 h-4" />
-            Email
-          </a>
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-base text-sm font-bold hover:text-foreground/70 transition-colors flex items-center gap-1"
-          >
-            <ExternalLink className="w-4 h-4" />
-            GitHub
-          </a>
-        </div>
-      </footer>
+      </div>
 
     </main>
-  );
+  )
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; padding: 24px; display: flex; gap: 40px; flex-wrap: wrap; align-items: flex-start; }
+  .col { display: flex; flex-direction: column; gap: 20px; min-width: 240px; }
+  .section-label { font-family: 'Space Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.09em; color: #444; margin-bottom: 4px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: #999; }
+  .input {
+    background: transparent; border: 1px solid #333; border-radius: 4px;
+    padding: 10px 14px; width: 100%;
+    font-family: 'Space Mono', monospace; font-size: 13px; color: #e8e8e8;
+    outline: none; transition: border-color 200ms ease-out;
+  }
+  .input::placeholder { color: #444; }
+  .input:focus { border-color: #5b9bf6; outline: none; }
+  .input.error { border-color: #d71921; }
+  .input.disabled { color: #666; border-color: #222; cursor: not-allowed; }
+  .input-underline {
+    background: transparent; border: none; border-bottom: 1px solid #333;
+    border-radius: 0; padding: 8px 0;
+    font-family: 'Space Mono', monospace; font-size: 13px; color: #e8e8e8;
+    outline: none; width: 100%;
+    transition: border-color 200ms ease-out;
+  }
+  .input-underline:focus { border-bottom-color: #5b9bf6; }
+  .error-msg { font-family: 'Space Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #d71921; }
+</style>
+</head>
+<body>
+  <div class="col">
+    <div class="section-label">FULL BORDER VARIANT</div>
+    <div class="field">
+      <div class="field-label">Default</div>
+      <input class="input" placeholder="Enter value…">
+    </div>
+    <div class="field">
+      <div class="field-label">Focus</div>
+      <input class="input" style="border-color:#5b9bf6" value="oxide-compiler">
+    </div>
+    <div class="field">
+      <div class="field-label">Error</div>
+      <input class="input error" value="invalid@">
+      <div class="error-msg">Invalid format</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Disabled</div>
+      <input class="input disabled" value="read-only" disabled>
+    </div>
+  </div>
+  <div class="col">
+    <div class="section-label">UNDERLINE VARIANT</div>
+    <div class="field">
+      <div class="field-label">Default</div>
+      <input class="input-underline" placeholder="Enter value…">
+    </div>
+    <div class="field">
+      <div class="field-label">Focus</div>
+      <input class="input-underline" style="border-bottom-color:#5b9bf6" value="hello-world">
+    </div>
+    <div class="field">
+      <div class="field-label">Error</div>
+      <input class="input-underline" style="border-bottom-color:#d71921" value="bad input">
+      <div class="error-msg">Required field</div>
+    </div>
+  </div>
+</body>
+</html>

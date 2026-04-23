@@ -1,0 +1,19 @@
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-md);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-normal);
+  margin-bottom: var(--nd-space-lg);
+  flex-shrink: 0;
+}
+
+.caret {
+  color: var(--nd-accent);
+}
+
+.path {
+  color: var(--nd-text-primary);
+}

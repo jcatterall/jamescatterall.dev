@@ -24,8 +24,16 @@
 - Derive types from data rather than maintaining parallel type hierarchies.
 - Use `const` by default; `let` only when reassignment is unavoidable.
 
-## Components
+## Design System
 
-- Use the **Neobrutalism** component library (https://www.neobrutalism.dev) — a shadcn/ui-based copy-paste library.
-- Install components via the shadcn CLI when available, otherwise copy manually into `src/components/ui/`.
-- The library uses CSS variables exclusively — paste the chosen theme from the `/styling` page into `globals.css`, replacing existing shadcn variable blocks.
+- Use the **Nothing design system** — OLED dark, dot-matrix aesthetic, typographically driven.
+- Components live in `src/components/` — build and extend them from scratch as needed.
+- Design tokens live in `src/app/globals.css` as `--nd-*` CSS custom properties.
+- Fonts: **Doto** (display/hero), **Space Grotesk** (body/UI), **Space Mono** (labels/data). All loaded via Google Fonts in `layout.tsx`.
+- Labels are always Space Mono, ALL CAPS, `--nd-text-secondary`. No shadows, no gradients, no border-radius > 16px on cards.
+
+## Terminal
+
+- The terminal overlay (`src/components/terminal/`) provides keyboard navigation across the site.
+- When adding a new page/route, update `ROUTE_MAP` in `src/components/terminal/commands.ts` and add the destination to `COMPLETABLE_COMMANDS` in the same file.
+- `ROUTE_MAP` format: `"<alias>": "<next-route>"` — include both the slug and the path (e.g. `"barcode"` and `"/barcode"`).

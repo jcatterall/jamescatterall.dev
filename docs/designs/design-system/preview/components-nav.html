@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; padding: 0; display: flex; flex-direction: column; gap: 24px; }
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 56px; border-bottom: 1px solid #222;
+  }
+  .nav-logo { font-family: 'Doto', monospace; font-size: 20px; color: #fff; letter-spacing: 0.02em; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-link {
+    font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+    color: #666; text-decoration: none; position: relative;
+    transition: color 200ms ease-out; padding-bottom: 2px;
+  }
+  .nav-link:hover { color: #e8e8e8; }
+  .nav-link.active { color: #fff; }
+  .nav-link.active::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 2px; background: #fff;
+  }
+  .nav-cta {
+    font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: #000; background: #fff; border: none; border-radius: 999px;
+    padding: 8px 20px; cursor: pointer; transition: opacity 200ms ease-out;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+  .label { font-family: 'Space Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: #444; padding: 0 32px; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="label" style="padding:16px 32px 8px">DEFAULT — WORK ACTIVE</div>
+    <nav>
+      <div class="nav-logo">DEV</div>
+      <div class="nav-links">
+        <a class="nav-link active" href="#">Work</a>
+        <a class="nav-link" href="#">Writing</a>
+        <a class="nav-link" href="#">About</a>
+        <a class="nav-link" href="#">Contact</a>
+      </div>
+      <button class="nav-cta">Hire Me</button>
+    </nav>
+  </div>
+  <div>
+    <div class="label" style="padding:0 32px 8px">WRITING ACTIVE</div>
+    <nav>
+      <div class="nav-logo">DEV</div>
+      <div class="nav-links">
+        <a class="nav-link" href="#">Work</a>
+        <a class="nav-link active" href="#">Writing</a>
+        <a class="nav-link" href="#">About</a>
+        <a class="nav-link" href="#">Contact</a>
+      </div>
+      <button class="nav-cta">Hire Me</button>
+    </nav>
+  </div>
+</body>
+</html>

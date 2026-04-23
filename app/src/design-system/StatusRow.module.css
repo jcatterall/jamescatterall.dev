@@ -1,0 +1,26 @@
+.row {
+  display: flex;
+  gap: var(--nd-space-md);
+  align-items: baseline;
+}
+
+.label {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-text-faint);
+  letter-spacing: var(--nd-tracking-wider);
+  text-transform: uppercase;
+  min-width: 56px;
+}
+
+.value {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-normal);
+  text-transform: uppercase;
+}
+
+.valueOnline {
+  color: var(--nd-success);
+}

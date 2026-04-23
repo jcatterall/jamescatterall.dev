@@ -1,0 +1,9 @@
+.divider {
+  border: none;
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  margin: var(--nd-space-lg) 0;
+}
+
+.thin {
+  border-top-color: var(--nd-surface-raised);
+}

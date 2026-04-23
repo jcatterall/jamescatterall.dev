@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+  .label { font-family: 'Space Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: #444; margin-bottom: 8px; }
+  /* Segmented */
+  .seg { display: inline-flex; background: #111; border: 1px solid #333; border-radius: 999px; padding: 3px; gap: 2px; }
+  .seg-item {
+    font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 6px 16px; border-radius: 999px; cursor: pointer; color: #999;
+    transition: background 200ms ease-out, color 200ms ease-out; border: none; background: transparent;
+  }
+  .seg-item.active { background: #fff; color: #000; }
+  .seg-item:not(.active):hover { color: #e8e8e8; }
+  /* Select dropdown */
+  .nd-select {
+    appearance: none; background: #111; border: 1px solid #333; border-radius: 4px;
+    padding: 10px 36px 10px 14px; font-family: 'Space Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.06em; color: #e8e8e8;
+    outline: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+    transition: border-color 200ms ease-out;
+  }
+  .nd-select:focus { border-color: #5b9bf6; }
+  .row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="label">SEGMENTED CONTROL — 3 OPTIONS</div>
+    <div class="seg">
+      <button class="seg-item active">Work</button>
+      <button class="seg-item">Writing</button>
+      <button class="seg-item">About</button>
+    </div>
+  </div>
+  <div>
+    <div class="label">SEGMENTED CONTROL — 2 OPTIONS</div>
+    <div class="seg">
+      <button class="seg-item">Grid</button>
+      <button class="seg-item active">List</button>
+    </div>
+  </div>
+  <div>
+    <div class="label">SELECT DROPDOWN</div>
+    <div class="row">
+      <select class="nd-select">
+        <option>All Projects</option>
+        <option>Rust</option>
+        <option>Web</option>
+        <option>Embedded</option>
+      </select>
+      <select class="nd-select" style="border-color:#5b9bf6">
+        <option>2024</option>
+      </select>
+    </div>
+  </div>
+</body>
+</html>

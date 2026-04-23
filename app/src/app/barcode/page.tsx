@@ -1,4 +1,6 @@
-import { BarcodeGenerator } from "@/components/barcode/BarcodeGenerator"
+import { Suspense } from "react"
+import BarcodeLoading from "./loading"
+import BarcodePageClient from "./BarcodePageClient"
 import styles from "./page.module.css"
 
 export const metadata = {
@@ -16,7 +18,9 @@ export default function BarcodePage() {
         </p>
       </section>
 
-      <BarcodeGenerator />
+      <Suspense fallback={<BarcodeLoading />}>
+        <BarcodePageClient />
+      </Suspense>
     </main>
   )
 }

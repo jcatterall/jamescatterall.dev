@@ -1,0 +1,378 @@
+/* ── LAYOUT ──────────────────────────────────────────────── */
+
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--nd-black);
+}
+
+/* ── LEFT COLUMN ─────────────────────────────────────────── */
+
+.leftCol {
+  width: 38%;
+  min-width: 300px;
+  border-right: var(--nd-border-width) solid var(--nd-border);
+  padding: 56px 48px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+  background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-color: var(--nd-black);
+}
+
+/* radial fade mask over the dot grid */
+.fadeOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 120% 80% at 20% 30%, transparent 30%, rgba(0, 0, 0, 0.9) 100%);
+}
+
+.identity {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── HERO NAME ───────────────────────────────────────────── */
+
+.heroName {
+  font-family: var(--font-doto), monospace;
+  font-size: clamp(36px, 3.8vw, 60px);
+  font-weight: 400;
+  color: var(--nd-text-display);
+  line-height: var(--nd-leading-none);
+  letter-spacing: var(--nd-tracking-tight);
+  margin: 0;
+}
+
+.heroCursor {
+  color: var(--nd-accent);
+  animation: heroCursorBlink 1400ms step-end infinite;
+  font-family: var(--font-space-mono), monospace;
+  margin-left: 2px;
+  font-size: 0.75em;
+  vertical-align: text-bottom;
+  position: relative;
+  top: -4px;
+}
+
+@keyframes heroCursorBlink {
+  0%, 49%  { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ── DIVIDERS ────────────────────────────────────────────── */
+
+.divider {
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  margin: 24px 0;
+}
+
+.dividerThin {
+  border-top: var(--nd-border-width) solid var(--nd-surface-raised);
+  margin: 24px 0;
+}
+
+/* ── STATUS ROWS ─────────────────────────────────────────── */
+
+.statusRows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.statusRow {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.statusLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-text-faint);
+  letter-spacing: var(--nd-tracking-wider);
+  text-transform: uppercase;
+  min-width: 56px;
+}
+
+.statusValue {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-normal);
+  text-transform: uppercase;
+}
+
+.statusOnline {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-success);
+  letter-spacing: var(--nd-tracking-normal);
+  text-transform: uppercase;
+}
+
+/* ── CONTACT LINKS ───────────────────────────────────────── */
+
+.contactRows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contactLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity var(--nd-duration-fast);
+}
+
+.contactLink:hover {
+  opacity: var(--nd-opacity-half);
+}
+
+.contactIcon {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-base);
+  color: var(--nd-text-faint);
+  line-height: 1;
+}
+
+.contactValue {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-tight);
+}
+
+.contactArrow {
+  font-size: var(--nd-text-base);
+  color: var(--nd-border-visible);
+  margin-left: auto;
+}
+
+/* ── COPYRIGHT ───────────────────────────────────────────── */
+
+.copyright {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-ghost);
+  letter-spacing: var(--nd-tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ── RIGHT COLUMN ────────────────────────────────────────── */
+
+.rightCol {
+  flex: 1;
+  padding: 56px 48px 48px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── PROMPT ──────────────────────────────────────────────── */
+
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-md);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-normal);
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.promptCaret {
+  color: var(--nd-accent);
+}
+
+.promptPath {
+  color: var(--nd-text-primary);
+}
+
+/* ── TABLE HEADER ────────────────────────────────────────── */
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 24px 10px 20px;
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+}
+
+.tableHeaderLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-border-visible);
+  letter-spacing: var(--nd-tracking-widest);
+  text-transform: uppercase;
+}
+
+/* ── WORK LIST ───────────────────────────────────────────── */
+
+.workList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.workList::-webkit-scrollbar {
+  width: 3px;
+}
+
+.workList::-webkit-scrollbar-track {
+  background: var(--nd-black);
+}
+
+.workList::-webkit-scrollbar-thumb {
+  background: var(--nd-border);
+}
+
+/* ── WORK ROW ────────────────────────────────────────────── */
+
+.workRow {
+  position: relative;
+  padding: 16px 24px 16px 20px;
+  border-bottom: var(--nd-border-width) solid var(--nd-surface-raised);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-decoration: none;
+  transition: background var(--nd-duration-fast);
+  cursor: pointer;
+}
+
+.workRow:hover {
+  background: var(--nd-surface);
+}
+
+.workRow:hover .rowTitle {
+  color: var(--nd-text-display);
+}
+
+.workRow:hover .rowArrow {
+  color: var(--nd-text-display);
+}
+
+.workRow:hover .rowAccent {
+  opacity: 1;
+}
+
+/* red left-edge accent bar */
+.rowAccent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--nd-border-width-thick);
+  background: var(--nd-accent);
+  opacity: 0;
+  transition: opacity var(--nd-duration-fast);
+}
+
+.rowBody {
+  flex: 1;
+  padding-right: 16px;
+}
+
+.rowTitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-lg);
+  color: var(--nd-text-display);
+  letter-spacing: var(--nd-tracking-tight);
+  margin-bottom: 5px;
+  transition: color var(--nd-duration-fast);
+}
+
+.rowDesc {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-text-muted);
+  line-height: var(--nd-leading-relaxed);
+  margin-bottom: 8px;
+  letter-spacing: var(--nd-tracking-tight);
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.rowMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 48px;
+}
+
+.rowYear {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-border-visible);
+  letter-spacing: var(--nd-tracking-wide);
+}
+
+.rowArrow {
+  font-size: var(--nd-text-xl);
+  color: var(--nd-text-faint);
+  transition: color var(--nd-duration-fast);
+}
+
+/* ── EOF ─────────────────────────────────────────────────── */
+
+.eof {
+  padding: 12px 24px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-ghost);
+  letter-spacing: var(--nd-tracking-wide);
+}
+
+/* ── MOBILE ──────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+    height: auto;
+    overflow: auto;
+  }
+
+  .leftCol {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    border-right: none;
+    border-bottom: var(--nd-border-width) solid var(--nd-border);
+    padding: 40px 24px;
+  }
+
+  .rightCol {
+    height: auto;
+    overflow: visible;
+    padding: 40px 24px;
+  }
+
+  .workList {
+    overflow: visible;
+  }
+}

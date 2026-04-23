@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — DEV_OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; color: #e8e8e8; font-family: 'Space Grotesk', sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+</style>
+</head>
+<body>
+
+<script type="text/babel" src="Header.jsx"></script>
+<script type="text/babel" src="Hero.jsx"></script>
+<script type="text/babel" src="ProjectCard.jsx"></script>
+<script type="text/babel" src="WorkSection.jsx"></script>
+<script type="text/babel" src="StatBar.jsx"></script>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#d71921",
+  "displayFont": "Doto",
+  "showStatBar": true,
+  "heroSize": "large"
+}/*EDITMODE-END*/;
+
+const App = () => {
+  const saved = (() => { try { return JSON.parse(localStorage.getItem('nd-portfolio-screen') || '{}'); } catch { return {}; } })();
+  const [screen, setScreenRaw] = React.useState(saved.screen || 'home');
+  const [selectedProject, setSelectedProject] = React.useState(null);
+  const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
+  const [tweakOpen, setTweakOpen] = React.useState(false);
+
+  const setScreen = (s) => {
+    setScreenRaw(s);
+    setSelectedProject(null);
+    localStorage.setItem('nd-portfolio-screen', JSON.stringify({ screen: s }));
+  };
+
+  const handleSelectProject = (p) => {
+    setSelectedProject(p);
+    setScreenRaw('project');
+  };
+
+  // Tweaks panel messaging
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweakOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweakOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const updateTweak = (key, val) => {
+    const next = { ...tweaks, [key]: val };
+    setTweaks(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+  };
+
+  const navScreen = selectedProject ? 'work' : screen;
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#000' }}>
+      <Header screen={navScreen} setScreen={setScreen} />
+      {tweaks.showStatBar && <StatBar />}
+
+      {screen === 'home' && <Hero setScreen={setScreen} />}
+      {screen === 'work' && <WorkSection onSelectProject={handleSelectProject} />}
+      {screen === 'about' && <AboutScreen />}
+      {screen === 'writing' && <WritingScreen />}
+      {screen === 'contact' && <ContactScreen />}
+      {screen === 'project' && selectedProject && (
+        <ProjectDetail project={selectedProject} onBack={() => setScreen('work')} />
+      )}
+
+      {/* Footer */}
+      <footer style={{
+        borderTop: '1px solid #1a1a1a', padding: '24px 48px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        marginTop: '64px',
+      }}>
+        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.07em', color: '#444' }}>© 2024 Alex Kern</span>
+        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', color: '#333', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Built with Rust — deployed in 400ms</span>
+      </footer>
+
+      {/* Tweaks Panel */}
+      {tweakOpen && (
+        <div style={{
+          position: 'fixed', bottom: '24px', right: '24px', zIndex: 9999,
+          background: '#111', border: '1px solid #333', borderRadius: '12px',
+          padding: '20px', width: '240px', display: 'flex', flexDirection: 'column', gap: '16px',
+        }}>
+          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#999' }}>Tweaks</div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.07em', color: '#666' }}>Accent Color</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {['#d71921', '#5b9bf6', '#4a9e5c', '#d4a843'].map(c => (
+                <div key={c} onClick={() => updateTweak('accentColor', c)} style={{
+                  width: '24px', height: '24px', borderRadius: '4px', background: c,
+                  border: tweaks.accentColor === c ? '2px solid #fff' : '2px solid transparent',
+                  cursor: 'pointer',
+                }} />
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.07em', color: '#666' }}>Stat Bar</label>
+            <div style={{ display: 'inline-flex', background: '#000', border: '1px solid #333', borderRadius: '999px', padding: '2px' }}>
+              {['Show', 'Hide'].map(o => (
+                <button key={o} onClick={() => updateTweak('showStatBar', o === 'Show')} style={{
+                  fontFamily: "'Space Mono', monospace", fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.06em',
+                  padding: '5px 14px', borderRadius: '999px', border: 'none', cursor: 'pointer',
+                  background: (o === 'Show') === tweaks.showStatBar ? '#fff' : 'transparent',
+                  color: (o === 'Show') === tweaks.showStatBar ? '#000' : '#666',
+                  transition: 'background 200ms ease-out, color 200ms ease-out',
+                }}>{o}</button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label style={{ fontFamily: "'Space Mono', monospace", fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.07em', color: '#666' }}>Hero Scale</label>
+            <div style={{ display: 'inline-flex', background: '#000', border: '1px solid #333', borderRadius: '999px', padding: '2px' }}>
+              {['Large', 'Compact'].map(o => (
+                <button key={o} onClick={() => updateTweak('heroSize', o.toLowerCase())} style={{
+                  fontFamily: "'Space Mono', monospace", fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.06em',
+                  padding: '5px 14px', borderRadius: '999px', border: 'none', cursor: 'pointer',
+                  background: tweaks.heroSize === o.toLowerCase() ? '#fff' : 'transparent',
+                  color: tweaks.heroSize === o.toLowerCase() ? '#000' : '#666',
+                  transition: 'background 200ms ease-out, color 200ms ease-out',
+                }}>{o}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

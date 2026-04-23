@@ -1,0 +1,1320 @@
+/*
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  DOT MATRIX  ·  DESIGN SYSTEM  ·  v1.0.0                                   ║
+║                                                                              ║
+║  Everything you need in one file.                                            ║
+║  Drop this into your project and start building.                             ║
+║                                                                              ║
+║  TABLE OF CONTENTS                                                           ║
+║  ─────────────────────────────────────────────────────────────────────────  ║
+║  1.  FONT IMPORTS        Google Fonts (Doto, Space Grotesk, Space Mono)     ║
+║  2.  TOKENS              Color, type, spacing, radius, animation            ║
+║  3.  RESET               Minimal, opinionated, OLED-safe                    ║
+║  4.  TYPOGRAPHY          Classes + semantic HTML elements                   ║
+║  5.  LAYOUT              Container, grid, stack, cluster                    ║
+║  6.  COMPONENTS                                                              ║
+║       6a.  Badge                                                             ║
+║       6b.  Button                                                            ║
+║       6c.  Card                                                              ║
+║       6d.  Input / Textarea / Select                                        ║
+║       6e.  Tag / Chip                                                        ║
+║       6f.  Segmented Control                                                 ║
+║       6g.  Navigation Bar                                                   ║
+║       6h.  Stat Row                                                          ║
+║       6i.  Progress Bar (segmented)                                         ║
+║       6j.  Empty State                                                       ║
+║       6k.  Skeleton Loader                                                  ║
+║       6l.  Tooltip                                                           ║
+║       6m.  Divider                                                           ║
+║       6n.  Code Block                                                        ║
+║  7.  UTILITIES           Color, spacing, display, cursor, a11y helpers      ║
+║  8.  ANIMATIONS          Keyframes used by components                       ║
+║                                                                              ║
+║  USAGE NOTES                                                                 ║
+║  · Add class="nd-root" (or nd-dark) to <html> or <body>                    ║
+║  · All components are opt-in via class names — no global element resets     ║
+║    except inside .nd-root                                                   ║
+║  · Prefix: nd- (Nothing Dot)                                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+*/
+
+
+/* ============================================================================
+   1. FONT IMPORTS
+   ============================================================================
+   Self-hosting is recommended for production. Replace with local @font-face
+   declarations pointing to your /fonts/ directory.
+
+   Doto         — dot-matrix variable display — DISPLAY ROLE ONLY (36px+)
+   Space Grotesk — geometric sans — BODY, HEADINGS, UI
+   Space Mono   — fixed-width — LABELS, DATA, CAPTIONS (always ALL CAPS)
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+
+/* ============================================================================
+   2. TOKENS
+   All design decisions live here as CSS custom properties.
+   Override at :root or on any scoped selector to theme.
+   ============================================================================ */
+
+:root {
+
+  /* ── Color: Backgrounds & Surfaces ────────────────────────────────────── */
+  --nd-black:             #000000;   /* page canvas — pure OLED black        */
+  --nd-surface:           #111111;   /* cards, panels, inputs                */
+  --nd-surface-raised:    #1a1a1a;   /* hover surfaces, dropdowns            */
+  --nd-surface-overlay:   #222222;   /* tooltips, popovers                   */
+
+  /* ── Color: Borders ───────────────────────────────────────────────────── */
+  --nd-border-subtle:     #1a1a1a;   /* barely-there structural lines        */
+  --nd-border:            #222222;   /* default structural border            */
+  --nd-border-visible:    #333333;   /* visible interactive border           */
+  --nd-border-strong:     #666666;   /* hover/emphasis border                */
+  --nd-border-focus:      #5b9bf6;   /* keyboard focus (2px)                 */
+  --nd-border-error:      #d71921;   /* error/invalid state                  */
+
+  /* ── Color: Text ──────────────────────────────────────────────────────── */
+  --nd-text-display:      #ffffff;   /* maximum contrast — display, h1       */
+  --nd-text-primary:      #e8e8e8;   /* default body copy                    */
+  --nd-text-secondary:    #999999;   /* supporting text, labels              */
+  --nd-text-tertiary:     #666666;   /* placeholders, disabled copy          */
+  --nd-text-disabled:     #444444;   /* truly disabled, non-interactive      */
+
+  /* ── Color: Accent (interrupt signal — never decorative) ─────────────── */
+  --nd-accent:            #d71921;
+  --nd-accent-subtle:     rgba(215, 25, 33, 0.12);
+  --nd-accent-border:     rgba(215, 25, 33, 0.4);
+
+  /* ── Color: Semantic ──────────────────────────────────────────────────── */
+  --nd-success:           #4a9e5c;
+  --nd-success-subtle:    rgba(74, 158, 92, 0.12);
+  --nd-success-border:    rgba(74, 158, 92, 0.4);
+
+  --nd-warning:           #d4a843;
+  --nd-warning-subtle:    rgba(212, 168, 67, 0.12);
+  --nd-warning-border:    rgba(212, 168, 67, 0.4);
+
+  --nd-interactive:       #5b9bf6;
+  --nd-interactive-subtle: rgba(91, 155, 246, 0.12);
+  --nd-interactive-border: rgba(91, 155, 246, 0.4);
+
+  /* ── Typography: Font Families ────────────────────────────────────────── */
+  --nd-font-display:      'Doto', 'Courier New', monospace;
+  --nd-font-body:         'Space Grotesk', system-ui, sans-serif;
+  --nd-font-mono:         'Space Mono', 'Courier New', monospace;
+
+  /* ── Typography: Display Scale (Doto only — 36px minimum) ────────────── */
+  --nd-display-2xl:       96px;
+  --nd-display-xl:        72px;
+  --nd-display-lg:        48px;
+  --nd-display-md:        36px;
+
+  /* ── Typography: Body / Heading Scale (Space Grotesk) ────────────────── */
+  --nd-text-h1:           32px;
+  --nd-text-h2:           24px;
+  --nd-text-h3:           20px;
+  --nd-text-h4:           17px;
+  --nd-text-body-lg:      16px;
+  --nd-text-body:         15px;
+  --nd-text-body-sm:      13px;
+
+  /* ── Typography: Mono / Label Scale (Space Mono — ALL CAPS) ──────────── */
+  --nd-text-label-lg:     13px;
+  --nd-text-label:        11px;
+  --nd-text-label-sm:     10px;
+
+  /* ── Typography: Weights ──────────────────────────────────────────────── */
+  --nd-weight-light:      300;
+  --nd-weight-regular:    400;
+  --nd-weight-medium:     500;
+  --nd-weight-semibold:   600;
+
+  /* ── Typography: Letter Spacing ───────────────────────────────────────── */
+  --nd-tracking-mono:     0.07em;    /* Space Mono labels — always use this  */
+  --nd-tracking-tight:    0.02em;
+
+  /* ── Typography: Line Heights ─────────────────────────────────────────── */
+  --nd-leading-none:      1;
+  --nd-leading-tight:     1.2;
+  --nd-leading-snug:      1.4;
+  --nd-leading-body:      1.65;
+  --nd-leading-relaxed:   1.8;
+
+  /* ── Spacing (base 8px) ───────────────────────────────────────────────── */
+  --nd-space-1:           4px;       /* tight: icon + label gap              */
+  --nd-space-2:           8px;       /* belongs-together: field label+input  */
+  --nd-space-3:           12px;
+  --nd-space-4:           16px;      /* same group: card internal sections   */
+  --nd-space-5:           24px;      /* comfortable separation               */
+  --nd-space-6:           32px;      /* section break                        */
+  --nd-space-7:           48px;      /* section break (wide)                 */
+  --nd-space-8:           64px;      /* new context                          */
+  --nd-space-9:           96px;      /* hero / vast                          */
+  --nd-space-10:          128px;
+
+  /* ── Border Radius ────────────────────────────────────────────────────── */
+  --nd-radius-none:       0;
+  --nd-radius-sm:         4px;       /* inputs, code blocks, technical       */
+  --nd-radius-md:         8px;       /* tooltips, dropdowns, small panels    */
+  --nd-radius-lg:         12px;      /* cards, panels (maximum for cards)    */
+  --nd-radius-pill:       999px;     /* buttons, tags, badges                */
+
+  /* ── Borders (composed shorthands) ───────────────────────────────────── */
+  --nd-ring-subtle:       1px solid var(--nd-border-subtle);
+  --nd-ring:              1px solid var(--nd-border);
+  --nd-ring-visible:      1px solid var(--nd-border-visible);
+  --nd-ring-strong:       1px solid var(--nd-border-strong);
+  --nd-ring-focus:        2px solid var(--nd-border-focus);
+  --nd-ring-error:        1px solid var(--nd-border-error);
+  --nd-ring-success:      1px solid var(--nd-success-border);
+  --nd-ring-accent:       1px solid var(--nd-accent-border);
+
+  /* ── Animation ────────────────────────────────────────────────────────── */
+  --nd-duration-instant:  0ms;
+  --nd-duration-fast:     150ms;
+  --nd-duration-default:  200ms;
+  --nd-duration-slow:     350ms;
+  --nd-easing:            ease-out;
+  --nd-transition:        var(--nd-duration-default) var(--nd-easing);
+
+  /* ── Z-index Scale ────────────────────────────────────────────────────── */
+  --nd-z-base:            0;
+  --nd-z-raised:          10;
+  --nd-z-dropdown:        100;
+  --nd-z-sticky:          200;
+  --nd-z-overlay:         300;
+  --nd-z-modal:           400;
+  --nd-z-tooltip:         500;
+  --nd-z-top:             9999;
+}
+
+
+/* ============================================================================
+   3. RESET
+   Applied inside .nd-root only — does not pollute the global scope.
+   ============================================================================ */
+
+.nd-root,
+.nd-root * {
+  box-sizing: border-box;
+}
+
+.nd-root {
+  background-color:         var(--nd-black);
+  color:                    var(--nd-text-primary);
+  font-family:              var(--nd-font-body);
+  font-size:                var(--nd-text-body);
+  font-weight:              var(--nd-weight-regular);
+  line-height:              var(--nd-leading-body);
+  -webkit-font-smoothing:   antialiased;
+  -moz-osx-font-smoothing:  grayscale;
+  text-rendering:           optimizeLegibility;
+}
+
+.nd-root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nd-root button,
+.nd-root input,
+.nd-root select,
+.nd-root textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.nd-root img,
+.nd-root svg {
+  display: block;
+  max-width: 100%;
+}
+
+.nd-root p + p {
+  margin-top: var(--nd-space-4);
+}
+
+/* Scrollbar */
+.nd-root ::-webkit-scrollbar        { width: 4px; height: 4px; }
+.nd-root ::-webkit-scrollbar-track  { background: var(--nd-black); }
+.nd-root ::-webkit-scrollbar-thumb  { background: var(--nd-border-visible); border-radius: 2px; }
+
+/* Focus */
+.nd-root :focus-visible {
+  outline: var(--nd-ring-focus);
+  outline-offset: 2px;
+  border-radius: var(--nd-radius-sm);
+}
+
+
+/* ============================================================================
+   4. TYPOGRAPHY
+   ============================================================================
+
+   ROLES
+   ──────────────────────────────────────────────────────────────────────────
+   .nd-display      Doto (dot-matrix). Hero moments only. Min 36px.
+                    Used for: name, section counters, hero numbers.
+                    Never for body copy, labels, or descriptions.
+
+   .nd-heading      Space Grotesk. Structural headings.
+                    Used for: page titles, section headings, card titles.
+
+   .nd-label        Space Mono. ALL CAPS. Data, metadata, system identifiers.
+                    Used for: nav links, section markers, badges, button text,
+                              dates, status indicators, form labels.
+                    NEVER sentence case in a label context.
+
+   .nd-body         Space Grotesk, weight 300–400. Prose.
+   .nd-code         Space Mono. Code snippets. Normal case (not ALL CAPS).
+   ============================================================================ */
+
+/* ── Display (Doto) ──────────────────────────────────────────────────────── */
+.nd-display         { font-family: var(--nd-font-display); color: var(--nd-text-display); line-height: var(--nd-leading-none); font-weight: 400; }
+.nd-display-2xl     { font-size: var(--nd-display-2xl); }
+.nd-display-xl      { font-size: var(--nd-display-xl); }
+.nd-display-lg      { font-size: var(--nd-display-lg); }
+.nd-display-md      { font-size: var(--nd-display-md); }
+
+/* ── Headings (Space Grotesk) ─────────────────────────────────────────────── */
+.nd-h1 { font-family: var(--nd-font-body); font-size: var(--nd-text-h1); font-weight: var(--nd-weight-semibold); color: var(--nd-text-display); line-height: var(--nd-leading-tight); }
+.nd-h2 { font-family: var(--nd-font-body); font-size: var(--nd-text-h2); font-weight: var(--nd-weight-medium);   color: var(--nd-text-display); line-height: var(--nd-leading-tight); }
+.nd-h3 { font-family: var(--nd-font-body); font-size: var(--nd-text-h3); font-weight: var(--nd-weight-medium);   color: var(--nd-text-primary);  line-height: var(--nd-leading-snug); }
+.nd-h4 { font-family: var(--nd-font-body); font-size: var(--nd-text-h4); font-weight: var(--nd-weight-medium);   color: var(--nd-text-primary);  line-height: var(--nd-leading-snug); }
+
+/* Semantic HTML inside .nd-root */
+.nd-root h1 { font-family: var(--nd-font-body); font-size: var(--nd-text-h1); font-weight: var(--nd-weight-semibold); color: var(--nd-text-display); line-height: var(--nd-leading-tight); }
+.nd-root h2 { font-family: var(--nd-font-body); font-size: var(--nd-text-h2); font-weight: var(--nd-weight-medium);   color: var(--nd-text-display); line-height: var(--nd-leading-tight); }
+.nd-root h3 { font-family: var(--nd-font-body); font-size: var(--nd-text-h3); font-weight: var(--nd-weight-medium);   color: var(--nd-text-primary);  line-height: var(--nd-leading-snug); }
+.nd-root h4,
+.nd-root h5,
+.nd-root h6 { font-family: var(--nd-font-body); font-size: var(--nd-text-h4); font-weight: var(--nd-weight-medium);   color: var(--nd-text-primary); }
+
+/* ── Body (Space Grotesk) ─────────────────────────────────────────────────── */
+.nd-body    { font-family: var(--nd-font-body); font-size: var(--nd-text-body);    font-weight: var(--nd-weight-regular); color: var(--nd-text-primary);   line-height: var(--nd-leading-body); }
+.nd-body-lg { font-family: var(--nd-font-body); font-size: var(--nd-text-body-lg); font-weight: var(--nd-weight-light);   color: var(--nd-text-primary);   line-height: var(--nd-leading-body); }
+.nd-body-sm { font-family: var(--nd-font-body); font-size: var(--nd-text-body-sm); font-weight: var(--nd-weight-light);   color: var(--nd-text-secondary); line-height: var(--nd-leading-body); }
+
+/* ── Labels (Space Mono — ALL CAPS) ──────────────────────────────────────── */
+.nd-label,
+.nd-label-lg,
+.nd-label-sm {
+  font-family:      var(--nd-font-mono);
+  text-transform:   uppercase;
+  letter-spacing:   var(--nd-tracking-mono);
+  line-height:      var(--nd-leading-snug);
+  color:            var(--nd-text-secondary);
+}
+.nd-label-lg { font-size: var(--nd-text-label-lg); }
+.nd-label    { font-size: var(--nd-text-label); }
+.nd-label-sm { font-size: var(--nd-text-label-sm); }
+
+/* ── Data / Mono Values (NOT all-caps — for dates, numbers, hashes) ─────── */
+.nd-data { font-family: var(--nd-font-mono); font-size: var(--nd-text-label); color: var(--nd-text-display); }
+
+/* ── Code (inline and block) ─────────────────────────────────────────────── */
+.nd-root code,
+.nd-code {
+  font-family:    var(--nd-font-mono);
+  font-size:      0.875em;
+  color:          var(--nd-text-primary);
+  background:     var(--nd-surface);
+  border:         var(--nd-ring-visible);
+  border-radius:  var(--nd-radius-sm);
+  padding:        0.1em 0.4em;
+}
+
+/* ── Color modifiers for text ─────────────────────────────────────────────── */
+.nd-text-display   { color: var(--nd-text-display) !important; }
+.nd-text-primary   { color: var(--nd-text-primary) !important; }
+.nd-text-secondary { color: var(--nd-text-secondary) !important; }
+.nd-text-tertiary  { color: var(--nd-text-tertiary) !important; }
+.nd-text-disabled  { color: var(--nd-text-disabled) !important; }
+.nd-text-accent    { color: var(--nd-accent) !important; }
+.nd-text-success   { color: var(--nd-success) !important; }
+.nd-text-warning   { color: var(--nd-warning) !important; }
+.nd-text-link      { color: var(--nd-interactive) !important; }
+.nd-text-link:hover { text-decoration: underline; }
+
+
+/* ============================================================================
+   5. LAYOUT
+   ============================================================================ */
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+.nd-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--nd-space-6);
+}
+.nd-container-sm  { max-width: 720px; }
+.nd-container-lg  { max-width: 1440px; }
+.nd-container-full { max-width: none; }
+
+/* ── Stack (vertical rhythm) ─────────────────────────────────────────────── */
+.nd-stack        { display: flex; flex-direction: column; }
+.nd-stack > * + * { margin-top: var(--nd-space-4); }
+.nd-stack-1  > * + * { margin-top: var(--nd-space-1); }
+.nd-stack-2  > * + * { margin-top: var(--nd-space-2); }
+.nd-stack-3  > * + * { margin-top: var(--nd-space-3); }
+.nd-stack-5  > * + * { margin-top: var(--nd-space-5); }
+.nd-stack-6  > * + * { margin-top: var(--nd-space-6); }
+.nd-stack-7  > * + * { margin-top: var(--nd-space-7); }
+
+/* ── Cluster (horizontal, wrapping, aligned) ─────────────────────────────── */
+.nd-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--nd-space-2); }
+.nd-cluster-3 { gap: var(--nd-space-3); }
+.nd-cluster-4 { gap: var(--nd-space-4); }
+.nd-cluster-5 { gap: var(--nd-space-5); }
+
+/* ── Grid ─────────────────────────────────────────────────────────────────── */
+.nd-grid         { display: grid; gap: var(--nd-space-4); }
+.nd-grid-2       { grid-template-columns: repeat(2, 1fr); }
+.nd-grid-3       { grid-template-columns: repeat(3, 1fr); }
+.nd-grid-4       { grid-template-columns: repeat(4, 1fr); }
+.nd-grid-auto-sm { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.nd-grid-auto-md { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.nd-grid-auto-lg { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+
+/* ── Split (two-column, space-between) ───────────────────────────────────── */
+.nd-split { display: flex; justify-content: space-between; align-items: center; gap: var(--nd-space-4); }
+
+
+/* ============================================================================
+   6. COMPONENTS
+   ============================================================================ */
+
+
+/* ── 6a. BADGE ───────────────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <span class="nd-badge">Rust</span>
+ *    <span class="nd-badge nd-badge-success">Deployed</span>
+ *    <span class="nd-badge nd-badge-accent">Breaking</span>
+ *    <span class="nd-badge nd-badge-active">Active</span>
+ *    <span class="nd-badge nd-badge-disabled">Deprecated</span>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-badge {
+  display:          inline-flex;
+  align-items:      center;
+  gap:              var(--nd-space-2);
+  padding:          4px 12px;
+  border-radius:    var(--nd-radius-pill);
+  border:           var(--nd-ring-visible);
+  font-family:      var(--nd-font-mono);
+  font-size:        var(--nd-text-label);
+  text-transform:   uppercase;
+  letter-spacing:   var(--nd-tracking-mono);
+  color:            var(--nd-text-secondary);
+  transition:       border-color var(--nd-transition), color var(--nd-transition);
+  cursor:           default;
+  white-space:      nowrap;
+  line-height:      1;
+}
+
+.nd-badge:not([class*="nd-badge-disabled"]):hover {
+  border-color: var(--nd-border-strong);
+  color:        var(--nd-text-primary);
+}
+
+.nd-badge-active   { border-color: var(--nd-border-strong); color: var(--nd-text-display); }
+.nd-badge-disabled { border-color: var(--nd-border);        color: var(--nd-text-disabled);  pointer-events: none; }
+.nd-badge-accent   { border-color: var(--nd-accent-border); color: var(--nd-accent); }
+.nd-badge-success  { border-color: var(--nd-success-border); color: var(--nd-success); }
+.nd-badge-warning  { border-color: var(--nd-warning-border); color: var(--nd-warning); }
+.nd-badge-info     { border-color: var(--nd-interactive-border); color: var(--nd-interactive); }
+
+/* Status dot inside badge */
+.nd-badge-dot {
+  width:         6px;
+  height:        6px;
+  border-radius: 50%;
+  background:    currentColor;
+  flex-shrink:   0;
+}
+.nd-badge-dot-blink { animation: nd-blink 2s ease-in-out infinite; }
+
+
+/* ── 6b. BUTTON ──────────────────────────────────────────────────────────── *
+ *
+ *  Base:  .nd-btn
+ *  Sizes: .nd-btn-sm, .nd-btn-lg
+ *
+ *  Variants:
+ *    .nd-btn                         secondary (border, transparent bg)
+ *    .nd-btn.nd-btn-primary          white fill, black text
+ *    .nd-btn.nd-btn-ghost            borderless
+ *    .nd-btn.nd-btn-destructive      red border + text
+ *    .nd-btn.nd-btn-link             inline, no chrome
+ *
+ *  Usage:
+ *    <button class="nd-btn nd-btn-primary">View Work</button>
+ *    <button class="nd-btn" disabled>Disabled</button>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-btn {
+  display:          inline-flex;
+  align-items:      center;
+  justify-content:  center;
+  gap:              var(--nd-space-2);
+  min-height:       44px;
+  padding:          0 var(--nd-space-5);
+  border-radius:    var(--nd-radius-pill);
+  border:           var(--nd-ring-visible);
+  background:       transparent;
+  color:            var(--nd-text-primary);
+  font-family:      var(--nd-font-mono);
+  font-size:        var(--nd-text-label-lg);
+  font-weight:      var(--nd-weight-regular);
+  text-transform:   uppercase;
+  letter-spacing:   0.06em;
+  line-height:      1;
+  cursor:           pointer;
+  white-space:      nowrap;
+  user-select:      none;
+  text-decoration:  none;
+  transition:       opacity var(--nd-transition),
+                    border-color var(--nd-transition),
+                    color var(--nd-transition),
+                    background var(--nd-transition);
+}
+
+.nd-btn:hover          { border-color: var(--nd-border-strong); }
+.nd-btn:active         { opacity: 0.7; transition-duration: 0ms; }
+.nd-btn:focus-visible  { outline: var(--nd-ring-focus); outline-offset: 2px; }
+.nd-btn:disabled,
+.nd-btn[aria-disabled="true"] {
+  color:            var(--nd-text-disabled);
+  border-color:     var(--nd-border);
+  pointer-events:   none;
+  cursor:           not-allowed;
+}
+
+/* Primary */
+.nd-btn-primary {
+  background:   var(--nd-text-display);
+  color:        var(--nd-black);
+  border-color: transparent;
+}
+.nd-btn-primary:hover { opacity: 0.88; border-color: transparent; }
+.nd-btn-primary:disabled,
+.nd-btn-primary[aria-disabled="true"] { background: var(--nd-surface-raised); color: var(--nd-text-disabled); border-color: transparent; }
+
+/* Ghost */
+.nd-btn-ghost {
+  border-color: transparent;
+  color:        var(--nd-text-secondary);
+  padding-inline: var(--nd-space-3);
+}
+.nd-btn-ghost:hover { color: var(--nd-text-primary); border-color: transparent; }
+.nd-btn-ghost:disabled,
+.nd-btn-ghost[aria-disabled="true"] { color: var(--nd-text-disabled); }
+
+/* Destructive */
+.nd-btn-destructive {
+  border-color: var(--nd-accent-border);
+  color:        var(--nd-accent);
+}
+.nd-btn-destructive:hover { background: var(--nd-accent-subtle); border-color: var(--nd-accent); }
+.nd-btn-destructive:disabled,
+.nd-btn-destructive[aria-disabled="true"] { color: var(--nd-text-disabled); border-color: var(--nd-border); background: transparent; }
+
+/* Link */
+.nd-btn-link {
+  border: none;
+  background: none;
+  color: var(--nd-interactive);
+  padding: 0;
+  min-height: unset;
+  font-size: var(--nd-text-label);
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--nd-font-body);
+}
+.nd-btn-link:hover { text-decoration: underline; border: none; }
+
+/* Sizes */
+.nd-btn-sm { min-height: 34px; padding: 0 var(--nd-space-4); font-size: var(--nd-text-label-sm); }
+.nd-btn-lg { min-height: 52px; padding: 0 var(--nd-space-6); font-size: var(--nd-text-label-lg); }
+
+/* Icon button */
+.nd-btn-icon {
+  padding: 0;
+  min-height: 36px;
+  width: 36px;
+  border-radius: var(--nd-radius-md);
+}
+.nd-btn-icon.nd-btn-sm { min-height: 28px; width: 28px; }
+.nd-btn-icon.nd-btn-lg { min-height: 44px; width: 44px; }
+
+
+/* ── 6c. CARD ─────────────────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <div class="nd-card">
+ *      <div class="nd-card-header">
+ *        <div class="nd-card-title">Project Name</div>
+ *        <div class="nd-card-desc">Short description.</div>
+ *      </div>
+ *      <div class="nd-card-body"> … </div>
+ *      <div class="nd-card-footer"> … </div>
+ *    </div>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-card {
+  background:    var(--nd-surface);
+  border:        var(--nd-ring-visible);
+  border-radius: var(--nd-radius-lg);
+  padding:       var(--nd-space-5);
+  display:       flex;
+  flex-direction: column;
+  gap:           var(--nd-space-4);
+  transition:    border-color var(--nd-transition);
+}
+
+.nd-card-interactive { cursor: pointer; }
+.nd-card-interactive:hover { border-color: var(--nd-border-strong); }
+
+.nd-card-title {
+  font-family:  var(--nd-font-body);
+  font-size:    var(--nd-text-h4);
+  font-weight:  var(--nd-weight-medium);
+  color:        var(--nd-text-display);
+  line-height:  var(--nd-leading-snug);
+}
+
+.nd-card-desc {
+  font-family:  var(--nd-font-body);
+  font-size:    var(--nd-text-body-sm);
+  font-weight:  var(--nd-weight-light);
+  color:        var(--nd-text-secondary);
+  line-height:  var(--nd-leading-body);
+  margin-top:   var(--nd-space-2);
+}
+
+.nd-card-footer {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  gap:             var(--nd-space-3);
+  margin-top:      auto;
+  padding-top:     var(--nd-space-3);
+  border-top:      var(--nd-ring-subtle);
+}
+
+/* Flat variant — no border, just surface */
+.nd-card-flat { border-color: transparent; }
+.nd-card-flat:hover { border-color: var(--nd-border-visible); }
+
+/* Padded variant sizes */
+.nd-card-sm { padding: var(--nd-space-4); }
+.nd-card-lg { padding: var(--nd-space-6); }
+
+
+/* ── 6d. INPUT / TEXTAREA / SELECT ───────────────────────────────────────── *
+ *
+ *  All inputs share .nd-input.
+ *  Variant: .nd-input-underline (borderless except bottom)
+ *
+ *  Usage:
+ *    <div class="nd-field">
+ *      <label class="nd-field-label" for="name">Name</label>
+ *      <input class="nd-input" id="name" placeholder="Enter value…">
+ *      <span class="nd-field-hint">Optional hint text</span>
+ *    </div>
+ *
+ *    Error state: add .nd-input-error to input, .nd-field-error to hint
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-field { display: flex; flex-direction: column; gap: var(--nd-space-2); }
+
+.nd-field-label {
+  font-family:    var(--nd-font-mono);
+  font-size:      var(--nd-text-label-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-mono);
+  color:          var(--nd-text-secondary);
+}
+
+.nd-field-hint {
+  font-family: var(--nd-font-mono);
+  font-size:   var(--nd-text-label-sm);
+  color:       var(--nd-text-tertiary);
+}
+
+.nd-field-error { color: var(--nd-accent); }
+
+.nd-input {
+  appearance:     none;
+  display:        block;
+  width:          100%;
+  min-height:     44px;
+  padding:        10px var(--nd-space-4);
+  background:     transparent;
+  border:         var(--nd-ring-visible);
+  border-radius:  var(--nd-radius-sm);
+  color:          var(--nd-text-primary);
+  font-family:    var(--nd-font-mono);
+  font-size:      var(--nd-text-label-lg);
+  outline:        none;
+  transition:     border-color var(--nd-transition);
+  caret-color:    var(--nd-text-display);
+}
+
+.nd-input::placeholder { color: var(--nd-text-disabled); }
+
+.nd-input:hover:not(:disabled):not(.nd-input-error) { border-color: var(--nd-border-strong); }
+
+.nd-input:focus { border-color: var(--nd-border-focus); }
+.nd-input:focus-visible { outline: none; }
+
+.nd-input:disabled {
+  color:          var(--nd-text-disabled);
+  border-color:   var(--nd-border);
+  cursor:         not-allowed;
+  pointer-events: none;
+}
+
+.nd-input-error { border-color: var(--nd-border-error) !important; }
+
+/* Underline variant */
+.nd-input-underline {
+  border:           none;
+  border-bottom:    var(--nd-ring-visible);
+  border-radius:    0;
+  padding-inline:   0;
+  background:       transparent;
+}
+.nd-input-underline:focus         { border-bottom-color: var(--nd-border-focus); }
+.nd-input-underline.nd-input-error { border-bottom-color: var(--nd-border-error); }
+
+/* Textarea */
+.nd-textarea { min-height: 120px; resize: vertical; }
+
+/* Select */
+.nd-select {
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-mono);
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-secondary);
+}
+.nd-select option { background: var(--nd-surface); color: var(--nd-text-primary); }
+
+
+/* ── 6e. TAG / CHIP ──────────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <span class="nd-tag">Rust</span>
+ *    <span class="nd-tag nd-tag-active">Active<button class="nd-tag-remove">×</button></span>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-tag {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            var(--nd-space-1);
+  padding:        3px 10px;
+  border-radius:  var(--nd-radius-pill);
+  border:         var(--nd-ring-visible);
+  font-family:    var(--nd-font-mono);
+  font-size:      var(--nd-text-label-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-mono);
+  color:          var(--nd-text-secondary);
+  transition:     border-color var(--nd-transition), color var(--nd-transition);
+  cursor:         default;
+  white-space:    nowrap;
+  line-height:    1.4;
+}
+
+.nd-tag:hover         { border-color: var(--nd-border-strong); color: var(--nd-text-primary); }
+.nd-tag-active        { border-color: var(--nd-border-strong); color: var(--nd-text-display); }
+.nd-tag-accent        { border-color: var(--nd-accent-border); color: var(--nd-accent); }
+.nd-tag-success       { border-color: var(--nd-success-border); color: var(--nd-success); }
+
+.nd-tag-remove {
+  display:    inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  color: var(--nd-text-tertiary);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color var(--nd-transition);
+}
+.nd-tag-remove:hover { color: var(--nd-text-display); }
+
+
+/* ── 6f. SEGMENTED CONTROL ───────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <div class="nd-seg" role="group">
+ *      <button class="nd-seg-item nd-seg-item-active">Work</button>
+ *      <button class="nd-seg-item">Writing</button>
+ *      <button class="nd-seg-item">About</button>
+ *    </div>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-seg {
+  display:       inline-flex;
+  align-items:   center;
+  background:    var(--nd-surface);
+  border:        var(--nd-ring-visible);
+  border-radius: var(--nd-radius-pill);
+  padding:       3px;
+  gap:           2px;
+}
+
+.nd-seg-item {
+  display:        inline-flex;
+  align-items:    center;
+  justify-content: center;
+  padding:        7px 18px;
+  border-radius:  var(--nd-radius-pill);
+  border:         none;
+  background:     transparent;
+  font-family:    var(--nd-font-mono);
+  font-size:      var(--nd-text-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color:          var(--nd-text-tertiary);
+  cursor:         pointer;
+  transition:     background var(--nd-transition), color var(--nd-transition);
+  white-space:    nowrap;
+  line-height:    1;
+  min-height:     32px;
+}
+
+.nd-seg-item:hover:not(.nd-seg-item-active) { color: var(--nd-text-primary); }
+.nd-seg-item-active { background: var(--nd-text-display); color: var(--nd-black); }
+.nd-seg-item:focus-visible { outline: var(--nd-ring-focus); outline-offset: 1px; }
+
+
+/* ── 6g. NAVIGATION BAR ──────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <header class="nd-nav">
+ *      <div class="nd-nav-logo">BRAND</div>
+ *      <nav class="nd-nav-links">
+ *        <a class="nd-nav-link nd-nav-link-active" href="#">Work</a>
+ *        <a class="nd-nav-link" href="#">About</a>
+ *      </nav>
+ *      <button class="nd-btn nd-btn-primary nd-btn-sm">Hire Me</button>
+ *    </header>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-nav {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  padding:         0 var(--nd-space-6);
+  height:          56px;
+  background:      rgba(0, 0, 0, 0.94);
+  border-bottom:   var(--nd-ring-subtle);
+  position:        sticky;
+  top:             0;
+  z-index:         var(--nd-z-sticky);
+}
+
+.nd-nav-logo {
+  font-family:    var(--nd-font-display);
+  font-size:      22px;
+  color:          var(--nd-text-display);
+  letter-spacing: 0.02em;
+  cursor:         pointer;
+  user-select:    none;
+  flex-shrink:    0;
+}
+
+.nd-nav-links {
+  display:     flex;
+  align-items: center;
+  gap:         var(--nd-space-6);
+}
+
+.nd-nav-link {
+  font-family:      var(--nd-font-mono);
+  font-size:        var(--nd-text-label);
+  text-transform:   uppercase;
+  letter-spacing:   var(--nd-tracking-mono);
+  color:            var(--nd-text-tertiary);
+  text-decoration:  none;
+  cursor:           pointer;
+  position:         relative;
+  padding-bottom:   2px;
+  border-bottom:    2px solid transparent;
+  transition:       color var(--nd-transition), border-color var(--nd-transition);
+}
+
+.nd-nav-link:hover         { color: var(--nd-text-primary); }
+.nd-nav-link-active        { color: var(--nd-text-display); border-bottom-color: var(--nd-text-display); }
+
+
+/* ── 6h. STAT ROW ─────────────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <dl class="nd-stats">
+ *      <div class="nd-stat">
+ *        <dt class="nd-stat-label">Status</dt>
+ *        <dd class="nd-stat-value">Available</dd>
+ *      </div>
+ *    </dl>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-stats {
+  display:       flex;
+  flex-direction: column;
+  border-top:    var(--nd-ring-subtle);
+}
+
+.nd-stat {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         var(--nd-space-3) 0;
+  border-bottom:   var(--nd-ring-subtle);
+  gap:             var(--nd-space-4);
+}
+
+.nd-stat-label {
+  font-family:    var(--nd-font-mono);
+  font-size:      var(--nd-text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-mono);
+  color:          var(--nd-text-secondary);
+  flex-shrink:    0;
+}
+
+.nd-stat-value {
+  font-family:    var(--nd-font-mono);
+  font-size:      var(--nd-text-label);
+  color:          var(--nd-text-display);
+  display:        flex;
+  align-items:    center;
+  gap:            var(--nd-space-2);
+}
+
+.nd-stat-unit {
+  font-size:      var(--nd-text-label-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-mono);
+  color:          var(--nd-text-tertiary);
+}
+
+/* Inline stat strip (horizontal) */
+.nd-stat-strip {
+  display:        flex;
+  gap:            var(--nd-space-7);
+  align-items:    center;
+  padding:        var(--nd-space-3) var(--nd-space-6);
+  border-bottom:  var(--nd-ring-subtle);
+  overflow-x:     auto;
+}
+
+.nd-stat-strip .nd-stat {
+  border: none;
+  padding: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--nd-space-1);
+  flex-shrink: 0;
+}
+
+.nd-stat-strip .nd-stat-value { font-size: var(--nd-text-body-sm); }
+
+
+/* ── 6i. PROGRESS BAR (segmented) ────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <div class="nd-progress" role="progressbar" aria-valuenow="60" aria-valuemax="100">
+ *      <div class="nd-progress-label">
+ *        <span class="nd-label-sm">Completion</span>
+ *        <span class="nd-data">6 / 10</span>
+ *      </div>
+ *      <div class="nd-progress-track" data-segments="10" data-filled="6"></div>
+ *    </div>
+ *
+ *  Or manually:
+ *    <div class="nd-progress-track">
+ *      <div class="nd-progress-seg nd-progress-filled"></div> × N
+ *      <div class="nd-progress-seg"></div> × (10 - N)
+ *    </div>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-progress { display: flex; flex-direction: column; gap: var(--nd-space-2); }
+
+.nd-progress-label {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+}
+
+.nd-progress-track {
+  display: flex;
+  gap:     2px;
+}
+
+.nd-progress-seg {
+  height:     8px;
+  flex:       1;
+  background: var(--nd-surface-raised);
+  transition: background var(--nd-duration-slow) var(--nd-easing);
+}
+
+.nd-progress-filled   { background: var(--nd-text-primary); }
+.nd-progress-success  { background: var(--nd-success); }
+.nd-progress-warning  { background: var(--nd-warning); }
+.nd-progress-accent   { background: var(--nd-accent); }
+.nd-progress-info     { background: var(--nd-interactive); }
+
+
+/* ── 6j. EMPTY STATE ─────────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <div class="nd-empty">
+ *      <p class="nd-empty-headline">No Results</p>
+ *      <p class="nd-empty-desc">No projects match the selected filters.</p>
+ *      <button class="nd-btn nd-btn-primary nd-btn-sm">Clear Filters</button>
+ *    </div>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-empty {
+  display:          flex;
+  flex-direction:   column;
+  align-items:      center;
+  justify-content:  center;
+  padding:          var(--nd-space-8) var(--nd-space-6);
+  text-align:       center;
+  background-image: radial-gradient(circle, var(--nd-border-visible) 1px, transparent 1px);
+  background-size:  16px 16px;
+  border-radius:    var(--nd-radius-lg);
+  gap:              var(--nd-space-4);
+  min-height:       240px;
+}
+
+.nd-empty-headline {
+  font-family:    var(--nd-font-mono);
+  font-size:      var(--nd-text-label-lg);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color:          var(--nd-text-secondary);
+}
+
+.nd-empty-desc {
+  font-family:  var(--nd-font-body);
+  font-size:    var(--nd-text-body-sm);
+  font-weight:  var(--nd-weight-light);
+  color:        var(--nd-text-disabled);
+  max-width:    300px;
+  line-height:  var(--nd-leading-body);
+}
+
+
+/* ── 6k. SKELETON LOADER ─────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <div class="nd-skel nd-skel-text" style="width:60%"></div>
+ *    <div class="nd-skel nd-skel-pill" style="width:64px"></div>
+ *    <div class="nd-skel nd-skel-block" style="height:160px"></div>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-skel {
+  background:   var(--nd-surface-raised);
+  border-radius: var(--nd-radius-sm);
+  animation:    nd-pulse 1.8s ease-in-out infinite;
+}
+
+.nd-skel-text  { height: 12px; border-radius: var(--nd-radius-sm); }
+.nd-skel-title { height: 20px; border-radius: var(--nd-radius-sm); }
+.nd-skel-pill  { height: 24px; border-radius: var(--nd-radius-pill); }
+.nd-skel-block { border-radius: var(--nd-radius-lg); width: 100%; }
+.nd-skel-circle { border-radius: 50%; }
+
+/* Stagger animation delay children */
+.nd-skel-group > *:nth-child(2) { animation-delay: 0.15s; }
+.nd-skel-group > *:nth-child(3) { animation-delay: 0.30s; }
+.nd-skel-group > *:nth-child(4) { animation-delay: 0.45s; }
+.nd-skel-group > *:nth-child(5) { animation-delay: 0.60s; }
+
+
+/* ── 6l. TOOLTIP ─────────────────────────────────────────────────────────── *
+ *
+ *  Pure CSS tooltip. Add data-tooltip attribute and .nd-tooltip to trigger.
+ *
+ *  Usage:
+ *    <span class="nd-tooltip" data-tooltip="View on GitHub">GitHub ↗</span>
+ *
+ *  Position modifiers: .nd-tooltip-top (default), .nd-tooltip-bottom
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-tooltip {
+  position: relative;
+  cursor:   default;
+}
+
+.nd-tooltip::after {
+  content:          attr(data-tooltip);
+  position:         absolute;
+  bottom:           calc(100% + 8px);
+  left:             50%;
+  transform:        translateX(-50%);
+  background:       var(--nd-surface-overlay);
+  border:           var(--nd-ring-visible);
+  border-radius:    var(--nd-radius-md);
+  padding:          6px 10px;
+  font-family:      var(--nd-font-mono);
+  font-size:        var(--nd-text-label-sm);
+  text-transform:   uppercase;
+  letter-spacing:   var(--nd-tracking-mono);
+  color:            var(--nd-text-primary);
+  white-space:      nowrap;
+  pointer-events:   none;
+  opacity:          0;
+  transition:       opacity var(--nd-duration-fast) var(--nd-easing);
+  z-index:          var(--nd-z-tooltip);
+}
+
+.nd-tooltip:hover::after  { opacity: 1; }
+.nd-tooltip-bottom::after { bottom: auto; top: calc(100% + 8px); }
+
+
+/* ── 6m. DIVIDER ─────────────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <hr class="nd-divider">
+ *    <div class="nd-divider-label">Or</div>   ← horizontal with label
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-divider {
+  border:         none;
+  border-top:     var(--nd-ring-subtle);
+  margin:         0;
+  display:        block;
+  width:          100%;
+}
+
+.nd-divider-visible { border-top-color: var(--nd-border-visible); }
+
+.nd-divider-label {
+  display:     flex;
+  align-items: center;
+  gap:         var(--nd-space-4);
+  font-family: var(--nd-font-mono);
+  font-size:   var(--nd-text-label-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-mono);
+  color:       var(--nd-text-tertiary);
+}
+.nd-divider-label::before,
+.nd-divider-label::after {
+  content:    '';
+  flex:       1;
+  height:     1px;
+  background: var(--nd-border-subtle);
+}
+
+
+/* ── 6n. CODE BLOCK ──────────────────────────────────────────────────────── *
+ *
+ *  Usage:
+ *    <pre class="nd-pre"><code>fn main() { … }</code></pre>
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+.nd-pre {
+  background:    var(--nd-surface);
+  border:        var(--nd-ring-visible);
+  border-radius: var(--nd-radius-sm);
+  padding:       var(--nd-space-4) var(--nd-space-5);
+  overflow-x:    auto;
+  font-family:   var(--nd-font-mono);
+  font-size:     var(--nd-text-label-lg);
+  color:         var(--nd-text-primary);
+  line-height:   var(--nd-leading-relaxed);
+}
+
+.nd-pre code {
+  background:    transparent;
+  border:        none;
+  padding:       0;
+  font-size:     inherit;
+  color:         inherit;
+}
+
+
+/* ============================================================================
+   7. UTILITIES
+   ============================================================================ */
+
+/* ── Display ───────────────────────────────────────────────────────────────── */
+.nd-block           { display: block; }
+.nd-inline          { display: inline; }
+.nd-inline-flex     { display: inline-flex; }
+.nd-flex            { display: flex; }
+.nd-grid-util       { display: grid; }
+.nd-hidden          { display: none !important; }
+.nd-sr-only         { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
+
+/* ── Flex helpers ─────────────────────────────────────────────────────────── */
+.nd-flex-row        { flex-direction: row; }
+.nd-flex-col        { flex-direction: column; }
+.nd-flex-wrap       { flex-wrap: wrap; }
+.nd-items-start     { align-items: flex-start; }
+.nd-items-center    { align-items: center; }
+.nd-items-end       { align-items: flex-end; }
+.nd-justify-start   { justify-content: flex-start; }
+.nd-justify-center  { justify-content: center; }
+.nd-justify-end     { justify-content: flex-end; }
+.nd-justify-between { justify-content: space-between; }
+.nd-flex-1          { flex: 1; }
+.nd-flex-shrink-0   { flex-shrink: 0; }
+.nd-gap-1           { gap: var(--nd-space-1); }
+.nd-gap-2           { gap: var(--nd-space-2); }
+.nd-gap-3           { gap: var(--nd-space-3); }
+.nd-gap-4           { gap: var(--nd-space-4); }
+.nd-gap-5           { gap: var(--nd-space-5); }
+.nd-gap-6           { gap: var(--nd-space-6); }
+
+/* ── Spacing ──────────────────────────────────────────────────────────────── */
+.nd-p-4    { padding:        var(--nd-space-4); }
+.nd-p-5    { padding:        var(--nd-space-5); }
+.nd-p-6    { padding:        var(--nd-space-6); }
+.nd-px-4   { padding-inline: var(--nd-space-4); }
+.nd-px-5   { padding-inline: var(--nd-space-5); }
+.nd-px-6   { padding-inline: var(--nd-space-6); }
+.nd-py-4   { padding-block:  var(--nd-space-4); }
+.nd-py-5   { padding-block:  var(--nd-space-5); }
+.nd-py-6   { padding-block:  var(--nd-space-6); }
+.nd-mt-2   { margin-top: var(--nd-space-2); }
+.nd-mt-4   { margin-top: var(--nd-space-4); }
+.nd-mt-5   { margin-top: var(--nd-space-5); }
+.nd-mt-6   { margin-top: var(--nd-space-6); }
+.nd-mt-7   { margin-top: var(--nd-space-7); }
+.nd-mt-8   { margin-top: var(--nd-space-8); }
+.nd-mb-2   { margin-bottom: var(--nd-space-2); }
+.nd-mb-4   { margin-bottom: var(--nd-space-4); }
+.nd-mb-5   { margin-bottom: var(--nd-space-5); }
+.nd-mb-6   { margin-bottom: var(--nd-space-6); }
+
+/* ── Surfaces ─────────────────────────────────────────────────────────────── */
+.nd-bg-black   { background: var(--nd-black); }
+.nd-bg-surface { background: var(--nd-surface); }
+.nd-bg-raised  { background: var(--nd-surface-raised); }
+.nd-bg-dot-grid {
+  background-image: radial-gradient(circle, var(--nd-border-visible) 1px, transparent 1px);
+  background-size:  16px 16px;
+}
+
+/* ── Borders ──────────────────────────────────────────────────────────────── */
+.nd-border-b        { border-bottom: var(--nd-ring-subtle); }
+.nd-border-t        { border-top:    var(--nd-ring-subtle); }
+.nd-border-visible  { border: var(--nd-ring-visible); }
+.nd-rounded-sm      { border-radius: var(--nd-radius-sm); }
+.nd-rounded-md      { border-radius: var(--nd-radius-md); }
+.nd-rounded-lg      { border-radius: var(--nd-radius-lg); }
+.nd-rounded-pill    { border-radius: var(--nd-radius-pill); }
+
+/* ── Cursor ───────────────────────────────────────────────────────────────── */
+.nd-cursor-pointer  { cursor: pointer; }
+.nd-cursor-default  { cursor: default; }
+.nd-pointer-none    { pointer-events: none; }
+
+/* ── Overflow ─────────────────────────────────────────────────────────────── */
+.nd-truncate        { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nd-overflow-hidden { overflow: hidden; }
+
+/* ── Width / Height ───────────────────────────────────────────────────────── */
+.nd-w-full   { width: 100%; }
+.nd-h-full   { height: 100%; }
+.nd-min-h-screen { min-height: 100vh; }
+
+/* ── Misc ─────────────────────────────────────────────────────────────────── */
+.nd-select-none   { user-select: none; }
+.nd-transition    { transition: all var(--nd-transition); }
+.nd-no-underline  { text-decoration: none; }
+
+
+/* ============================================================================
+   8. ANIMATIONS (keyframes)
+   ============================================================================ */
+
+/* Blink — status dots */
+@keyframes nd-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+/* Pulse — skeleton loaders */
+@keyframes nd-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+/* Fade in — page transitions, overlays */
+@keyframes nd-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Slide up — modals, toasts */
+@keyframes nd-slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation utility classes */
+.nd-animate-fade-in  { animation: nd-fade-in  var(--nd-duration-default) var(--nd-easing) both; }
+.nd-animate-slide-up { animation: nd-slide-up var(--nd-duration-default) var(--nd-easing) both; }
+.nd-animate-blink    { animation: nd-blink 2s ease-in-out infinite; }
+.nd-animate-pulse    { animation: nd-pulse 1.8s ease-in-out infinite; }
+
+/* Delay helpers (use with animation classes) */
+.nd-delay-1 { animation-delay: 150ms; }
+.nd-delay-2 { animation-delay: 300ms; }
+.nd-delay-3 { animation-delay: 450ms; }
+.nd-delay-4 { animation-delay: 600ms; }
+
+
+/*
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  QUICK-START CHEATSHEET                                                      ║
+║                                                                              ║
+║  1. Add class="nd-root" to <body> or your app root                          ║
+║                                                                              ║
+║  2. FONTS                                                                    ║
+║     Display (hero only):  font-family: var(--nd-font-display)               ║
+║     Body / UI:            font-family: var(--nd-font-body)                  ║
+║     Labels / data:        font-family: var(--nd-font-mono)                  ║
+║                                                                              ║
+║  3. COLORS                                                                   ║
+║     Page bg:     var(--nd-black)          #000000                           ║
+║     Card bg:     var(--nd-surface)        #111111                           ║
+║     Default text: var(--nd-text-primary)  #E8E8E8                           ║
+║     Labels:      var(--nd-text-secondary) #999999                           ║
+║     Accent:      var(--nd-accent)         #D71921  ← interrupt only         ║
+║     Interactive: var(--nd-interactive)    #5B9BF6                           ║
+║     Success:     var(--nd-success)        #4A9E5C                           ║
+║     Warning:     var(--nd-warning)        #D4A843                           ║
+║                                                                              ║
+║  4. KEY RULES                                                                ║
+║     · No shadows. No gradients. No backdrop-filter.                         ║
+║     · Depth = border only. Hover = border brightens.                        ║
+║     · Red (#D71921) is an interrupt signal — never decorative.              ║
+║     · All Space Mono text → uppercase + letter-spacing: 0.07em             ║
+║     · Doto only above 36px, never in body copy                              ║
+║     · Radius: 4px inputs · 8px dropdowns · 12px cards · 999px pills        ║
+║     · Animation: opacity + border-color only. 200ms ease-out.              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+*/

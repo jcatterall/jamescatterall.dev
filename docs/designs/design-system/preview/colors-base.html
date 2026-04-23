@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; font-family: 'Space Mono', monospace; padding: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .swatch { height: 56px; border-radius: 4px; position: relative; }
+  .label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.07em; color: #666; margin-top: 6px; line-height: 1.4; }
+  .val   { font-size: 9px; color: #444; }
+  .row   { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin-bottom: 20px; }
+  .section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: #444; margin-bottom: 8px; }
+</style>
+</head>
+<body class="nd-root">
+  <div class="section-label">BACKGROUNDS & SURFACES</div>
+  <div class="row">
+    <div>
+      <div class="swatch" style="background:#000;border:1px solid #222"></div>
+      <div class="label">BLACK</div><div class="val">#000000</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#111111;border:1px solid #222"></div>
+      <div class="label">SURFACE</div><div class="val">#111111</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#1a1a1a;border:1px solid #222"></div>
+      <div class="label">RAISED</div><div class="val">#1A1A1A</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#222222;border:1px solid #333"></div>
+      <div class="label">BORDER</div><div class="val">#222222</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#333333"></div>
+      <div class="label">BORDER VIS.</div><div class="val">#333333</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#666666"></div>
+      <div class="label">DISABLED</div><div class="val">#666666</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#999999"></div>
+      <div class="label">SECONDARY</div><div class="val">#999999</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#e8e8e8"></div>
+      <div class="label">PRIMARY</div><div class="val">#E8E8E8</div>
+    </div>
+  </div>
+  <div class="section-label">ACCENT & SEMANTIC</div>
+  <div class="row">
+    <div>
+      <div class="swatch" style="background:#ffffff"></div>
+      <div class="label">DISPLAY</div><div class="val">#FFFFFF</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#d71921"></div>
+      <div class="label">ACCENT</div><div class="val">#D71921</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:rgba(215,25,33,0.15);border:1px solid #333"></div>
+      <div class="label">ACCENT SUBTLE</div><div class="val">rgba(215,25,33,0.15)</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#4a9e5c"></div>
+      <div class="label">SUCCESS</div><div class="val">#4A9E5C</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#d4a843"></div>
+      <div class="label">WARNING</div><div class="val">#D4A843</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:#5b9bf6"></div>
+      <div class="label">INTERACTIVE</div><div class="val">#5B9BF6</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:rgba(74,158,92,0.15);border:1px solid #333"></div>
+      <div class="label">SUCCESS SUBTLE</div><div class="val">rgba(74,158,92,0.15)</div>
+    </div>
+    <div>
+      <div class="swatch" style="background:rgba(91,155,246,0.15);border:1px solid #333"></div>
+      <div class="label">INTERACTIVE SUBTLE</div><div class="val">rgba(91,155,246,0.15)</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,22 +1,22 @@
 .grid {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--nd-space-sm);
   flex-wrap: wrap;
 }
 
 .swatch {
-  width: 2rem;
-  height: 2rem;
-  border-radius: var(--radius-base);
-  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--nd-radius-sm);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
   background-color: var(--swatch-color);
   cursor: pointer;
   flex-shrink: 0;
   outline: 2px solid transparent;
   outline-offset: 2px;
+  transition: outline-color var(--nd-duration-fast);
 }
 
 .swatch.active {
-  outline: 2px solid #000;
-  outline-offset: 2px;
+  outline-color: var(--nd-text-display);
 }

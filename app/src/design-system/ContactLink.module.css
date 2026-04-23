@@ -1,0 +1,32 @@
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--nd-space-2xs);
+  text-decoration: none;
+  opacity: 1;
+  transition: opacity var(--nd-duration-fast);
+}
+
+.link:hover {
+  opacity: 0.6;
+}
+
+.icon {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-base);
+  color: var(--nd-text-faint);
+  line-height: var(--nd-leading-none);
+}
+
+.value {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-sm);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-tight);
+}
+
+.arrow {
+  font-size: var(--nd-text-base);
+  color: var(--nd-border-visible);
+  margin-left: auto;
+}

@@ -2,14 +2,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 2rem;
+  gap: calc(var(--nd-space-sm) + var(--nd-space-xs));
+  padding: var(--nd-space-xl);
   width: 100%;
   max-width: 350px;
-  background-color: white;
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-base);
-  box-shadow: var(--shadow-shadow);
+  background-color: white; /* intentional: barcodes require white background */
+  border: var(--nd-border-width-thick) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-xl);
+  box-shadow: var(--nd-shadow-card);
 }
 
 .svgContainer {
@@ -24,10 +24,10 @@
 
 .digits {
   display: flex;
-  gap: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-base);
-  letter-spacing: 0.15em;
-  color: #000;
-  font-family: monospace;
+  gap: var(--nd-space-xs);
+  font-size: var(--nd-text-base);
+  font-weight: 400;
+  letter-spacing: 0.15em; /* EAN-13 spec digit spacing */
+  color: #000; /* intentional: barcode digit text must be black on white */
+  font-family: var(--font-space-mono), monospace;
 }

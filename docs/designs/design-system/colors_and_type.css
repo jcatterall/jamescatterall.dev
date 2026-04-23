@@ -1,0 +1,185 @@
+/* ============================================================
+   NOTHING-INSPIRED PORTFOLIO — DESIGN TOKENS
+   colors_and_type.css
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   GOOGLE FONTS IMPORT
+   Doto: dot-matrix variable display font
+   Space Grotesk: body / UI / headings
+   Space Mono: labels / data / captions (ALL CAPS)
+   ------------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+/* ------------------------------------------------------------
+   BASE COLOR TOKENS
+   ------------------------------------------------------------ */
+:root {
+  /* Backgrounds */
+  --nd-black:           #000000;   /* page background, OLED */
+  --nd-surface:         #111111;   /* cards, panels */
+  --nd-surface-raised:  #1a1a1a;   /* hover surface, elevated */
+
+  /* Borders */
+  --nd-border:          #222222;   /* subtle / structural */
+  --nd-border-visible:  #333333;   /* interactive / visible */
+
+  /* Text */
+  --nd-text-disabled:   #666666;
+  --nd-text-secondary:  #999999;
+  --nd-text-primary:    #e8e8e8;
+  --nd-text-display:    #ffffff;
+
+  /* Accent — interrupt signal only, never decorative */
+  --nd-accent:          #d71921;
+  --nd-accent-subtle:   rgba(215, 25, 33, 0.15);
+
+  /* Semantic */
+  --nd-success:         #4a9e5c;
+  --nd-warning:         #d4a843;
+  --nd-interactive:     #5b9bf6;
+
+  /* Semantic subtle variants */
+  --nd-success-subtle:  rgba(74, 158, 92, 0.15);
+  --nd-warning-subtle:  rgba(212, 168, 67, 0.15);
+  --nd-interactive-subtle: rgba(91, 155, 246, 0.15);
+}
+
+/* ------------------------------------------------------------
+   TYPOGRAPHY TOKENS
+   ------------------------------------------------------------ */
+:root {
+  /* Font families */
+  --nd-font-display:  'Doto', 'Courier New', monospace;   /* dot-matrix, hero only */
+  --nd-font-body:     'Space Grotesk', sans-serif;         /* UI, headings, body */
+  --nd-font-mono:     'Space Mono', 'Courier New', monospace; /* labels, data, caps */
+
+  /* Display scale — Doto only, 36px+ */
+  --nd-text-display-2xl: 96px;
+  --nd-text-display-xl:  72px;
+  --nd-text-display-lg:  48px;
+  --nd-text-display-md:  36px;
+
+  /* Body / heading scale — Space Grotesk */
+  --nd-text-h1:   32px;
+  --nd-text-h2:   24px;
+  --nd-text-h3:   20px;
+  --nd-text-h4:   16px;
+  --nd-text-body: 15px;
+  --nd-text-sm:   13px;
+
+  /* Mono / label scale — Space Mono, ALL CAPS */
+  --nd-text-label-lg:  13px;
+  --nd-text-label-md:  11px;
+  --nd-text-label-sm:  10px;
+
+  /* Font weights */
+  --nd-weight-light:    300;
+  --nd-weight-regular:  400;
+  --nd-weight-medium:   500;
+  --nd-weight-semibold: 600;
+
+  /* Letter spacing */
+  --nd-tracking-mono:   0.07em;   /* for Space Mono labels */
+  --nd-tracking-tight:  0.02em;
+
+  /* Line heights */
+  --nd-leading-tight:   1.2;
+  --nd-leading-body:    1.6;
+  --nd-leading-relaxed: 1.75;
+}
+
+/* ------------------------------------------------------------
+   SPACING TOKENS (base 8px)
+   ------------------------------------------------------------ */
+:root {
+  --nd-space-1:   4px;    /* tight: icon+label gap */
+  --nd-space-2:   8px;    /* belongs together */
+  --nd-space-3:   12px;
+  --nd-space-4:   16px;   /* same group */
+  --nd-space-5:   24px;   /* comfortable separation */
+  --nd-space-6:   32px;   /* section break */
+  --nd-space-7:   48px;   /* section break wide */
+  --nd-space-8:   64px;   /* new context */
+  --nd-space-9:   96px;   /* hero / vast */
+}
+
+/* ------------------------------------------------------------
+   BORDER RADIUS TOKENS
+   ------------------------------------------------------------ */
+:root {
+  --nd-radius-input:  4px;    /* inputs, code, technical */
+  --nd-radius-card:   12px;   /* cards, panels */
+  --nd-radius-sm:     8px;    /* tooltips, dropdowns */
+  --nd-radius-pill:   999px;  /* buttons, tags, badges */
+}
+
+/* ------------------------------------------------------------
+   ELEVATION — borders only, never shadow
+   ------------------------------------------------------------ */
+:root {
+  --nd-border-subtle:      1px solid var(--nd-border);
+  --nd-border-default:     1px solid var(--nd-border-visible);
+  --nd-border-focus:       2px solid var(--nd-interactive);
+  --nd-border-error:       1px solid var(--nd-accent);
+  --nd-border-active:      1px solid var(--nd-text-primary);
+}
+
+/* ------------------------------------------------------------
+   ANIMATION TOKENS
+   ------------------------------------------------------------ */
+:root {
+  --nd-duration-fast:    150ms;
+  --nd-duration-default: 200ms;
+  --nd-easing:           ease-out;
+  --nd-transition:       var(--nd-duration-default) var(--nd-easing);
+}
+
+/* ============================================================
+   SEMANTIC UTILITY CLASSES
+   Apply these directly in HTML for rapid prototyping
+   ============================================================ */
+
+/* Page reset */
+.nd-root {
+  background: var(--nd-black);
+  color: var(--nd-text-primary);
+  font-family: var(--nd-font-body);
+  font-size: var(--nd-text-body);
+  line-height: var(--nd-leading-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display text — Doto, hero moments only */
+.nd-display {
+  font-family: var(--nd-font-display);
+  font-size: var(--nd-text-display-lg);
+  color: var(--nd-text-display);
+  line-height: var(--nd-leading-tight);
+}
+.nd-display-xl  { font-size: var(--nd-text-display-xl); }
+.nd-display-2xl { font-size: var(--nd-text-display-2xl); }
+
+/* Headings — Space Grotesk */
+.nd-h1 { font-family: var(--nd-font-body); font-size: var(--nd-text-h1); font-weight: var(--nd-weight-semibold); color: var(--nd-text-display); line-height: var(--nd-leading-tight); }
+.nd-h2 { font-family: var(--nd-font-body); font-size: var(--nd-text-h2); font-weight: var(--nd-weight-medium);  color: var(--nd-text-display); line-height: var(--nd-leading-tight); }
+.nd-h3 { font-family: var(--nd-font-body); font-size: var(--nd-text-h3); font-weight: var(--nd-weight-medium);  color: var(--nd-text-primary); }
+.nd-h4 { font-family: var(--nd-font-body); font-size: var(--nd-text-h4); font-weight: var(--nd-weight-medium);  color: var(--nd-text-primary); }
+
+/* Body — Space Grotesk */
+.nd-body    { font-family: var(--nd-font-body); font-size: var(--nd-text-body); color: var(--nd-text-primary); line-height: var(--nd-leading-body); }
+.nd-body-sm { font-family: var(--nd-font-body); font-size: var(--nd-text-sm);   color: var(--nd-text-secondary); }
+
+/* Labels — Space Mono ALL CAPS */
+.nd-label    { font-family: var(--nd-font-mono); font-size: var(--nd-text-label-md); text-transform: uppercase; letter-spacing: var(--nd-tracking-mono); color: var(--nd-text-secondary); }
+.nd-label-lg { font-size: var(--nd-text-label-lg); }
+.nd-label-sm { font-size: var(--nd-text-label-sm); }
+
+/* Data values — Space Mono, mixed case */
+.nd-data { font-family: var(--nd-font-mono); font-size: var(--nd-text-label-md); color: var(--nd-text-display); }
+
+/* Accent text */
+.nd-accent-text { color: var(--nd-accent); }
+.nd-success-text { color: var(--nd-success); }
+.nd-warning-text { color: var(--nd-warning); }
+.nd-interactive-text { color: var(--nd-interactive); }
