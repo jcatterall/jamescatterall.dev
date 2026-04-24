@@ -47,7 +47,7 @@ const DEFAULT_SETTINGS: Settings = {
   autoAdvance: false,
 };
 
-const toSec = (min: number) => min * 60;
+export const toSec = (min: number) => min * 60;
 
 function makeDefault(): TimerState {
   return {
@@ -87,7 +87,7 @@ function nextPhase(
   return "focus";
 }
 
-function durationForPhase(phase: Phase, settings: Settings): number {
+export function durationForPhase(phase: Phase, settings: Settings): number {
   if (phase === "focus") return toSec(settings.focusDuration);
   if (phase === "short_break") return toSec(settings.shortBreak);
   if (phase === "long_break") return toSec(settings.longBreak);

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import SessionLoading from "./loading";
 import SessionPageClient from "./SessionPageClient";
+import { PageNav } from "@/components/PageNav";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -12,6 +13,7 @@ export const metadata = {
 export default function SessionPage() {
   return (
     <main className={styles.page}>
+      <PageNav slug="session" label="Session" />
       <Suspense fallback={<SessionLoading />}>
         <SessionPageClient />
       </Suspense>

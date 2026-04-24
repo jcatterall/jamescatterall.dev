@@ -1,5 +1,3 @@
-import { hexToRgb } from "./helpers";
-
 export function exportPNG(
   frame: Uint8Array,
   gridSize: number,
@@ -22,12 +20,7 @@ export function exportPNG(
   }
   cvs.toBlob((blob) => {
     if (!blob) return;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `pixel-grid-${scale}x.png`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(blob, `pixel-grid-${scale}x.png`);
   }, "image/png");
 }
 
@@ -59,12 +52,7 @@ export function exportSpriteSheet(
   });
   cvs.toBlob((blob) => {
     if (!blob) return;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `pixel-grid-sheet-${scale}x.png`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadBlob(blob, `pixel-grid-sheet-${scale}x.png`);
   }, "image/png");
 }
 
@@ -146,6 +134,15 @@ export async function copyAsCSS(
   }
   const css = `box-shadow: ${shadows.join(",\n  ")};`;
   await navigator.clipboard.writeText(css);
+}
+
+function downloadBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function download(content: string, filename: string, mime: string): void {

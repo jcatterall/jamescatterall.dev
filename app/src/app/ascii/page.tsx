@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import AsciiLoading from "./loading"
 import AsciiLensPageClient from "./AsciiLensPageClient"
+import { PageNav } from "@/components/PageNav"
 import styles from "./page.module.css"
 
 export const metadata = {
@@ -12,6 +13,7 @@ export const metadata = {
 export default function AsciiPage() {
   return (
     <main className={styles.page}>
+      <PageNav slug="ascii-lens" label="ASCII Lens" />
       <Suspense fallback={<AsciiLoading />}>
         <AsciiLensPageClient />
       </Suspense>

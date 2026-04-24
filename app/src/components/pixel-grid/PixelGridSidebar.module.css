@@ -24,27 +24,27 @@
 
 .breadcrumbAccent {
   font-family: var(--font-space-mono), monospace;
-  font-size: 10px;
+  font-size: var(--nd-text-label-sm);
   color: var(--nd-accent);
 }
 
 .breadcrumbPath {
   font-family: var(--font-space-mono), monospace;
-  font-size: 10px;
+  font-size: var(--nd-text-label-sm);
   color: var(--nd-text-secondary);
   letter-spacing: 0.06em;
 }
 
 .title {
   font-family: var(--font-space-grotesk), sans-serif;
-  font-size: 15px;
+  font-size: var(--nd-text-body);
   font-weight: 600;
   color: var(--nd-text-display);
 }
 
 .desc {
   font-family: var(--font-space-grotesk), sans-serif;
-  font-size: 11px;
+  font-size: var(--nd-text-label);
   color: var(--nd-text-secondary);
   line-height: 1.5;
 }
@@ -66,7 +66,7 @@
 
 .label {
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--nd-text-secondary);
@@ -88,7 +88,7 @@
   background: transparent;
   color: var(--nd-text-tertiary);
   font-family: var(--font-space-mono), monospace;
-  font-size: 10px;
+  font-size: var(--nd-text-label-sm);
   letter-spacing: 0.06em;
   cursor: pointer;
   width: 100%;
@@ -119,7 +119,7 @@
 .toolKey {
   margin-left: auto;
   color: var(--nd-text-disabled);
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
 }
 
 /* Grid sizes */
@@ -132,7 +132,7 @@
   flex: 1;
   padding: 5px 0;
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   letter-spacing: 0.04em;
   border: var(--nd-border-width) solid var(--nd-border);
   background: transparent;
@@ -182,7 +182,7 @@
 
 .activeHex {
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   color: var(--nd-text-secondary);
   letter-spacing: 0.04em;
 }
@@ -194,7 +194,7 @@
   background: transparent;
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
@@ -221,7 +221,7 @@
   background: transparent;
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   cursor: pointer;
   transition: border-color 120ms, color 120ms;
 }
@@ -249,7 +249,7 @@
   background: transparent;
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;

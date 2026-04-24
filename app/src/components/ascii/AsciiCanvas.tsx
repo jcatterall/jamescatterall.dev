@@ -35,6 +35,8 @@ type FrameSnapshot = {
   invert: boolean
 }
 
+const luma = (r: number, g: number, b: number) => (0.299 * r + 0.587 * g + 0.114 * b) / 255
+
 /* ── Component ── */
 
 type Props = {
@@ -131,7 +133,7 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
         const r = data[i]
         const g = data[i + 1]
         const b = data[i + 2]
-        let lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+        let lum = luma(r, g, b)
         if (invert) lum = 1 - lum
         const ch = chars[Math.min(len - 1, Math.floor(lum * len))]
         if (!ch || ch === " ") continue
@@ -245,7 +247,7 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
       for (let col = 0; col < cols; col++) {
         const i  = (row * cols + col) * 4
         const r  = data[i]; const g = data[i + 1]; const b = data[i + 2]
-        let lum  = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+        let lum  = luma(r, g, b)
         if (invert) lum = 1 - lum
         const ch = chars[Math.min(len - 1, Math.floor(lum * len))]
         if (!ch || ch === " ") continue

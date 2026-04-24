@@ -28,7 +28,7 @@
 
 .kbd {
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   letter-spacing: 0.04em;
   border: var(--nd-border-width) solid var(--nd-border-visible);
   background: var(--nd-surface);
@@ -40,14 +40,14 @@
 
 .action {
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   letter-spacing: 0.04em;
   color: var(--nd-text-secondary);
 }
 
 .toggle {
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   letter-spacing: 0.07em;
   text-transform: uppercase;
   background: none;

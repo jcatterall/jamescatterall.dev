@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import PixelGridLoading from "./loading";
 import PixelGridPageClient from "./PixelGridPageClient";
+import { PageNav } from "@/components/PageNav";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -12,6 +13,7 @@ export const metadata = {
 export default function PixelGridPage() {
   return (
     <main className={styles.page}>
+      <PageNav slug="pixel-grid" label="Pixel Grid" />
       <Suspense fallback={<PixelGridLoading />}>
         <PixelGridPageClient />
       </Suspense>

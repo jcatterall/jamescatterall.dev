@@ -34,7 +34,7 @@
 
 .index {
   font-family: var(--font-space-mono), monospace;
-  font-size: 8px;
+  font-size: var(--nd-text-xs);
   color: var(--nd-text-secondary);
   letter-spacing: 0.06em;
 }
@@ -56,7 +56,7 @@
   border: none;
   border-bottom: var(--nd-border-width) solid var(--nd-border);
   color: var(--nd-text-disabled);
-  font-size: 10px;
+  font-size: var(--nd-text-label-sm);
   cursor: pointer;
   padding: 0;
   line-height: 1;

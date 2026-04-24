@@ -1,23 +1,15 @@
 "use client";
 
 import type { Phase, Settings } from "./SessionTimer";
+import { durationForPhase } from "./SessionTimer";
 import styles from "./TimerArea.module.css";
 
 /* ── Helpers ── */
-
-const toSec = (min: number) => min * 60;
 
 function fmt(s: number) {
   const m = Math.floor(s / 60);
   const sec = s % 60;
   return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-}
-
-function durationForPhase(phase: Phase, settings: Settings): number {
-  if (phase === "focus") return toSec(settings.focusDuration);
-  if (phase === "short_break") return toSec(settings.shortBreak);
-  if (phase === "long_break") return toSec(settings.longBreak);
-  return toSec(settings.focusDuration);
 }
 
 /* ── Phase metadata ── */

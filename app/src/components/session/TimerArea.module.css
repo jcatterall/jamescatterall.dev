@@ -187,7 +187,7 @@
   border: var(--nd-border-width) solid var(--nd-border);
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
-  font-size: 16px;
+  font-size: var(--nd-text-body);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -206,7 +206,7 @@
   border: var(--nd-border-width) solid var(--nd-text-display);
   color: var(--nd-black);
   font-family: var(--font-space-mono), monospace;
-  font-size: 20px;
+  font-size: var(--nd-text-h3);
   cursor: pointer;
   display: flex;
   align-items: center;

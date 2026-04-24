@@ -228,7 +228,7 @@
 
 .uploadArrow {
   font-family: var(--font-space-mono), monospace;
-  font-size: 24px;
+  font-size: var(--nd-text-h2);
   color: var(--nd-border-visible);
   transition: color var(--nd-duration-fast);
 }

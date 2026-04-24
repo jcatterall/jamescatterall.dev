@@ -2,7 +2,7 @@
   border-top: var(--nd-border-width) solid var(--nd-border);
   display: flex;
   align-items: center;
-  min-height: calc(68px + var(--nd-space-3) * 2);
+  min-height: calc(92px + var(--nd-space-3) * 2);
   padding: var(--nd-space-3) var(--nd-space-4);
   gap: var(--nd-space-3);
   background: var(--nd-black);
@@ -14,7 +14,7 @@
   flex-shrink: 0;
   margin-right: 4px;
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--nd-text-secondary);
@@ -28,14 +28,14 @@
 }
 
 .addBtn {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   flex-shrink: 0;
   border: 1px dashed var(--nd-border-visible);
   background: transparent;
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
-  font-size: 16px;
+  font-size: var(--nd-text-body);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -49,12 +49,12 @@
 }
 
 .addIcon {
-  font-size: 12px;
+  font-size: var(--nd-text-md);
   line-height: 1;
 }
 
 .addLabel {
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -63,7 +63,7 @@
   margin-left: auto;
   flex-shrink: 0;
   font-family: var(--font-space-mono), monospace;
-  font-size: 9px;
+  font-size: var(--nd-text-xs);
   color: var(--nd-text-disabled);
   letter-spacing: 0.06em;
 }

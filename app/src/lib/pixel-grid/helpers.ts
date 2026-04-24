@@ -2,22 +2,22 @@ import type { GridSize } from "./types";
 
 // Index 0 = transparent / off state
 export const SYSTEM_PALETTE: string[] = [
-  "#000000", // 0 — off/transparent
-  "#ffffff", // 1 — text-display
-  "#e8e8e8", // 2 — text-primary
-  "#999999", // 3 — text-secondary
-  "#666666", // 4 — text-tertiary
-  "#4a9e5c", // 5 — success/green
-  "#d4a843", // 6 — warning/amber
-  "#d71921", // 7 — accent/red
-  "#5b9bf6", // 8 — interactive/blue
-  "#111111", // 9 — surface
-  "#1a1a1a", // 10 — surface-raised
-  "#222222", // 11 — border
-  "#333333", // 12 — border-visible
-  "#444444", // 13 — text-disabled
-  "#555555", // 14 — text-muted
-  "#777777", // 15 — mid grey
+  "#000000", // 0  — black
+  "#ffffff", // 1  — white
+  "#999999", // 2  — mid grey
+  "#e8d5b0", // 3  — warm parchment
+  "#c9956a", // 4  — burnt sienna
+  "#8b3a3a", // 5  — deep crimson
+  "#d4547a", // 6  — raspberry
+  "#e8a030", // 7  — golden amber
+  "#4a7c59", // 8  — forest green
+  "#7ec8a0", // 9  — seafoam
+  "#2d6a8f", // 10 — ocean blue
+  "#7ab3d4", // 11 — steel blue
+  "#5c4a8f", // 12 — deep violet
+  "#b09fd4", // 13 — dusty lavender
+  "#3d3d2e", // 14 — dark olive
+  "#c8d4a0", // 15 — sage green
 ];
 
 export const makeFrame = (n: number): Uint8Array => new Uint8Array(n * n);

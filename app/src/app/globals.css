@@ -56,25 +56,25 @@
   --nd-display-md:  36px;
 
   /* ── Typography: Heading Scale (Space Grotesk) ───────────── */
-  --nd-text-h1: 32px;
-  --nd-text-h2: 24px;
-  --nd-text-h3: 20px;
-  --nd-text-h4: 17px;
+  --nd-text-h1: 40px;
+  --nd-text-h2: 28px;
+  --nd-text-h3: 22px;
+  --nd-text-h4: 18px;
 
   /* ── Typography: Body Scale (Space Grotesk) ──────────────── */
-  --nd-text-body-lg: 16px;
-  --nd-text-body:    15px;
-  --nd-text-body-sm: 13px;
+  --nd-text-body-lg: 17px;
+  --nd-text-body:    16px;
+  --nd-text-body-sm: 14px;
 
   /* ── Typography: Mono/Label Scale (Space Mono — ALL CAPS) ── */
-  --nd-text-label-lg: 13px;
-  --nd-text-label:    11px;
-  --nd-text-label-sm: 10px;
+  --nd-text-label-lg: 16px;
+  --nd-text-label:    14px;
+  --nd-text-label-sm: 13px;
 
   /* ── Typography: App extensions (beyond spec) ────────────── */
-  --nd-text-xs: 9px;    /* very small detail text (copyright, year)   */
-  --nd-text-md: 12px;   /* between label and label-lg (prompts)       */
-  --nd-text-xl: 14px;   /* between label-lg and body-lg (arrows)      */
+  --nd-text-xs: 12px;   /* very small detail text (copyright, year)   */
+  --nd-text-md: 14px;   /* between label and label-lg (prompts)       */
+  --nd-text-xl: 16px;   /* between label-lg and body-lg (arrows)      */
 
   /* ── Typography: Letter Spacing ─────────────────────────── */
   --nd-tracking-mono:    0.07em;   /* Space Mono labels — spec canonical  */

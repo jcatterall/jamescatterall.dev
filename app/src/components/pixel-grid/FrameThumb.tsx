@@ -54,8 +54,8 @@ export function FrameThumb({
       <div className={styles.main}>
         <canvas
           ref={canvasRef}
-          width={48}
-          height={48}
+          width={72}
+          height={72}
           className={styles.canvas}
         />
         <div className={styles.footer}>

@@ -46,7 +46,7 @@
   cursor: pointer;
   color: inherit;
   opacity: 0.6;
-  font-size: 10px;
+  font-size: var(--nd-text-label-sm);
   line-height: 1;
   margin-left: 2px;
   transition: opacity var(--nd-duration-fast);

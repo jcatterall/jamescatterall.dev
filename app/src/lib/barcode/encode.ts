@@ -26,6 +26,12 @@ const computeCheckDigit = (digits: number[]): number => {
   return (10 - (sum % 10)) % 10
 }
 
+const buildBars = (all: number[], parity: string): string => {
+  const left = all.slice(1, 7).map((d, i) => (parity[i] === "L" ? L_CODE[d] : G_CODE[d])).join("")
+  const right = all.slice(7).map((d) => R_CODE[d]).join("")
+  return `101${left}01010${right}101`
+}
+
 export const encodeEan13 = (value: string): string | null => {
   const raw = value.replace(/\D/g, "")
   if (raw.length < 12 || raw.length > 13) return null
@@ -36,19 +42,7 @@ export const encodeEan13 = (value: string): string | null => {
   if (raw.length === 13 && Number(raw[12]) !== check) return null
 
   const all = [...digits, check]
-  const parity = PARITY[all[0]]
-
-  const left = all
-    .slice(1, 7)
-    .map((d, i) => (parity[i] === "L" ? L_CODE[d] : G_CODE[d]))
-    .join("")
-
-  const right = all
-    .slice(7)
-    .map((d) => R_CODE[d])
-    .join("")
-
-  return `101${left}01010${right}101`
+  return buildBars(all, PARITY[all[0]])
 }
 
 // Always returns a valid encoding by right-padding partial input with zeros
@@ -57,19 +51,7 @@ export const encodeForPreview = (value: string): string => {
   const digits = raw.split("").map(Number)
   const check = computeCheckDigit(digits)
   const all = [...digits, check]
-  const parity = PARITY[all[0]]
-
-  const left = all
-    .slice(1, 7)
-    .map((d, i) => (parity[i] === "L" ? L_CODE[d] : G_CODE[d]))
-    .join("")
-
-  const right = all
-    .slice(7)
-    .map((d) => R_CODE[d])
-    .join("")
-
-  return `101${left}01010${right}101`
+  return buildBars(all, PARITY[all[0]])
 }
 
 export const getDisplayDigits = (value: string): string[] => {

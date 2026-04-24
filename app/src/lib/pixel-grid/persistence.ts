@@ -30,6 +30,7 @@ export function loadState(): PixelGridState | null {
     parsed.redoStack = (parsed.redoStack ?? []).map((snap: number[][]) =>
       snap.map((f) => new Uint8Array(f)),
     );
+    parsed.palette = [...SYSTEM_PALETTE];
     return parsed as PixelGridState;
   } catch {
     return null;
