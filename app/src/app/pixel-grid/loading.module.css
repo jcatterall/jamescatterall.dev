@@ -1,0 +1,283 @@
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* All skeleton leaf shapes */
+.skeletonLine,
+.skeletonLabel,
+.skeletonTool,
+.skeletonSizeBtn,
+.skeletonSwatch,
+.skeletonResetBtn,
+.skeletonHistoryBtn,
+.skeletonNewBtn,
+.skeletonCanvas,
+.skeletonPreview,
+.skeletonPlayBtn,
+.skeletonFpsSlider,
+.skeletonExportBtn,
+.skeletonThumb,
+.skeletonAddBtn,
+.stripCount {
+  background-color: var(--nd-surface-raised);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Layout mirrors PixelGridEditor.module.css ── */
+.editor {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Sidebar — mirrors PixelGridSidebar.module.css ── */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarHeader {
+  padding: var(--nd-space-4) var(--nd-space-4) var(--nd-space-3);
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sidebarBody {
+  flex: 1;
+  padding: var(--nd-space-3) var(--nd-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-5);
+  overflow: hidden;
+}
+
+.sidebarFooter {
+  padding: var(--nd-space-3) var(--nd-space-4);
+  border-top: var(--nd-border-width) solid var(--nd-border);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.skeletonLabel {
+  height: 9px;
+  width: 48px;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.05s;
+}
+
+.skeletonLine {
+  height: 9px;
+  border-radius: var(--nd-radius-sm);
+}
+
+/* Tools */
+.toolList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.skeletonTool {
+  height: 28px;
+  width: 100%;
+  border-radius: var(--nd-radius-sm);
+}
+
+/* Grid sizes */
+.gridSizes {
+  display: flex;
+  gap: 4px;
+}
+
+.skeletonSizeBtn {
+  flex: 1;
+  height: 26px;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.1s;
+}
+
+/* Palette */
+.paletteGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+}
+
+.skeletonSwatch {
+  aspect-ratio: 1;
+  border-radius: 1px;
+}
+
+.skeletonResetBtn {
+  height: 26px;
+  width: 100%;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.15s;
+}
+
+/* History */
+.historyRow {
+  display: flex;
+  gap: 6px;
+}
+
+.skeletonHistoryBtn {
+  flex: 1;
+  height: 28px;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.1s;
+}
+
+/* New canvas */
+.skeletonNewBtn {
+  height: 34px;
+  width: 100%;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.2s;
+}
+
+/* ── Canvas area — mirrors EditorCanvas.module.css ── */
+.canvasWrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--nd-space-6);
+  overflow: hidden;
+  background: var(--nd-black);
+  background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.skeletonCanvas {
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.05s;
+}
+
+/* ── Preview panel — mirrors PreviewPanel.module.css ── */
+.previewPanel {
+  width: 220px;
+  min-width: 180px;
+  flex-shrink: 0;
+  border-left: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-4);
+  padding: var(--nd-space-4);
+  overflow: hidden;
+}
+
+.skeletonPreview {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.05s;
+}
+
+.skeletonPlayBtn {
+  height: 26px;
+  width: 100%;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.1s;
+}
+
+.skeletonFpsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--nd-space-2);
+}
+
+.skeletonFpsSlider {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.12s;
+}
+
+.exportList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skeletonExportBtn {
+  height: 28px;
+  width: 100%;
+  border-radius: var(--nd-radius-sm);
+}
+
+.statusSection {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.statusRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── Frame strip — mirrors FrameStrip.module.css ── */
+.frameStrip {
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  align-items: center;
+  padding: var(--nd-space-3) var(--nd-space-4);
+  gap: var(--nd-space-3);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.skeletonThumb {
+  width: 56px;
+  height: 84px;
+  flex-shrink: 0;
+  border-radius: var(--nd-radius-sm);
+}
+
+.skeletonAddBtn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.1s;
+}
+
+.stripCount {
+  margin-left: auto;
+  height: 9px;
+  width: 64px;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.15s;
+}
+
+/* ── Legend bar — mirrors KeyboardLegend.module.css ── */
+.legendBar {
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  padding: var(--nd-space-3) var(--nd-space-5);
+  display: flex;
+  justify-content: center;
+  background: var(--nd-black);
+}

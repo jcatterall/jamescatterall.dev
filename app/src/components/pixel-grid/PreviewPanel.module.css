@@ -1,0 +1,167 @@
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.panel {
+  width: 220px;
+  min-width: 180px;
+  flex-shrink: 0;
+  border-left: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-4);
+  padding: var(--nd-space-4);
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--nd-black);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.label {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nd-text-secondary);
+}
+
+.previewWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--nd-black);
+  border: var(--nd-border-width) solid var(--nd-border);
+}
+
+.previewCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: blur(0.4px);
+  image-rendering: pixelated;
+}
+
+.playBtn {
+  width: 100%;
+  padding: 5px 0;
+  border: var(--nd-border-width) solid var(--nd-border);
+  background: transparent;
+  color: var(--nd-text-secondary);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.playBtn:hover {
+  border-color: var(--nd-border-visible);
+  color: var(--nd-text-primary);
+}
+
+.playBtnActive {
+  border-color: var(--nd-success);
+  color: var(--nd-success);
+  background: rgba(74, 158, 92, 0.08);
+}
+
+.playBtnActive:hover {
+  border-color: var(--nd-success);
+  color: var(--nd-success);
+}
+
+.fpsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--nd-space-2);
+}
+
+.fpsSlider {
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 1px;
+  background: var(--nd-border-visible);
+  outline: none;
+  cursor: pointer;
+}
+
+.fpsSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background: var(--nd-text-primary);
+  cursor: pointer;
+}
+
+.fpsValue {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
+  color: var(--nd-text-primary);
+  min-width: 20px;
+  text-align: right;
+}
+
+/* Export */
+.exportList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exportBtn {
+  width: 100%;
+  padding: 6px 0;
+  border: var(--nd-border-width) solid var(--nd-border);
+  background: transparent;
+  color: var(--nd-text-secondary);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 120ms;
+}
+
+.exportBtn:hover {
+  border-color: var(--nd-border-visible);
+  color: var(--nd-text-primary);
+}
+
+.exportMsg {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
+  color: var(--nd-success);
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  animation: fadeIn 150ms ease-out both;
+}
+
+/* Status */
+.status {
+  margin-top: auto;
+}
+
+.statusRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.statusKey {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 8px;
+  color: var(--nd-text-secondary);
+  letter-spacing: 0.07em;
+}
+
+.statusVal {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 8px;
+  color: var(--nd-text-primary);
+}

@@ -21,3 +21,4 @@ export { EmptyState } from "./EmptyState";
 export { Skeleton, SkeletonGroup } from "./Skeleton";
 export { Tooltip } from "./Tooltip";
 export { Code, Pre } from "./Code";
+export { Modal } from "./Modal";

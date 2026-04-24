@@ -1,0 +1,69 @@
+.strip {
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  align-items: center;
+  min-height: calc(68px + var(--nd-space-3) * 2);
+  padding: var(--nd-space-3) var(--nd-space-4);
+  gap: var(--nd-space-3);
+  background: var(--nd-black);
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.label {
+  flex-shrink: 0;
+  margin-right: 4px;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nd-text-secondary);
+}
+
+.addGroup {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.addBtn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px dashed var(--nd-border-visible);
+  background: transparent;
+  color: var(--nd-text-secondary);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 120ms, color 120ms;
+}
+
+.addBtn:hover {
+  border-color: var(--nd-text-secondary);
+  color: var(--nd-text-primary);
+}
+
+.addIcon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.addLabel {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.count {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 9px;
+  color: var(--nd-text-disabled);
+  letter-spacing: 0.06em;
+}

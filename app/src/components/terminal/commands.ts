@@ -13,6 +13,10 @@ export const ROUTE_MAP: Record<string, string> = {
   "/barcode": "/barcode",
   session: "/session",
   "/session": "/session",
+  ascii: "/ascii",
+  "/ascii": "/ascii",
+  "pixel-grid": "/pixel-grid",
+  "/pixel-grid": "/pixel-grid",
 };
 
 export const COMPLETABLE_COMMANDS = [
@@ -22,6 +26,10 @@ export const COMPLETABLE_COMMANDS = [
   "goto barcode",
   "goto /session",
   "goto session",
+  "goto /ascii",
+  "goto ascii",
+  "goto /pixel-grid",
+  "goto pixel-grid",
   "goto home",
   "help",
   "ls",
@@ -38,7 +46,9 @@ export const HELP_TEXT = [
   "DESTINATIONS",
   "  home  /              homepage",
   "  barcode  /barcode    barcode studio",
-  "  session  /session   session timer",
+  "  session  /session    session timer",
+  "  ascii  /ascii        ascii lens",
+  "  pixel-grid  /pixel-grid  pixel grid",
 ];
 
 export const LS_TEXT = [
@@ -46,6 +56,8 @@ export const LS_TEXT = [
   "  /          homepage",
   "  /barcode   barcode studio",
   "  /session   session timer",
+  "  /ascii     ascii lens",
+  "  /pixel-grid  pixel grid",
 ];
 
 export function parseCommand(input: string): ParsedCommand {

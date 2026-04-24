@@ -1,0 +1,145 @@
+/* ── Animation ── */
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.skel {
+  background: var(--nd-surface-raised);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Page layout — mirrors AsciiLens.module.css ── */
+
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Sidebar — mirrors AsciiSidebar.module.css structure ── */
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebarHeader {
+  padding: var(--nd-space-5) var(--nd-space-5) var(--nd-space-4);
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.sidebarBody {
+  flex: 1;
+  overflow: hidden;
+  padding: var(--nd-space-4) var(--nd-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-5);
+}
+
+.sidebarFooter {
+  padding: var(--nd-space-4) var(--nd-space-5);
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+/* Header shapes */
+
+.skelPrompt      { height: 12px; width: 72px; }
+.skelTitle       { height: 20px; width: 120px; }
+.skelSubtitle    { height: 12px; width: 100%; }
+.skelSubtitleShort { height: 12px; width: 70%; }
+
+/* Section label */
+.skelLabel       { height: 10px; width: 64px; }
+
+/* Source buttons — 36px height matches actual padding+font */
+.skelBtn         { height: 36px; width: 100%; }
+
+/* Resolution slider */
+.sliderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.skelSliderVal   { height: 10px; width: 48px; }
+.skelSlider      { height: 1px; width: 100%; }
+
+/* Char set pills */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nd-space-1);
+}
+.skelPill        { height: 24px; }
+.skelCharPreview { height: 24px; width: 100%; }
+
+/* Mode toggles */
+.toggleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.skelToggleLabel { height: 10px; width: 48px; }
+.skelToggle      { height: 16px; width: 32px; }
+
+/* Export button — matches idleBtnPrimary height */
+.skelExportBtn   { height: 40px; width: 100%; }
+
+/* ── Canvas area — mirrors AsciiCanvas.module.css structure ── */
+
+.canvasWrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--nd-black);
+}
+
+.skelDotGrid {
+  position: absolute;
+  inset: 0;
+  background: var(--nd-black);
+}
+
+.skelBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  height: 18px;
+  width: 80px;
+}
+
+.statusBar {
+  height: 28px;
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--nd-space-4);
+  flex-shrink: 0;
+  background: var(--nd-black);
+}
+
+.skelStatus      { height: 10px; width: 120px; }
