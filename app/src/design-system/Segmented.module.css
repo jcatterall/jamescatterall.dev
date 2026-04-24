@@ -1,0 +1,47 @@
+/* ── Track ────────────────────────────────────────────────── */
+
+.seg {
+  display: inline-flex;
+  align-items: center;
+  background: var(--nd-surface-raised);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-pill);
+  padding: 3px;
+  gap: 2px;
+}
+
+/* ── Item ─────────────────────────────────────────────────── */
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  font-weight: 400;
+  letter-spacing: var(--nd-tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: var(--nd-space-1) var(--nd-space-4);
+  border-radius: var(--nd-radius-pill);
+  border: none;
+  background: transparent;
+  color: var(--nd-text-tertiary);
+  cursor: pointer;
+  transition: color var(--nd-duration-fast), background var(--nd-duration-fast);
+  min-height: 32px;
+}
+
+.item:hover:not(.itemActive) {
+  color: var(--nd-text-primary);
+}
+
+.itemActive {
+  background: var(--nd-text-display);
+  color: var(--nd-black);
+}
+
+.item:focus-visible {
+  outline: var(--nd-border-width-thick) solid var(--nd-border-focus);
+  outline-offset: 1px;
+}

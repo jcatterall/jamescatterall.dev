@@ -6,7 +6,7 @@
   font-size: var(--nd-text-md);
   color: var(--nd-text-secondary);
   letter-spacing: var(--nd-tracking-normal);
-  margin-bottom: var(--nd-space-lg);
+  margin-bottom: var(--nd-space-5);
   flex-shrink: 0;
 }
 

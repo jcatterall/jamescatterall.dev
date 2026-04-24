@@ -93,8 +93,8 @@
 
 .statusLabel {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
-  color: var(--nd-text-faint);
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-disabled);
   letter-spacing: var(--nd-tracking-wider);
   text-transform: uppercase;
   min-width: 56px;
@@ -102,7 +102,7 @@
 
 .statusValue {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
+  font-size: var(--nd-text-label-sm);
   color: var(--nd-text-secondary);
   letter-spacing: var(--nd-tracking-normal);
   text-transform: uppercase;
@@ -110,7 +110,7 @@
 
 .statusOnline {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
+  font-size: var(--nd-text-label-sm);
   color: var(--nd-success);
   letter-spacing: var(--nd-tracking-normal);
   text-transform: uppercase;
@@ -134,25 +134,25 @@
 }
 
 .contactLink:hover {
-  opacity: var(--nd-opacity-half);
+  opacity: 0.6;
 }
 
 .contactIcon {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-base);
-  color: var(--nd-text-faint);
+  font-size: var(--nd-text-label);
+  color: var(--nd-text-disabled);
   line-height: 1;
 }
 
 .contactValue {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
+  font-size: var(--nd-text-label-sm);
   color: var(--nd-text-secondary);
   letter-spacing: var(--nd-tracking-tight);
 }
 
 .contactArrow {
-  font-size: var(--nd-text-base);
+  font-size: var(--nd-text-label);
   color: var(--nd-border-visible);
   margin-left: auto;
 }
@@ -287,7 +287,7 @@
 
 .rowTitle {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-lg);
+  font-size: var(--nd-text-label-lg);
   color: var(--nd-text-display);
   letter-spacing: var(--nd-tracking-tight);
   margin-bottom: 5px;
@@ -296,8 +296,8 @@
 
 .rowDesc {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
-  color: var(--nd-text-muted);
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-tertiary);
   line-height: var(--nd-leading-relaxed);
   margin-bottom: 8px;
   letter-spacing: var(--nd-tracking-tight);
@@ -334,7 +334,7 @@
 
 .rowArrow {
   font-size: var(--nd-text-xl);
-  color: var(--nd-text-faint);
+  color: var(--nd-text-disabled);
   transition: color var(--nd-duration-fast);
 }
 

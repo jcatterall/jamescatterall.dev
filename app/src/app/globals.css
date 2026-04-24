@@ -1,86 +1,146 @@
 :root {
-  /* ── Colours ─────────────────────────────────────────── */
-  --nd-black: #000000;
-  --nd-surface: #111111;
-  --nd-surface-raised: #1a1a1a;
-  --nd-border: #222222;
-  --nd-border-visible: #333333;
-  --nd-text-disabled: #666666;
-  --nd-text-secondary: #999999;
-  --nd-text-primary: #e8e8e8;
-  --nd-text-display: #ffffff;
-  --nd-accent: #d71921;
-  --nd-accent-subtle: rgba(215, 25, 33, 0.15);
-  --nd-success: #4a9e5c;
-  --nd-warning: #d4a843;
-  --nd-interactive: #5b9bf6;
+  /* ── Color: Backgrounds & Surfaces ─────────────────────── */
+  --nd-black:           #000000;   /* page canvas — pure OLED black        */
+  --nd-surface:         #111111;   /* cards, panels, inputs                */
+  --nd-surface-raised:  #1a1a1a;   /* hover surfaces, dropdowns            */
+  --nd-surface-overlay: #222222;   /* tooltips, popovers                   */
 
-  /* Extended palette */
-  --nd-text-faint: #444444;
-  --nd-text-muted: #555555;
-  --nd-text-ghost: #2a2a2a;
-  --nd-backdrop: rgba(0, 0, 0, 0.4);
-  --nd-overlay: rgba(0, 0, 0, 0.96);
+  /* ── Color: Borders ──────────────────────────────────────── */
+  --nd-border-subtle:   #1a1a1a;   /* barely-there structural lines        */
+  --nd-border:          #222222;   /* default structural border            */
+  --nd-border-visible:  #333333;   /* visible interactive border           */
+  --nd-border-strong:   #666666;   /* hover/emphasis border                */
+  --nd-border-focus:    #5b9bf6;   /* keyboard focus ring                  */
+  --nd-border-error:    #d71921;   /* error/invalid state                  */
 
-  /* ── Spacing ──────────────────────────────────────────── */
-  --nd-space-xs:  4px;
-  --nd-space-sm:  8px;
-  --nd-space-2xs: 10px;
-  --nd-space-md:  16px;
-  --nd-space-lg:  24px;
-  --nd-space-xl:  32px;
-  --nd-space-2xl: 48px;
-  --nd-space-3xl: 64px;
-  --nd-space-4xl: 96px;
+  /* ── Color: Text ─────────────────────────────────────────── */
+  --nd-text-display:    #ffffff;   /* maximum contrast — display, h1       */
+  --nd-text-primary:    #e8e8e8;   /* default body copy                    */
+  --nd-text-secondary:  #999999;   /* supporting text, labels              */
+  --nd-text-tertiary:   #666666;   /* placeholders, disabled copy          */
+  --nd-text-disabled:   #444444;   /* truly disabled, non-interactive      */
 
-  /* ── Font sizes — monospace label scale ───────────────── */
-  --nd-text-xs:   9px;
-  --nd-text-sm:  10px;
-  --nd-text-base: 11px;
-  --nd-text-md:  12px;
-  --nd-text-lg:  13px;
-  --nd-text-xl:  14px;
-  --nd-text-2xl: 16px;
+  /* ── Color: App extensions (beyond spec) ─────────────────── */
+  --nd-text-muted:      #555555;   /* mid-disabled text                    */
+  --nd-text-ghost:      #2a2a2a;   /* barely visible, ghost text           */
+  --nd-backdrop:        rgba(0, 0, 0, 0.4);
+  --nd-overlay:         rgba(0, 0, 0, 0.96);
 
-  /* ── Letter spacing ───────────────────────────────────── */
+  /* ── Color: Accent (interrupt signal — never decorative) ──── */
+  --nd-accent:          #d71921;
+  --nd-accent-subtle:   rgba(215, 25, 33, 0.12);
+  --nd-accent-border:   rgba(215, 25, 33, 0.4);
+
+  /* ── Color: Semantic ─────────────────────────────────────── */
+  --nd-success:         #4a9e5c;
+  --nd-success-subtle:  rgba(74, 158, 92, 0.12);
+  --nd-success-border:  rgba(74, 158, 92, 0.4);
+
+  --nd-warning:         #d4a843;
+  --nd-warning-subtle:  rgba(212, 168, 67, 0.12);
+  --nd-warning-border:  rgba(212, 168, 67, 0.4);
+
+  --nd-interactive:         #5b9bf6;
+  --nd-interactive-subtle:  rgba(91, 155, 246, 0.12);
+  --nd-interactive-border:  rgba(91, 155, 246, 0.4);
+
+  /* ── Typography: Font Families ───────────────────────────── */
+  --nd-font-display: 'Doto', 'Courier New', monospace;
+  --nd-font-body:    'Space Grotesk', system-ui, sans-serif;
+  --nd-font-mono:    'Space Mono', 'Courier New', monospace;
+
+  /* ── Typography: Display Scale (Doto only — 36px+) ────────── */
+  --nd-display-2xl: 96px;
+  --nd-display-xl:  72px;
+  --nd-display-lg:  48px;
+  --nd-display-md:  36px;
+
+  /* ── Typography: Heading Scale (Space Grotesk) ───────────── */
+  --nd-text-h1: 32px;
+  --nd-text-h2: 24px;
+  --nd-text-h3: 20px;
+  --nd-text-h4: 17px;
+
+  /* ── Typography: Body Scale (Space Grotesk) ──────────────── */
+  --nd-text-body-lg: 16px;
+  --nd-text-body:    15px;
+  --nd-text-body-sm: 13px;
+
+  /* ── Typography: Mono/Label Scale (Space Mono — ALL CAPS) ── */
+  --nd-text-label-lg: 13px;
+  --nd-text-label:    11px;
+  --nd-text-label-sm: 10px;
+
+  /* ── Typography: App extensions (beyond spec) ────────────── */
+  --nd-text-xs: 9px;    /* very small detail text (copyright, year)   */
+  --nd-text-md: 12px;   /* between label and label-lg (prompts)       */
+  --nd-text-xl: 14px;   /* between label-lg and body-lg (arrows)      */
+
+  /* ── Typography: Letter Spacing ─────────────────────────── */
+  --nd-tracking-mono:    0.07em;   /* Space Mono labels — spec canonical  */
   --nd-tracking-tight:   0.02em;
   --nd-tracking-normal:  0.04em;
   --nd-tracking-wide:    0.06em;
-  --nd-tracking-wider:   0.07em;
+  --nd-tracking-wider:   0.07em;   /* = --nd-tracking-mono               */
   --nd-tracking-widest:  0.08em;
   --nd-tracking-loose:   0.1em;
   --nd-tracking-looser:  0.12em;
   --nd-tracking-spread:  0.3em;
 
-  /* ── Line heights ─────────────────────────────────────── */
+  /* ── Typography: Line Heights ────────────────────────────── */
   --nd-leading-none:    1.0;
   --nd-leading-tight:   1.05;
   --nd-leading-snug:    1.1;
   --nd-leading-compact: 1.2;
   --nd-leading-normal:  1.5;
   --nd-leading-relaxed: 1.6;
+  --nd-leading-body:    1.6;       /* spec canonical = relaxed            */
 
-  /* ── Border radius ────────────────────────────────────── */
-  --nd-radius-sm:   4px;
-  --nd-radius-md:   6px;
-  --nd-radius-lg:   8px;
-  --nd-radius-xl:  12px;
-  --nd-radius-pill: 999px;
+  /* ── Typography: Weights ─────────────────────────────────── */
+  --nd-weight-light:    300;
+  --nd-weight-regular:  400;
+  --nd-weight-medium:   500;
+  --nd-weight-semibold: 600;
 
-  /* ── Transitions (include easing — write property at call site) */
-  --nd-duration-fast: 150ms ease-out;
-  --nd-duration-base: 200ms ease-out;
+  /* ── Spacing (8px base scale) ────────────────────────────── */
+  --nd-space-1:   4px;    /* tight: icon+label gap                      */
+  --nd-space-2:   8px;    /* belongs together                           */
+  --nd-space-3:  12px;
+  --nd-space-4:  16px;    /* same group                                 */
+  --nd-space-5:  24px;    /* comfortable separation                     */
+  --nd-space-6:  32px;    /* section break                              */
+  --nd-space-7:  48px;
+  --nd-space-8:  64px;    /* new context                                */
+  --nd-space-9:  96px;    /* hero / vast                                */
+  --nd-space-10: 128px;
 
-  /* ── Shadows ──────────────────────────────────────────── */
+  /* ── Border Radius ───────────────────────────────────────── */
+  --nd-radius-sm:   4px;    /* inputs, code, technical                  */
+  --nd-radius-md:   8px;    /* dropdowns, tooltips                      */
+  --nd-radius-lg:  12px;    /* cards, panels                            */
+  --nd-radius-pill: 999px;  /* buttons, tags, badges                    */
+
+  /* ── Animation ──────────────────────────────────────────── */
+  --nd-easing:           ease-out;
+  --nd-duration-fast:    150ms ease-out;
+  --nd-duration-default: 200ms ease-out;
+  --nd-transition:       200ms ease-out;
+
+  /* ── Shadows ─────────────────────────────────────────────── */
   --nd-shadow-float: 0 24px 64px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.03);
   --nd-shadow-card:  0 8px 24px rgba(0, 0, 0, 0.6);
 
-  /* ── Opacity ──────────────────────────────────────────── */
+  /* ── Phase backgrounds (Session Timer) ─────────────────── */
+  --nd-phase-focus-bg:       #030a04;   /* deep green tint — focus          */
+  --nd-phase-short-break-bg: #030508;   /* deep blue tint — short break     */
+  --nd-phase-long-break-bg:  #080602;   /* deep amber tint — long break     */
+
+  /* ── Opacity ─────────────────────────────────────────────── */
   --nd-opacity-dim:   0.4;
   --nd-opacity-half:  0.5;
   --nd-opacity-muted: 0.8;
 
-  /* ── Border widths ────────────────────────────────────── */
+  /* ── Border widths ───────────────────────────────────────── */
   --nd-border-width:       1px;
   --nd-border-width-thick: 2px;
 }

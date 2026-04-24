@@ -1,7 +1,57 @@
 .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--nd-space-1);
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
   color: var(--nd-text-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  border: var(--nd-border-width) solid transparent;
+  border-radius: var(--nd-radius-pill);
+  padding: 0 var(--nd-space-2);
+  line-height: 20px;
+  transition: border-color var(--nd-duration-fast), color var(--nd-duration-fast);
+}
+
+.tag:hover {
+  border-color: var(--nd-border-strong);
+  color: var(--nd-text-primary);
+}
+
+/* ── Variants ───────────────────────────────────────────── */
+
+.tagActive {
+  border-color: var(--nd-border-strong);
+  color: var(--nd-text-display);
+}
+
+.tagAccent {
+  border-color: var(--nd-accent-border);
+  color: var(--nd-accent);
+}
+
+.tagSuccess {
+  border-color: var(--nd-success-border);
+  color: var(--nd-success);
+}
+
+/* ── Remove button ──────────────────────────────────────── */
+
+.removeBtn {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.6;
+  font-size: 10px;
+  line-height: 1;
+  margin-left: 2px;
+  transition: opacity var(--nd-duration-fast);
+}
+
+.removeBtn:hover {
+  opacity: 1;
 }

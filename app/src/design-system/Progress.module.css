@@ -1,0 +1,52 @@
+/* ── Progress container ───────────────────────────────────── */
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.labelText {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-wide);
+  color: var(--nd-text-secondary);
+}
+
+.labelValue {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  color: var(--nd-text-tertiary);
+}
+
+/* ── Track ────────────────────────────────────────────────── */
+
+.track {
+  display: flex;
+  gap: 2px;
+  height: 4px;
+  border-radius: var(--nd-radius-sm);
+  overflow: hidden;
+  background: var(--nd-surface-raised);
+}
+
+/* ── Fill variants ────────────────────────────────────────── */
+
+.seg {
+  height: 100%;
+  border-radius: var(--nd-radius-sm);
+  transition: width var(--nd-duration-default);
+}
+
+.filled  { background: var(--nd-text-primary); }
+.success { background: var(--nd-success); }
+.warning { background: var(--nd-warning); }
+.accent  { background: var(--nd-accent); }
+.info    { background: var(--nd-interactive); }

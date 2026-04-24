@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { useTerminal, type TerminalLine } from "./useTerminal"
-import { useGlobalKeyboard } from "./useGlobalKeyboard"
-import { useTypewriter } from "./useTypewriter"
-import styles from "./Terminal.module.css"
+import { useEffect, useRef, useState } from "react";
+import { useTerminal, type TerminalLine } from "./useTerminal";
+import { useGlobalKeyboard } from "./useGlobalKeyboard";
+import { useTypewriter } from "./useTypewriter";
+import styles from "./Terminal.module.css";
 
 type TerminalLineViewProps = {
-  line: TerminalLine
-  onAnimationDone: () => void
-}
+  line: TerminalLine;
+  onAnimationDone: () => void;
+};
 
 function TerminalLineView({ line, onAnimationDone }: TerminalLineViewProps) {
-  const { revealed, done } = useTypewriter(line.text, line.animating)
+  const { revealed, done } = useTypewriter(line.text, line.animating);
 
   useEffect(() => {
-    if (done && line.animating) onAnimationDone()
-  }, [done, line.animating, onAnimationDone])
+    if (done && line.animating) onAnimationDone();
+  }, [done, line.animating, onAnimationDone]);
 
   const kindClass =
     line.kind === "input"
@@ -25,7 +25,7 @@ function TerminalLineView({ line, onAnimationDone }: TerminalLineViewProps) {
         ? styles.lineError
         : line.kind === "system"
           ? styles.lineSystem
-          : styles.lineOutput
+          : styles.lineOutput;
 
   return (
     <div className={`${styles.line} ${kindClass}`}>
@@ -38,61 +38,61 @@ function TerminalLineView({ line, onAnimationDone }: TerminalLineViewProps) {
         <span className={styles.lineIndent}>{revealed}</span>
       )}
     </div>
-  )
+  );
 }
 
 export function Terminal() {
-  const { state, dispatch, executeCommand } = useTerminal()
-  const [konamiActive, setKonamiActive] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const outputRef = useRef<HTMLDivElement>(null)
+  const { state, dispatch, executeCommand } = useTerminal();
+  const [konamiActive, setKonamiActive] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (state.isOpen) {
-      inputRef.current?.focus()
+      inputRef.current?.focus();
     } else {
-      document.body.focus()
+      document.body.focus();
     }
-  }, [state.isOpen])
+  }, [state.isOpen]);
 
   useEffect(() => {
     if (outputRef.current) {
-      outputRef.current.scrollTop = outputRef.current.scrollHeight
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
-  }, [state.lines])
+  }, [state.lines]);
 
   useGlobalKeyboard(
     () => dispatch({ type: "TOGGLE" }),
     () => setKonamiActive(true),
-    state.isOpen
-  )
+    state.isOpen,
+    konamiActive,
+    () => setKonamiActive(false),
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const cmd = state.inputValue.trim()
-    if (!cmd) return
-    dispatch({ type: "SUBMIT_COMMAND" })
-    executeCommand(cmd)
-  }
+    e.preventDefault();
+    const cmd = state.inputValue.trim();
+    if (!cmd) return;
+    dispatch({ type: "SUBMIT_COMMAND" });
+    executeCommand(cmd);
+  };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowUp") {
-      e.preventDefault()
-      dispatch({ type: "HISTORY_UP" })
+      e.preventDefault();
+      dispatch({ type: "HISTORY_UP" });
     } else if (e.key === "ArrowDown") {
-      e.preventDefault()
-      dispatch({ type: "HISTORY_DOWN" })
+      e.preventDefault();
+      dispatch({ type: "HISTORY_DOWN" });
     } else if (e.key === "Tab") {
-      e.preventDefault()
-      dispatch({ type: "TAB_COMPLETE" })
+      e.preventDefault();
+      dispatch({ type: "TAB_COMPLETE" });
     }
-  }
+  };
 
   return (
     <>
-      {/* Dim backdrop — only when open */}
-      <div className={`${styles.backdrop} ${state.isOpen ? styles.backdropVisible : ""}`} />
-
       {/* Closed-state indicator pill */}
       <div
         className={`${styles.triggerHint} ${state.isOpen ? styles.triggerHintHidden : ""}`}
@@ -137,7 +137,9 @@ export function Terminal() {
         <div className={styles.output} ref={outputRef} aria-live="polite">
           <div className={styles.sessionStart}>
             jcatterall@portfolio ~ %{" "}
-            <span className={styles.sessionStartHighlight}>session started</span>
+            <span className={styles.sessionStartHighlight}>
+              session started
+            </span>
           </div>
           <div className={styles.sessionDivider} />
           {state.lines.map((line) => (
@@ -154,7 +156,13 @@ export function Terminal() {
         {/* Input row */}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputRow}>
-            <span className={styles.inputPrompt} aria-hidden="true">{">"}</span>
+            <span className={styles.inputPrompt} aria-hidden="true">
+              {">"}
+            </span>
+            <span
+              className={`${styles.cursor} ${inputFocused ? styles.cursorActive : ""}`}
+              aria-hidden="true"
+            />
             <input
               ref={inputRef}
               className={styles.input}
@@ -163,13 +171,14 @@ export function Terminal() {
                 dispatch({ type: "SET_INPUT", payload: e.target.value })
               }
               onKeyDown={handleInputKeyDown}
+              onFocus={() => setInputFocused(true)}
+              onBlur={() => setInputFocused(false)}
               spellCheck={false}
               autoComplete="off"
               autoCorrect="off"
               aria-label="Terminal input"
               tabIndex={state.isOpen ? 0 : -1}
             />
-            <span className={styles.cursor} aria-hidden="true" />
           </div>
         </form>
       </div>
@@ -178,7 +187,9 @@ export function Terminal() {
       {konamiActive && (
         <div
           className={styles.konamiBurst}
-          onAnimationEnd={() => setKonamiActive(false)}
+          onAnimationEnd={(e) => {
+            if (e.target === e.currentTarget) setKonamiActive(false);
+          }}
           aria-live="assertive"
           role="status"
         >
@@ -194,12 +205,16 @@ export function Terminal() {
           {/* Content */}
           <div className={styles.konamiContent}>
             <div className={styles.konamiSequence}>↑ ↑ ↓ ↓ ← → ← → B A</div>
-            <div className={styles.konamiHeadline}>ACHIEVEMENT<br />UNLOCKED</div>
+            <div className={styles.konamiHeadline}>
+              ACHIEVEMENT
+              <br />
+              UNLOCKED
+            </div>
             <div className={styles.konamiSub}>you found the konami code</div>
             <div className={styles.konamiDismiss}>press any key to dismiss</div>
           </div>
         </div>
       )}
     </>
-  )
+  );
 }

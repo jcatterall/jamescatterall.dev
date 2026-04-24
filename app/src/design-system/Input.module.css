@@ -1,0 +1,110 @@
+/* ── Field wrapper ────────────────────────────────────────── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.fieldLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-widest);
+  color: var(--nd-text-secondary);
+}
+
+.fieldHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  color: var(--nd-text-tertiary);
+}
+
+.fieldError {
+  color: var(--nd-accent);
+}
+
+/* ── Input ────────────────────────────────────────────────── */
+
+.input {
+  height: 40px;
+  width: 100%;
+  background-color: var(--nd-surface-raised);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-sm);
+  padding: 0 var(--nd-space-3);
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-lg);
+  color: var(--nd-text-primary);
+  outline: none;
+  transition: border-color var(--nd-duration-fast);
+}
+
+.input::placeholder {
+  color: var(--nd-text-disabled);
+}
+
+.input:hover:not(:disabled):not(.inputError) {
+  border-color: var(--nd-border-strong);
+}
+
+.input:focus {
+  border-color: var(--nd-border-focus);
+}
+
+.input:disabled {
+  opacity: var(--nd-opacity-dim);
+  pointer-events: none;
+}
+
+/* Error state */
+.inputError {
+  border-color: var(--nd-border-error) !important;
+}
+
+/* Underline variant */
+.inputUnderline {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  border-bottom: var(--nd-border-width) solid var(--nd-border-visible);
+  padding-inline: 0;
+}
+
+.inputUnderline:hover:not(:disabled) {
+  border-bottom-color: var(--nd-border-strong);
+}
+
+.inputUnderline:focus {
+  border-bottom-color: var(--nd-border-focus);
+}
+
+.inputUnderline.inputError {
+  border-bottom-color: var(--nd-border-error) !important;
+}
+
+/* ── Textarea ─────────────────────────────────────────────── */
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+  padding: var(--nd-space-3);
+  height: auto;
+}
+
+/* ── Select ───────────────────────────────────────────────── */
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23666666' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--nd-space-3) center;
+  padding-right: var(--nd-space-7);
+  cursor: pointer;
+}
+
+.select option {
+  background: var(--nd-surface);
+  color: var(--nd-text-primary);
+}

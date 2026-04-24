@@ -1,0 +1,45 @@
+/* ── Inline code ──────────────────────────────────────────── */
+
+.code {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9em;
+  color: var(--nd-text-primary);
+  background: var(--nd-surface-raised);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-sm);
+  padding: 1px 6px;
+}
+
+/* ── Code block ───────────────────────────────────────────── */
+
+.pre {
+  background: var(--nd-surface);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-sm);
+  padding: var(--nd-space-5);
+  overflow-x: auto;
+}
+
+.pre::-webkit-scrollbar {
+  height: 3px;
+}
+
+.pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pre::-webkit-scrollbar-thumb {
+  background: var(--nd-border-visible);
+  border-radius: 2px;
+}
+
+.pre code {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  color: var(--nd-text-secondary);
+  line-height: var(--nd-leading-relaxed);
+  background: none;
+  border: none;
+  padding: 0;
+  white-space: pre;
+}

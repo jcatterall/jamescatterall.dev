@@ -1,0 +1,252 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--nd-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--nd-space-4);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  width: 420px;
+  max-width: 100%;
+  max-height: 90vh;
+  background: var(--nd-black);
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: slideUp 250ms ease-out both;
+}
+
+/* ── Header ── */
+
+.cardHeader {
+  padding: 28px var(--nd-space-5) var(--nd-space-5);
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+}
+
+.receiptLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-loose);
+  text-transform: uppercase;
+  margin-bottom: var(--nd-space-1);
+}
+
+.receiptDate {
+  font-family: var(--font-doto), monospace;
+  font-size: 22px;
+  color: var(--nd-text-display);
+  letter-spacing: var(--nd-tracking-normal);
+}
+
+/* ── Stats ── */
+
+.statsGrid {
+  padding: var(--nd-space-4) var(--nd-space-5);
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--nd-space-3) 0;
+  flex-shrink: 0;
+}
+
+.stat {}
+
+.statLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-widest);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.statValue {
+  font-family: var(--font-doto), monospace;
+  font-size: 18px;
+  color: var(--nd-text-display);
+  letter-spacing: var(--nd-tracking-normal);
+}
+
+/* ── Section ── */
+
+.section {
+  padding: var(--nd-space-4) var(--nd-space-5);
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+}
+
+.sectionLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-widest);
+  text-transform: uppercase;
+  margin-bottom: var(--nd-space-2);
+}
+
+/* ── Timeline ── */
+
+.timeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.cell {
+  width: 8px;
+  height: 16px;
+  border: var(--nd-border-width) solid var(--nd-border);
+  opacity: 0.3;
+}
+
+.cell[data-phase="focus"] {
+  background: var(--nd-success);
+  border-color: var(--nd-success);
+  opacity: 1;
+}
+
+.cell[data-phase="break"] {
+  background: var(--nd-text-secondary);
+  border-color: var(--nd-text-secondary);
+  opacity: 1;
+}
+
+.legend {
+  display: flex;
+  gap: var(--nd-space-4);
+  margin-top: var(--nd-space-2);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legendSwatch {
+  width: 8px;
+  height: 8px;
+}
+
+.legendSwatch[data-focus] {
+  background: var(--nd-success);
+}
+
+.legendSwatch[data-break] {
+  background: var(--nd-text-secondary);
+}
+
+.legendLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ── Block log ── */
+
+.logHeader {
+  display: grid;
+  grid-template-columns: 48px 48px 52px 1fr;
+  gap: var(--nd-space-1);
+  margin-bottom: var(--nd-space-1);
+}
+
+.logHeaderCell {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 8px;
+  color: var(--nd-text-disabled);
+  letter-spacing: var(--nd-tracking-wider);
+  text-transform: uppercase;
+}
+
+.logRow {
+  display: grid;
+  grid-template-columns: 48px 48px 52px 1fr;
+  gap: var(--nd-space-1);
+  padding: 5px 0;
+  border-top: var(--nd-border-width) solid var(--nd-border);
+}
+
+.logCell {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+}
+
+.logCellBright {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-primary);
+}
+
+.logCellType {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.logCellType[data-focus] {
+  color: var(--nd-success);
+}
+
+/* ── Actions ── */
+
+.actions {
+  padding: var(--nd-space-4) var(--nd-space-5);
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  gap: var(--nd-space-2);
+  flex-shrink: 0;
+}
+
+.btnNew {
+  flex: 1;
+  padding: 10px 0;
+  background: var(--nd-text-display);
+  color: var(--nd-black);
+  border: none;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-sm);
+  letter-spacing: var(--nd-tracking-wider);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity var(--nd-duration-fast);
+}
+
+.btnNew:hover {
+  opacity: 0.85;
+}
+
+.btnClose {
+  flex: 1;
+  padding: 10px 0;
+  background: transparent;
+  color: var(--nd-text-secondary);
+  border: var(--nd-border-width) solid var(--nd-border);
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-sm);
+  letter-spacing: var(--nd-tracking-wider);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--nd-duration-fast);
+}
+
+.btnClose:hover {
+  border-color: var(--nd-border-visible);
+}

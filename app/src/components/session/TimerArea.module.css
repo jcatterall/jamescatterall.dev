@@ -1,0 +1,311 @@
+.area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  transition: background 600ms ease-out;
+}
+
+/* ── Notification banner ── */
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.notifBanner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: var(--nd-surface);
+  border-bottom: var(--nd-border-width) solid var(--nd-border-visible);
+  padding: 10px var(--nd-space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--nd-space-2);
+  animation: fadeInDown 200ms ease-out both;
+}
+
+@keyframes pulseBanner {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.notifBannerDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nd-interactive);
+  animation: pulseBanner 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.notifBannerMsg {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-primary);
+  letter-spacing: var(--nd-tracking-normal);
+  flex: 1;
+}
+
+.notifBannerDismiss {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* ── Progress line ── */
+
+.progressTrack {
+  height: 2px;
+  background: var(--nd-border);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.progressFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  transition: width 1s linear, background 600ms ease-out;
+}
+
+/* ── Center content ── */
+
+.center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--nd-space-8) var(--nd-space-5);
+  gap: var(--nd-space-5);
+}
+
+/* ── Phase label ── */
+
+@keyframes flashPhase {
+  0%   { opacity: 0; letter-spacing: 0.4em; }
+  30%  { opacity: 1; letter-spacing: var(--nd-tracking-looser); }
+  100% { opacity: 1; letter-spacing: var(--nd-tracking-looser); }
+}
+
+.phaseLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  letter-spacing: var(--nd-tracking-looser);
+  text-transform: uppercase;
+  animation: flashPhase 500ms ease-out both;
+}
+
+/* ── Countdown ── */
+
+.countdown {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--nd-space-2);
+  transition: opacity 300ms ease-out;
+}
+
+.countdownMinutes {
+  font-family: var(--font-doto), monospace;
+  font-size: clamp(96px, 14vw, 160px);
+  font-weight: var(--nd-weight-regular);
+  color: var(--nd-text-display);
+  line-height: var(--nd-leading-none);
+  letter-spacing: var(--nd-tracking-tight);
+}
+
+.countdownSeparator {
+  font-family: var(--font-doto), monospace;
+  font-size: clamp(40px, 5.5vw, 64px);
+  color: var(--nd-text-secondary);
+  line-height: 1.2;
+  padding-bottom: 0.08em;
+}
+
+.countdownSeconds {
+  font-family: var(--font-doto), monospace;
+  font-size: clamp(40px, 5.5vw, 64px);
+  font-weight: var(--nd-weight-regular);
+  color: var(--nd-text-display);
+  line-height: 1.2;
+  letter-spacing: var(--nd-tracking-tight);
+  padding-bottom: 0.08em;
+}
+
+/* ── Session pips ── */
+
+.pips {
+  display: flex;
+  gap: var(--nd-space-2);
+  align-items: center;
+}
+
+.pip {
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  border: var(--nd-border-width) solid var(--nd-border-visible);
+  transition: all 300ms ease-out;
+}
+
+.pip[data-filled] {
+  background: var(--nd-success);
+  border-color: var(--nd-success);
+}
+
+.pipCount {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-md);
+  color: var(--nd-text-secondary);
+  margin-left: var(--nd-space-2);
+  letter-spacing: var(--nd-tracking-wide);
+}
+
+/* ── Controls ── */
+
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btnSecondary {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: var(--nd-border-width) solid var(--nd-border);
+  color: var(--nd-text-secondary);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--nd-duration-fast), color var(--nd-duration-fast);
+}
+
+.btnSecondary:hover {
+  border-color: var(--nd-border-visible);
+}
+
+.btnPrimary {
+  width: 64px;
+  height: 64px;
+  background: var(--nd-text-display);
+  border: var(--nd-border-width) solid var(--nd-text-display);
+  color: var(--nd-black);
+  font-family: var(--font-space-mono), monospace;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease-out;
+}
+
+.btnPrimary[data-running] {
+  background: transparent;
+  border-color: var(--nd-border-visible);
+  color: var(--nd-text-display);
+}
+
+/* ── Hints ── */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.confirmHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-warning);
+  letter-spacing: var(--nd-tracking-wider);
+  animation: fadeIn 150ms ease-out both;
+}
+
+.idleHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-wider);
+  animation: fadeIn 400ms ease-out both;
+}
+
+/* Fixed-height container — always occupies space so countdown never shifts */
+.hintSlot {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Legend ── */
+
+.legendBar {
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  padding: var(--nd-space-3) var(--nd-space-5);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px var(--nd-space-5);
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 200ms ease-out both;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legendKey {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  border: var(--nd-border-width) solid var(--nd-border);
+  background: var(--nd-surface);
+  padding: 2px var(--nd-space-2);
+  letter-spacing: var(--nd-tracking-normal);
+  min-width: 36px;
+  text-align: center;
+}
+
+.legendAction {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-normal);
+}
+
+.legendToggle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-secondary);
+  letter-spacing: var(--nd-tracking-wider);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--nd-duration-fast);
+}
+
+.legendToggle:hover {
+  color: var(--nd-text-primary);
+}

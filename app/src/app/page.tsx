@@ -1,4 +1,4 @@
-import styles from "./page.module.css"
+import styles from "./page.module.css";
 
 const projects = [
   {
@@ -7,6 +7,13 @@ const projects = [
     tags: ["SVG", "TypeScript"],
     year: "2025",
     href: "/barcode",
+  },
+  {
+    title: "Session",
+    desc: "Keyboard-first Pomodoro timer with desktop notifications and a dot-matrix session receipt.",
+    tags: ["TypeScript", "Web API"],
+    year: "2026",
+    href: "/session",
   },
   {
     title: "Dev Dashboard",
@@ -36,18 +43,19 @@ const projects = [
     year: "2022",
     href: "#",
   },
-]
+];
 
 export default function Home() {
   return (
     <main className={styles.layout}>
-
       {/* ── LEFT: Identity ── */}
       <aside className={styles.leftCol}>
         <div className={styles.fadeOverlay} />
         <div className={styles.identity}>
           <h1 className={styles.heroName}>
-            JAMES<br />CATTERALL
+            JAMES
+            <br />
+            CATTERALL
           </h1>
           <div className={styles.divider} />
           <div className={styles.statusRows}>
@@ -66,12 +74,22 @@ export default function Home() {
           </div>
           <div className={styles.dividerThin} />
           <div className={styles.contactRows}>
-            <a href="mailto:james.catterall92@gmail.com" className={styles.contactLink}>
+            <a
+              href="mailto:james.catterall92@gmail.com"
+              className={styles.contactLink}
+            >
               <span className={styles.contactIcon}>✉</span>
-              <span className={styles.contactValue}>james.catterall92@gmail.com</span>
+              <span className={styles.contactValue}>
+                james.catterall92@gmail.com
+              </span>
               <span className={styles.contactArrow}>↗</span>
             </a>
-            <a href="https://github.com/jcatterall" target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
+            <a
+              href="https://github.com/jcatterall"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.contactLink}
+            >
               <span className={styles.contactIcon}>⌥</span>
               <span className={styles.contactValue}>github.com/jcatterall</span>
               <span className={styles.contactArrow}>↗</span>
@@ -100,7 +118,9 @@ export default function Home() {
                 <div className={styles.rowDesc}>{p.desc}</div>
                 <div className={styles.tagRow}>
                   {p.tags.map((t) => (
-                    <span key={t} className={styles.tag}>[{t}]</span>
+                    <span key={t} className={styles.tag}>
+                      [{t}]
+                    </span>
                   ))}
                 </div>
               </div>
@@ -113,7 +133,6 @@ export default function Home() {
           <div className={styles.eof}>{projects.length} entries — EOF</div>
         </div>
       </div>
-
     </main>
-  )
+  );
 }

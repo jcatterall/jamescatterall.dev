@@ -1,0 +1,25 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--nd-space-8) var(--nd-space-5);
+  gap: var(--nd-space-4);
+}
+
+.headline {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-lg);
+  text-transform: uppercase;
+  letter-spacing: var(--nd-tracking-wide);
+  color: var(--nd-text-secondary);
+}
+
+.description {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  font-size: var(--nd-text-body-sm);
+  color: var(--nd-text-tertiary);
+  line-height: var(--nd-leading-body);
+  max-width: 360px;
+}

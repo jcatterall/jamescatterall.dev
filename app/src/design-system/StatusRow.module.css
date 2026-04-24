@@ -1,13 +1,13 @@
 .row {
   display: flex;
-  gap: var(--nd-space-md);
+  gap: var(--nd-space-4);
   align-items: baseline;
 }
 
 .label {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
-  color: var(--nd-text-faint);
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-disabled);
   letter-spacing: var(--nd-tracking-wider);
   text-transform: uppercase;
   min-width: 56px;
@@ -15,7 +15,7 @@
 
 .value {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
+  font-size: var(--nd-text-label-sm);
   color: var(--nd-text-secondary);
   letter-spacing: var(--nd-tracking-normal);
   text-transform: uppercase;

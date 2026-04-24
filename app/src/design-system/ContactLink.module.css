@@ -1,7 +1,7 @@
 .link {
   display: flex;
   align-items: center;
-  gap: var(--nd-space-2xs);
+  gap: var(--nd-space-2);
   text-decoration: none;
   opacity: 1;
   transition: opacity var(--nd-duration-fast);
@@ -13,20 +13,20 @@
 
 .icon {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-base);
-  color: var(--nd-text-faint);
+  font-size: var(--nd-text-label);
+  color: var(--nd-text-disabled);
   line-height: var(--nd-leading-none);
 }
 
 .value {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
+  font-size: var(--nd-text-label-sm);
   color: var(--nd-text-secondary);
   letter-spacing: var(--nd-tracking-tight);
 }
 
 .arrow {
-  font-size: var(--nd-text-base);
+  font-size: var(--nd-text-label);
   color: var(--nd-border-visible);
   margin-left: auto;
 }

@@ -2,13 +2,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(var(--nd-space-sm) + var(--nd-space-xs));
-  padding: var(--nd-space-xl);
+  gap: calc(var(--nd-space-2) + var(--nd-space-1));
+  padding: var(--nd-space-6);
   width: 100%;
   max-width: 350px;
   background-color: white; /* intentional: barcodes require white background */
   border: var(--nd-border-width-thick) solid var(--nd-border-visible);
-  border-radius: var(--nd-radius-xl);
+  border-radius: var(--nd-radius-lg);
   box-shadow: var(--nd-shadow-card);
 }
 
@@ -24,8 +24,8 @@
 
 .digits {
   display: flex;
-  gap: var(--nd-space-xs);
-  font-size: var(--nd-text-base);
+  gap: var(--nd-space-1);
+  font-size: var(--nd-text-label);
   font-weight: 400;
   letter-spacing: 0.15em; /* EAN-13 spec digit spacing */
   color: #000; /* intentional: barcode digit text must be black on white */

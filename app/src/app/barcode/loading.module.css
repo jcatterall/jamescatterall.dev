@@ -3,19 +3,25 @@
   50% { opacity: 0.4; }
 }
 
-.page {
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: var(--nd-space-3xl) var(--nd-space-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--nd-space-2xl);
+/* shared pulse */
+.skeletonLabel,
+.skeletonInput,
+.skeletonHint,
+.skeletonChip,
+.skeletonSwatch,
+.skeletonButton,
+.skeletonSvg,
+.skeletonDigits {
+  background-color: var(--nd-surface-raised);
+  animation: pulse 1.8s ease-in-out infinite;
 }
+
+/* ── LAYOUT ── mirrors BarcodeGenerator.module.css */
 
 .layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--nd-space-xl);
+  gap: var(--nd-space-6);
 }
 
 @media (min-width: 768px) {
@@ -25,71 +31,110 @@
   }
 }
 
+/* ── CONTROLS PANEL ── */
+
 .controls {
   display: flex;
   flex-direction: column;
-  gap: var(--nd-space-lg);
-  padding: var(--nd-space-lg);
+  gap: var(--nd-space-5);
+  padding: var(--nd-space-5);
   background-color: var(--nd-surface);
   border: var(--nd-border-width) solid var(--nd-border-visible);
-  border-radius: var(--nd-radius-xl);
+  border-radius: var(--nd-radius-lg);
 }
 
-.skeletonField {
+.field {
   display: flex;
   flex-direction: column;
-  gap: var(--nd-space-sm);
-}
-
-/* shared pulse */
-.skeletonLabel,
-.skeletonInput,
-.skeletonChips,
-.skeletonSwatches,
-.skeletonButton,
-.skeletonPreview {
-  background-color: var(--nd-surface-raised);
-  border-radius: var(--nd-radius-sm);
-  animation: pulse 1.8s ease-in-out infinite;
+  gap: var(--nd-space-2);
 }
 
 .skeletonLabel {
   height: 11px;
   width: 80px;
+  border-radius: var(--nd-radius-sm);
 }
 
 .skeletonInput {
   height: 40px;
   width: 100%;
-  border-radius: var(--nd-radius-md);
-  animation-delay: 0.15s;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.1s;
+}
+
+.skeletonHint {
+  height: 11px;
+  width: 24px;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.12s;
 }
 
 .skeletonChips {
-  height: 28px;
-  width: 220px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skeletonChip {
+  height: 27px;
   border-radius: var(--nd-radius-pill);
-  animation-delay: 0.2s;
+  flex-shrink: 0;
+  animation-delay: 0.15s;
 }
 
 .skeletonSwatches {
+  display: flex;
+  gap: var(--nd-space-2);
+  flex-wrap: wrap;
+}
+
+.skeletonSwatch {
+  width: 28px;
   height: 28px;
-  width: 160px;
   border-radius: var(--nd-radius-sm);
-  animation-delay: 0.25s;
+  flex-shrink: 0;
+  animation-delay: 0.2s;
 }
 
 .skeletonButton {
-  height: 44px;
+  min-height: 44px;
   width: 100%;
   border-radius: var(--nd-radius-pill);
-  animation-delay: 0.3s;
+  animation-delay: 0.25s;
 }
 
-.skeletonPreview {
+/* ── PREVIEW ── mirrors BarcodePreview.module.css */
+
+.preview {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.skeletonPreviewCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--nd-space-2) + var(--nd-space-1));
+  padding: var(--nd-space-6);
   width: 100%;
   max-width: 350px;
-  aspect-ratio: 285 / 466;
-  border-radius: var(--nd-radius-xl);
-  animation-delay: 0.1s;
+  background-color: white;
+  border: var(--nd-border-width-thick) solid var(--nd-border-visible);
+  border-radius: var(--nd-radius-lg);
+  box-shadow: var(--nd-shadow-card);
+}
+
+.skeletonSvg {
+  width: 100%;
+  aspect-ratio: 285 / 430;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.05s;
+}
+
+.skeletonDigits {
+  height: 13px;
+  width: 180px;
+  border-radius: var(--nd-radius-sm);
+  animation-delay: 0.08s;
 }

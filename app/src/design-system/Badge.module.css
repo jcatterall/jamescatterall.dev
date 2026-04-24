@@ -1,14 +1,15 @@
 .badge {
   display: inline-flex;
   align-items: center;
+  gap: var(--nd-space-1);
   justify-content: center;
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-base);
+  font-size: var(--nd-text-label);
   font-weight: 400;
   letter-spacing: var(--nd-tracking-wide);
   text-transform: uppercase;
   white-space: nowrap;
-  padding: var(--nd-space-xs) calc(var(--nd-space-sm) + var(--nd-space-xs));
+  padding: var(--nd-space-1) calc(var(--nd-space-2) + var(--nd-space-1));
   border-radius: var(--nd-radius-pill);
   border: var(--nd-border-width) solid var(--nd-border-visible);
   color: var(--nd-text-secondary);
@@ -21,7 +22,55 @@
   color: var(--nd-text-primary);
 }
 
+/* ── Variants ──────────────────────────────────────────────── */
+
 .active {
-  border-color: var(--nd-text-display);
+  border-color: var(--nd-border-strong);
   color: var(--nd-text-display);
+}
+
+.badgeDisabled {
+  border-color: var(--nd-border);
+  color: var(--nd-text-disabled);
+  pointer-events: none;
+}
+
+.accent {
+  border-color: var(--nd-accent-border);
+  color: var(--nd-accent);
+}
+
+.success {
+  border-color: var(--nd-success-border);
+  color: var(--nd-success);
+}
+
+.warning {
+  border-color: var(--nd-warning-border);
+  color: var(--nd-warning);
+}
+
+.info {
+  border-color: var(--nd-interactive-border);
+  color: var(--nd-interactive);
+}
+
+/* ── Status dot ────────────────────────────────────────────── */
+
+.dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.dotBlink {
+  animation: ndBlink 2s ease-in-out infinite;
+}
+
+@keyframes ndBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }

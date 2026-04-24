@@ -5,9 +5,9 @@
 }
 
 .chip {
-  padding: var(--nd-space-xs) calc(var(--nd-space-sm) + var(--nd-space-xs));
+  padding: var(--nd-space-1) calc(var(--nd-space-2) + var(--nd-space-1));
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-base);
+  font-size: var(--nd-text-label);
   letter-spacing: var(--nd-tracking-wide);
   text-transform: uppercase;
   border: var(--nd-border-width) solid var(--nd-border-visible);
@@ -19,7 +19,7 @@
 }
 
 .chip:hover {
-  border-color: var(--nd-text-disabled);
+  border-color: var(--nd-text-tertiary);
   color: var(--nd-text-primary);
 }
 

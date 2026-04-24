@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Film Barcode — jamescatterall.dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #0a0a0a; color: #e8e8e8; font-family: 'Space Grotesk', sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #222; }
+  input[type=range] { -webkit-appearance: none; appearance: none; height: 1px; background: #333; outline: none; width: 100%; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 11px; height: 11px; background: #e8e8e8; cursor: pointer; }
+  input[type=range]::-moz-range-thumb { width: 11px; height: 11px; background: #e8e8e8; border: none; border-radius: 0; }
+  input[type=text] { background: #000; border: 1px solid #222; color: #e8e8e8; font-family: 'Space Mono', monospace; font-size: 11px; padding: 8px 10px; width: 100%; outline: none; letter-spacing: 0.03em; transition: border-color 150ms; }
+  input[type=text]:focus { border-color: #444; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes buildIn { from{opacity:0} to{opacity:1} }
+  @keyframes scanPulse { 0%,100%{opacity:0.4} 50%{opacity:0.9} }
+  button { font-family: 'Space Mono', monospace; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+/* ── TOKENS ── */
+const nd = {
+  bg: '#0a0a0a', black: '#000000',
+  surface: '#111111', surfaceRaised: '#1a1a1a',
+  border: '#1e1e1e', borderVisible: '#333333',
+  textDisabled: '#333333', textSecondary: '#555555',
+  textMid: '#999999', textPrimary: '#e8e8e8', textDisplay: '#ffffff',
+  accent: '#d71921', success: '#4a9e5c', warning: '#d4a843', interactive: '#5b9bf6',
+  mono: "'Space Mono', monospace", grotesk: "'Space Grotesk', sans-serif", doto: "'Doto', monospace",
+};
+
+/* ── DEMO FILM PALETTES ── */
+const DEMO_FILMS = [
+  {
+    id: 'br2049',
+    label: 'Blade Runner 2049',
+    duration: 9720, // 162 min
+    palette: (t) => {
+      // Teal-orange dominant, cold exterior, warm interior, deep blue skyline
+      const act = t < 0.25 ? 0 : t < 0.55 ? 1 : t < 0.78 ? 2 : 3;
+      const n = Math.sin(t * 180 + act) * 0.12 + Math.sin(t * 40) * 0.06;
+      if (act === 0) return hsl(195 + n * 20, 45 + n * 10, 18 + n * 8);  // cold teal open
+      if (act === 1) return hsl(28 + n * 30,  60 + n * 15, 22 + n * 10); // amber city
+      if (act === 2) return hsl(210 + n * 25, 50 + n * 10, 12 + n * 6);  // deep blue/grey
+      return hsl(16 + n * 40, 65 + n * 10, 28 + n * 12);                 // warm climax
+    },
+  },
+  {
+    id: 'moonlight',
+    label: 'Moonlight',
+    duration: 6540, // 109 min
+    palette: (t) => {
+      const act = t < 0.33 ? 0 : t < 0.66 ? 1 : 2;
+      const n = Math.sin(t * 120) * 0.1 + Math.sin(t * 30) * 0.05;
+      if (act === 0) return hsl(220 + n * 30, 55, 22 + n * 8);   // moonlit deep blue
+      if (act === 1) return hsl(200 + n * 20, 40, 30 + n * 10);  // humid grey-blue
+      return hsl(240 + n * 25, 35 + n * 10, 18 + n * 6);         // cool resolution
+    },
+  },
+  {
+    id: 'lalaland',
+    label: 'La La Land',
+    duration: 7860, // 131 min
+    palette: (t) => {
+      // Vibrant saturated, pink/lavender, golden hour
+      const n = Math.sin(t * 200) * 0.1 + Math.sin(t * 50) * 0.06;
+      const base = (t * 320 + 40) % 360;
+      return hsl(base + n * 30, 65 + n * 15, 52 + n * 10);
+    },
+  },
+  {
+    id: 'fury',
+    label: 'Mad Max: Fury Road',
+    duration: 7200, // 120 min
+    palette: (t) => {
+      // Harsh orange desert, teal correction, explosive saturation
+      const n = Math.sin(t * 250) * 0.15 + Math.sin(t * 60) * 0.08;
+      const isTeal = Math.sin(t * 8) > 0.7;
+      if (isTeal) return hsl(185 + n * 20, 50 + n * 10, 28 + n * 10);
+      return hsl(24 + n * 25, 80 + n * 10, 38 + n * 12);
+    },
+  },
+  {
+    id: 'parasite',
+    label: 'Parasite',
+    duration: 8340, // 139 min
+    palette: (t) => {
+      const act = t < 0.4 ? 0 : t < 0.7 ? 1 : 2;
+      const n = Math.sin(t * 160) * 0.08;
+      if (act === 0) return hsl(55 + n * 20, 18 + n * 8, 42 + n * 10);   // warm clinical
+      if (act === 1) return hsl(220 + n * 20, 20 + n * 10, 22 + n * 8);  // cold descent
+      return hsl(0 + n * 20, 55 + n * 15, 20 + n * 8);                   // dark red
+    },
+  },
+];
+
+function hsl(h, s, l) {
+  // Convert HSL to hex
+  h = ((h % 360) + 360) % 360;
+  s = Math.max(0, Math.min(100, s)) / 100;
+  l = Math.max(0, Math.min(100, l)) / 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
+  let r, g, b;
+  if (h < 60)      { r=c; g=x; b=0; }
+  else if (h < 120){ r=x; g=c; b=0; }
+  else if (h < 180){ r=0; g=c; b=x; }
+  else if (h < 240){ r=0; g=x; b=c; }
+  else if (h < 300){ r=x; g=0; b=c; }
+  else             { r=c; g=0; b=x; }
+  const toHex = v => Math.round((v+m)*255).toString(16).padStart(2,'0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+/* ── LABEL ── */
+const Label = ({ children, style }) => (
+  <div style={{ fontFamily: nd.mono, fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.08em', color: nd.textSecondary, ...style }}>{children}</div>
+);
+
+/* ── SEGMENTED ── */
+const Segmented = ({ options, value, onChange }) => (
+  <div style={{ display: 'flex', background: nd.black, border: `1px solid ${nd.border}` }}>
+    {options.map(o => (
+      <button key={o.value} onClick={() => onChange(o.value)} style={{
+        flex: 1, padding: '6px 0', border: 'none',
+        fontFamily: nd.mono, fontSize: 9, letterSpacing: '0.05em', textTransform: 'uppercase',
+        background: value === o.value ? nd.textDisplay : 'transparent',
+        color: value === o.value ? nd.black : nd.textSecondary,
+        cursor: 'pointer', transition: 'all 150ms ease-out',
+        borderRight: `1px solid ${nd.border}`,
+      }}>{o.label}</button>
+    ))}
+  </div>
+);
+
+/* ── NAV ── */
+const Nav = () => (
+  <nav style={{
+    height: 48, borderBottom: `1px solid ${nd.border}`,
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '0 20px', background: 'rgba(10,10,10,0.96)', flexShrink: 0,
+  }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <a href="#" style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary, letterSpacing: '0.06em', transition: 'color 150ms' }}
+        onMouseEnter={e => e.currentTarget.style.color = nd.textPrimary}
+        onMouseLeave={e => e.currentTarget.style.color = nd.textSecondary}
+      >← BACK</a>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary }}>
+          <span style={{ color: nd.accent }}>{'>'}</span> jcatterall
+        </span>
+        <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary }}>/</span>
+        <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textPrimary, letterSpacing: '0.06em' }}>film-barcode</span>
+      </div>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textDisabled, letterSpacing: '0.06em' }}>BROWSER-ONLY · NO UPLOAD</span>
+    </div>
+  </nav>
+);
+
+/* ── SIDEBAR ── */
+const Sidebar = ({ settings, setSettings, status, onStart, onCancel, onExport, film, hasResult }) => {
+  const [urlInput, setUrlInput] = React.useState('');
+  const [selectedDemo, setSelectedDemo] = React.useState(DEMO_FILMS[0].id);
+  const set = (k, v) => setSettings(s => ({ ...s, [k]: v }));
+  const isIdle = status === 'idle';
+  const isProcessing = status === 'processing';
+  const isComplete = status === 'complete';
+
+  const totalFrames = film ? Math.floor(film.duration * settings.sampleRate) : 0;
+  const estSecs = totalFrames > 0 ? (totalFrames * 0.05).toFixed(1) : '—';
+
+  return (
+    <aside style={{
+      width: 260, flexShrink: 0, borderRight: `1px solid ${nd.border}`,
+      display: 'flex', flexDirection: 'column', background: nd.bg, overflow: 'hidden',
+    }}>
+      {/* Header */}
+      <div style={{ padding: '20px 20px 16px', borderBottom: `1px solid ${nd.border}`, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+          <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.accent }}>{'>'}</span>
+          <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary, letterSpacing: '0.06em' }}>./film-barcode</span>
+        </div>
+        <div style={{ fontFamily: nd.grotesk, fontSize: 16, fontWeight: 600, color: nd.textDisplay }}>Film Barcode</div>
+        <div style={{ fontFamily: nd.grotesk, fontSize: 12, color: nd.textSecondary, marginTop: 4, lineHeight: 1.5 }}>
+          Collapse any film into a single image of colour.
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+        {/* Input */}
+        <div>
+          <Label style={{ marginBottom: 10 }}>Input</Label>
+          {/* File drop zone */}
+          <div style={{
+            border: `1px dashed ${nd.borderVisible}`,
+            padding: '16px 12px',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+            cursor: 'pointer', marginBottom: 10,
+            transition: 'border-color 150ms',
+          }}
+            onMouseEnter={e => e.currentTarget.style.borderColor = nd.textMid}
+            onMouseLeave={e => e.currentTarget.style.borderColor = nd.borderVisible}
+          >
+            <span style={{ fontFamily: nd.mono, fontSize: 16, color: nd.textSecondary }}>↑</span>
+            <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', textTransform: 'uppercase' }}>DROP VIDEO FILE</span>
+            <span style={{ fontFamily: nd.grotesk, fontSize: 11, color: nd.textDisabled }}>MP4, MOV, WebM — up to 4 GB</span>
+          </div>
+          {/* URL input */}
+          <Label style={{ marginBottom: 6 }}>OR DIRECT URL (.mp4 only)</Label>
+          <input type="text" placeholder="https://example.com/film.mp4" value={urlInput}
+            onChange={e => setUrlInput(e.target.value)}
+          />
+          <div style={{ fontFamily: nd.grotesk, fontSize: 10, color: nd.textDisabled, marginTop: 5, lineHeight: 1.5 }}>
+            YouTube / Vimeo not supported (CORS).
+          </div>
+        </div>
+
+        {/* Demo selector */}
+        <div>
+          <Label style={{ marginBottom: 10 }}>Demo Film</Label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {DEMO_FILMS.map(f => (
+              <button key={f.id} onClick={() => setSelectedDemo(f.id)} style={{
+                textAlign: 'left', padding: '7px 10px',
+                border: `1px solid ${selectedDemo === f.id ? nd.textPrimary : nd.border}`,
+                background: selectedDemo === f.id ? nd.surfaceRaised : 'transparent',
+                color: selectedDemo === f.id ? nd.textPrimary : nd.textSecondary,
+                fontFamily: nd.mono, fontSize: 9, letterSpacing: '0.04em',
+                cursor: 'pointer', transition: 'all 150ms',
+              }}>{f.label}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Sample rate */}
+        <div>
+          <Label style={{ marginBottom: 10 }}>Sample Rate</Label>
+          <Segmented
+            options={[
+              { label: '0.25', value: 0.25 },
+              { label: '1', value: 1 },
+              { label: '2', value: 2 },
+              { label: '4', value: 4 },
+            ]}
+            value={settings.sampleRate}
+            onChange={v => set('sampleRate', v)}
+          />
+          <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textDisabled, marginTop: 6 }}>FPS — HIGHER = MORE DETAIL</div>
+        </div>
+
+        {/* Bar height */}
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <Label>Bar Height</Label>
+            <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textPrimary }}>{settings.barHeight}px</span>
+          </div>
+          <input type="range" min={1} max={8} step={1} value={settings.barHeight}
+            onChange={e => set('barHeight', Number(e.target.value))} />
+        </div>
+
+        {/* Output width */}
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <Label>Output Width</Label>
+            <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textPrimary }}>{settings.outputWidth}px</span>
+          </div>
+          <input type="range" min={400} max={2400} step={100} value={settings.outputWidth}
+            onChange={e => set('outputWidth', Number(e.target.value))} />
+        </div>
+
+        {/* Palette depth */}
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <Label>Palette Depth</Label>
+            <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textPrimary }}>{settings.paletteDepth} colour{settings.paletteDepth > 1 ? 's' : ''}</span>
+          </div>
+          <input type="range" min={1} max={5} step={1} value={settings.paletteDepth}
+            onChange={e => set('paletteDepth', Number(e.target.value))} />
+          <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textDisabled, marginTop: 4 }}>
+            {settings.paletteDepth > 1 ? 'BARS SPLIT BY COLOUR PROPORTION' : 'SINGLE DOMINANT COLOUR PER BAR'}
+          </div>
+        </div>
+
+        {/* Timestamp overlay */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Label>Timestamp Overlay</Label>
+          <div onClick={() => set('timestampOverlay', !settings.timestampOverlay)} style={{
+            width: 32, height: 16, background: settings.timestampOverlay ? nd.success : nd.border,
+            position: 'relative', cursor: 'pointer', transition: 'background 200ms',
+          }}>
+            <div style={{
+              position: 'absolute', top: 3, width: 10, height: 10,
+              left: settings.timestampOverlay ? 18 : 3,
+              background: nd.textDisplay, transition: 'left 200ms',
+            }} />
+          </div>
+        </div>
+
+        {/* Frame estimate */}
+        {selectedDemo && (
+          <div style={{
+            background: nd.surface, border: `1px solid ${nd.border}`,
+            padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 5,
+          }}>
+            {[
+              { k: 'FILM', v: DEMO_FILMS.find(f => f.id === selectedDemo)?.label },
+              { k: 'FRAMES', v: `~${Math.floor(DEMO_FILMS.find(f=>f.id===selectedDemo)?.duration * settings.sampleRate)} frames` },
+              { k: 'EST. TIME', v: `~${(Math.floor(DEMO_FILMS.find(f=>f.id===selectedDemo)?.duration * settings.sampleRate) * 0.05).toFixed(1)}s` },
+            ].map(({ k, v }) => (
+              <div key={k} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.06em' }}>{k}</span>
+                <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textPrimary }}>{v}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div style={{ padding: '14px 20px', borderTop: `1px solid ${nd.border}`, display: 'flex', flexDirection: 'column', gap: 8, flexShrink: 0 }}>
+        {!isProcessing ? (
+          <button onClick={() => onStart(selectedDemo)} style={{
+            padding: '11px 0', background: nd.textDisplay, color: nd.black, border: 'none',
+            fontFamily: nd.mono, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase',
+            cursor: 'pointer', transition: 'opacity 150ms', width: '100%',
+          }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+          >▶ PROCESS FILM</button>
+        ) : (
+          <button onClick={onCancel} style={{
+            padding: '11px 0', background: 'transparent', color: nd.accent,
+            border: `1px solid ${nd.accent}`,
+            fontFamily: nd.mono, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase',
+            cursor: 'pointer', width: '100%',
+          }}>✕ CANCEL</button>
+        )}
+        {isComplete && (
+          <div style={{ display: 'flex', gap: 6 }}>
+            {[
+              { label: '↓ PNG', action: 'png' },
+              { label: '↓ SVG', action: 'svg' },
+              { label: '⌥ CSS', action: 'css' },
+            ].map(({ label, action }) => (
+              <button key={action} onClick={() => onExport(action)} style={{
+                flex: 1, padding: '8px 0',
+                background: 'transparent', color: nd.textMid,
+                border: `1px solid ${nd.border}`,
+                fontFamily: nd.mono, fontSize: 9, letterSpacing: '0.06em', textTransform: 'uppercase',
+                cursor: 'pointer', transition: 'all 150ms',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = nd.borderVisible; e.currentTarget.style.color = nd.textPrimary; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = nd.border; e.currentTarget.style.color = nd.textMid; }}
+              >{label}</button>
+            ))}
+          </div>
+        )}
+      </div>
+    </aside>
+  );
+};
+
+/* ── IDLE SCREEN ── */
+const IdleScreen = ({ onStart }) => (
+  <div style={{
+    flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+    background: nd.bg, position: 'relative', overflow: 'hidden',
+    animation: 'fadeIn 300ms ease-out both',
+  }}>
+    {/* Dot grid */}
+    <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, #1a1a1a 1px, transparent 1px)', backgroundSize: '18px 18px', opacity: 0.5 }} />
+
+    {/* Film strip preview — vertical color swatches */}
+    <div style={{ position: 'relative', zIndex: 1, display: 'flex', gap: 3, marginBottom: 40, opacity: 0.35 }}>
+      {DEMO_FILMS.map(film => (
+        <div key={film.id} style={{ width: 24, display: 'flex', flexDirection: 'column', gap: 1 }}>
+          {Array.from({ length: 40 }, (_, i) => (
+            <div key={i} style={{ height: 8, background: film.palette(i / 40), width: '100%' }} />
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+      <div style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary, letterSpacing: '0.1em', marginBottom: 8 }}>
+        SELECT A FILM IN THE SIDEBAR
+      </div>
+      <button onClick={() => onStart(DEMO_FILMS[0].id)} style={{
+        padding: '10px 28px', background: 'transparent',
+        color: nd.textMid, border: `1px solid ${nd.border}`,
+        fontFamily: nd.mono, fontSize: 10, letterSpacing: '0.07em', textTransform: 'uppercase',
+        cursor: 'pointer', transition: 'all 150ms',
+      }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = nd.borderVisible; e.currentTarget.style.color = nd.textPrimary; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = nd.border; e.currentTarget.style.color = nd.textMid; }}
+      >OR TRY A DEMO →</button>
+    </div>
+  </div>
+);
+
+/* ── BARCODE CANVAS ── */
+const BarcodeCanvas = ({ filmId, settings, status, onComplete }) => {
+  const canvasRef = React.useRef(null);
+  const rafRef = React.useRef(null);
+  const cancelledRef = React.useRef(false);
+  const [progress, setProgress] = React.useState({ current: 0, total: 0 });
+  const [dominantColors, setDominantColors] = React.useState([]);
+
+  React.useEffect(() => {
+    if (status !== 'processing' || !filmId) return;
+    cancelledRef.current = false;
+
+    const film = DEMO_FILMS.find(f => f.id === filmId);
+    if (!film) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const totalFrames = Math.floor(film.duration * settings.sampleRate);
+    const barH = settings.barHeight;
+    const canvasH = Math.min(totalFrames * barH, 6000);
+    const effectiveBarH = canvasH / totalFrames;
+
+    canvas.width = settings.outputWidth;
+    canvas.height = Math.max(canvasH, 1);
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    setProgress({ current: 0, total: totalFrames });
+    setDominantColors([]);
+
+    let frameIdx = 0;
+    const BATCH = 8; // frames per animation tick — controls speed
+
+    const tick = () => {
+      if (cancelledRef.current) return;
+      for (let b = 0; b < BATCH && frameIdx < totalFrames; b++, frameIdx++) {
+        const t = frameIdx / totalFrames;
+        const color = film.palette(t);
+
+        if (settings.paletteDepth === 1) {
+          ctx.fillStyle = color;
+          ctx.fillRect(0, frameIdx * effectiveBarH, settings.outputWidth, Math.ceil(effectiveBarH));
+        } else {
+          // Subdivide bar into palette segments
+          const segW = settings.outputWidth / settings.paletteDepth;
+          for (let p = 0; p < settings.paletteDepth; p++) {
+            const pt = (t + p * 0.07) % 1;
+            ctx.fillStyle = film.palette(pt);
+            ctx.fillRect(p * segW, frameIdx * effectiveBarH, segW, Math.ceil(effectiveBarH));
+          }
+        }
+
+        // Timestamp overlay — every 10 minutes
+        if (settings.timestampOverlay && frameIdx % Math.floor(600 * settings.sampleRate) === 0 && frameIdx > 0) {
+          const mins = Math.floor((frameIdx / settings.sampleRate) / 60);
+          ctx.fillStyle = 'rgba(255,255,255,0.45)';
+          ctx.font = `9px 'Space Mono', monospace`;
+          ctx.fillText(`${mins}m`, settings.outputWidth - 28, frameIdx * effectiveBarH + 10);
+        }
+
+        setDominantColors(prev => {
+          const c = [...prev];
+          if (frameIdx % Math.ceil(totalFrames / 12) === 0) c.push(color);
+          return c;
+        });
+      }
+
+      setProgress({ current: frameIdx, total: totalFrames });
+
+      if (frameIdx < totalFrames) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        onComplete();
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      cancelledRef.current = true;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [status, filmId]);
+
+  const pct = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
+
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: nd.black }}>
+      {/* Canvas scroll area */}
+      <div style={{ flex: 1, overflow: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', padding: 24 }}>
+        <canvas
+          ref={canvasRef}
+          style={{
+            display: 'block',
+            maxWidth: '100%',
+            height: 'auto',
+            imageRendering: 'pixelated',
+          }}
+        />
+      </div>
+
+      {/* Progress bar + stats */}
+      {(status === 'processing' || status === 'complete') && (
+        <div style={{ borderTop: `1px solid ${nd.border}`, background: nd.bg, flexShrink: 0 }}>
+          {/* Thin progress bar */}
+          <div style={{ height: 2, background: nd.border, position: 'relative' }}>
+            <div style={{
+              position: 'absolute', left: 0, top: 0, bottom: 0,
+              width: `${pct}%`,
+              background: status === 'complete' ? nd.success : nd.accent,
+              transition: 'width 100ms linear, background 300ms ease-out',
+            }} />
+          </div>
+
+          <div style={{ padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ fontFamily: nd.mono, fontSize: 10, color: status === 'complete' ? nd.success : nd.textMid, letterSpacing: '0.05em' }}>
+              {status === 'complete'
+                ? `COMPLETE — ${progress.total} FRAMES PROCESSED`
+                : `PROCESSING — ${progress.current.toLocaleString()} / ${progress.total.toLocaleString()} FRAMES — ${pct}%`
+              }
+            </div>
+
+            {/* Dominant color swatches */}
+            <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+              <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textDisabled, letterSpacing: '0.06em', marginRight: 6 }}>PALETTE</span>
+              {dominantColors.map((c, i) => (
+                <div key={i} style={{ width: 12, height: 12, background: c }} title={c} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ── APP ── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "defaultFilm": "br2049"
+}/*EDITMODE-END*/;
+
+const DEFAULT_SETTINGS = {
+  sampleRate: 1, barHeight: 2, outputWidth: 800,
+  paletteDepth: 1, timestampOverlay: false,
+};
+
+const App = () => {
+  const [status, setStatus] = React.useState('idle');
+  const [settings, setSettings] = React.useState(DEFAULT_SETTINGS);
+  const [activeFilm, setActiveFilm] = React.useState(null);
+  const [tweakOpen, setTweakOpen] = React.useState(false);
+  const [tweaks] = React.useState(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    const h = e => {
+      if (e.data?.type === '__activate_edit_mode') setTweakOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweakOpen(false);
+    };
+    window.addEventListener('message', h);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', h);
+  }, []);
+
+  const handleStart = (filmId) => {
+    setActiveFilm(filmId);
+    setStatus('processing');
+  };
+
+  const handleCancel = () => setStatus('idle');
+  const handleComplete = () => setStatus('complete');
+  const handleExport = (type) => {
+    alert(`${type.toUpperCase()} export — in production this would download the canvas as a ${type === 'css' ? 'linear-gradient string' : type.toUpperCase()} file.`);
+  };
+
+  return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: nd.bg, overflow: 'hidden' }}>
+      <Nav />
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <Sidebar
+          settings={settings}
+          setSettings={setSettings}
+          status={status}
+          onStart={handleStart}
+          onCancel={handleCancel}
+          onExport={handleExport}
+          film={activeFilm ? DEMO_FILMS.find(f => f.id === activeFilm) : null}
+          hasResult={status === 'complete'}
+        />
+
+        {status === 'idle'
+          ? <IdleScreen onStart={handleStart} />
+          : <BarcodeCanvas
+              filmId={activeFilm}
+              settings={settings}
+              status={status}
+              onComplete={handleComplete}
+            />
+        }
+      </div>
+
+      {/* Tweaks */}
+      {tweakOpen && (
+        <div style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
+          background: nd.surface, border: `1px solid ${nd.borderVisible}`,
+          padding: 20, width: 220, display: 'flex', flexDirection: 'column', gap: 14,
+        }}>
+          <div style={{ fontFamily: nd.mono, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.08em', color: nd.textMid }}>Tweaks</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', marginBottom: 4 }}>LOAD DEMO</div>
+            {DEMO_FILMS.map(f => (
+              <button key={f.id} onClick={() => handleStart(f.id)} style={{
+                textAlign: 'left', padding: '6px 10px',
+                border: `1px solid ${activeFilm === f.id ? nd.textPrimary : nd.border}`,
+                background: 'transparent', color: activeFilm === f.id ? nd.textPrimary : nd.textSecondary,
+                fontFamily: nd.mono, fontSize: 9, cursor: 'pointer', letterSpacing: '0.04em',
+              }}>{f.label}</button>
+            ))}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', marginBottom: 4 }}>RESET</div>
+            <button onClick={() => { setStatus('idle'); setActiveFilm(null); }} style={{
+              padding: '7px', border: `1px solid ${nd.border}`,
+              background: 'transparent', color: nd.textMid,
+              fontFamily: nd.mono, fontSize: 9, cursor: 'pointer',
+            }}>BACK TO IDLE</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 .row {
   position: relative;
-  padding: var(--nd-space-md) var(--nd-space-lg) var(--nd-space-md) 20px;
+  padding: var(--nd-space-4) var(--nd-space-5) var(--nd-space-4) 20px;
   border-bottom: var(--nd-border-width) solid var(--nd-surface-raised);
   display: flex;
   justify-content: space-between;
@@ -39,12 +39,12 @@
 
 .body {
   flex: 1;
-  padding-right: var(--nd-space-md);
+  padding-right: var(--nd-space-4);
 }
 
 .title {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-lg);
+  font-size: var(--nd-text-label-lg);
   color: var(--nd-text-display);
   letter-spacing: var(--nd-tracking-tight);
   margin-bottom: 5px;
@@ -53,10 +53,10 @@
 
 .desc {
   font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-sm);
-  color: var(--nd-text-disabled);
+  font-size: var(--nd-text-label-sm);
+  color: var(--nd-text-tertiary);
   line-height: var(--nd-leading-relaxed);
-  margin-bottom: var(--nd-space-sm);
+  margin-bottom: var(--nd-space-2);
   letter-spacing: var(--nd-tracking-tight);
 }
 
@@ -70,7 +70,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--nd-space-xs);
+  gap: var(--nd-space-1);
   min-width: 48px;
 }
 
@@ -83,6 +83,6 @@
 
 .arrow {
   font-size: var(--nd-text-xl);
-  color: var(--nd-text-faint);
+  color: var(--nd-text-disabled);
   transition: color var(--nd-duration-fast);
 }

@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session — jamescatterall.dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #0a0a0a; color: #e8e8e8; font-family: 'Space Grotesk', sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #222; }
+  input[type=number] {
+    -moz-appearance: textfield;
+    background: #000; border: 1px solid #222; color: #e8e8e8;
+    font-family: 'Space Mono', monospace; font-size: 12px;
+    padding: 6px 8px; width: 100%; outline: none;
+    letter-spacing: 0.04em;
+    transition: border-color 150ms ease-out;
+  }
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  input[type=number]:focus { border-color: #444; }
+  @keyframes pulseGreen { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes pulseAccent { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes flashPhase { 0%{opacity:0;letter-spacing:0.4em} 30%{opacity:1;letter-spacing:0.12em} 100%{opacity:1;letter-spacing:0.12em} }
+  @keyframes receiptIn { from{transform:translateX(100%)} to{transform:translateX(0)} }
+  button { font-family: 'Space Mono', monospace; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+/* ── TOKENS ── */
+const nd = {
+  bg: '#0a0a0a', black: '#000000',
+  surface: '#111111', surfaceRaised: '#1a1a1a',
+  border: '#222222', borderVisible: '#333333',
+  textDisabled: '#333333', textSecondary: '#555555',
+  textMid: '#999999', textPrimary: '#e8e8e8', textDisplay: '#ffffff',
+  accent: '#d71921', success: '#4a9e5c',
+  warning: '#d4a843', interactive: '#5b9bf6',
+  mono: "'Space Mono', monospace",
+  grotesk: "'Space Grotesk', sans-serif",
+  doto: "'Doto', monospace",
+};
+
+const PHASE_META = {
+  idle:        { label: 'READY',       color: nd.textMid,    dimColor: '#222',       bg: nd.bg },
+  focus:       { label: 'FOCUS',       color: nd.success,    dimColor: '#1a2e1e',    bg: '#030a04' },
+  short_break: { label: 'SHORT BREAK', color: nd.interactive, dimColor: '#0d1520',  bg: '#030508' },
+  long_break:  { label: 'LONG BREAK',  color: nd.warning,    dimColor: '#2a2010',    bg: '#080602' },
+};
+
+/* ── HELPERS ── */
+const fmt = (s) => {
+  const m = Math.floor(s / 60), sec = s % 60;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+};
+
+const totalSec = (m) => m * 60;
+
+const DEMO_BLOCKS = (() => {
+  const now = Date.now();
+  const blocks = [];
+  let cursor = now - 2.4 * 3600 * 1000;
+  const sequence = [
+    { phase: 'focus', dur: 25 }, { phase: 'short_break', dur: 5 },
+    { phase: 'focus', dur: 25 }, { phase: 'short_break', dur: 5 },
+    { phase: 'focus', dur: 22 }, { phase: 'short_break', dur: 5 },
+    { phase: 'focus', dur: 25 }, { phase: 'long_break', dur: 15 },
+    { phase: 'focus', dur: 25 }, { phase: 'short_break', dur: 5 },
+    { phase: 'focus', dur: 25 },
+  ];
+  sequence.forEach(({ phase, dur }) => {
+    const start = cursor;
+    const end = cursor + dur * 60 * 1000;
+    blocks.push({ phase, startedAt: start, endedAt: end, completed: true });
+    cursor = end + (phase === 'long_break' ? 180000 : 30000);
+  });
+  return blocks;
+})();
+
+/* ── LOCAL STORAGE ── */
+const LS_KEY = 'session-timer-v1';
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch { return null; }
+}
+function saveState(s) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch {}
+}
+
+/* ── DEFAULT STATE ── */
+const DEFAULT_SETTINGS = {
+  focusDuration: 25, shortBreak: 5, longBreak: 15,
+  longBreakInterval: 4, autoAdvance: false,
+};
+const makeDefault = () => ({
+  phase: 'idle', sessionCount: 0, blockCount: 0,
+  remaining: totalSec(DEFAULT_SETTINGS.focusDuration),
+  running: false, blocks: [],
+  settings: { ...DEFAULT_SETTINGS },
+});
+
+/* ── RECEIPT COMPONENT ── */
+const Receipt = ({ blocks, onClose, onNew }) => {
+  const focusBlocks  = blocks.filter(b => b.phase === 'focus');
+  const breakBlocks  = blocks.filter(b => b.phase !== 'focus');
+  const totalFocus   = focusBlocks.reduce((a,b) => a + (b.endedAt - b.startedAt), 0);
+  const totalBreak   = breakBlocks.reduce((a,b) => a + (b.endedAt - b.startedAt), 0);
+  const sessionStart = blocks[0]?.startedAt || Date.now();
+  const sessionEnd   = blocks[blocks.length - 1]?.endedAt || Date.now();
+  const totalMins    = Math.ceil((sessionEnd - sessionStart) / 60000);
+
+  const fmtDur = (ms) => {
+    const m = Math.floor(ms / 60000);
+    return `${m}m`;
+  };
+  const fmtTime = (ts) => new Date(ts).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  const fmtDate = (ts) => new Date(ts).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+
+  // Timeline strip — one cell per minute
+  const cells = [];
+  for (let i = 0; i < totalMins; i++) {
+    const t = sessionStart + i * 60000;
+    const block = blocks.find(b => b.startedAt <= t && b.endedAt > t);
+    let color = 'transparent';
+    let border = nd.border;
+    if (block) {
+      if (block.phase === 'focus') { color = nd.success; border = nd.success; }
+      else { color = nd.textSecondary; border = nd.textSecondary; }
+    }
+    cells.push({ color, border });
+  }
+
+  const typeLabel = { focus: 'FOCUS', short_break: 'SHORT BRK', long_break: 'LONG BRK' };
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 200,
+      background: 'rgba(0,0,0,0.7)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }} onClick={e => e.target === e.currentTarget && onClose()}>
+      <div style={{
+        width: 420, maxHeight: '90vh',
+        background: nd.bg,
+        border: `1px solid ${nd.borderVisible}`,
+        display: 'flex', flexDirection: 'column',
+        overflowY: 'auto',
+        animation: 'slideUp 250ms ease-out both',
+      }}>
+        {/* Receipt header */}
+        <div style={{ padding: '28px 24px 20px', borderBottom: `1px solid ${nd.border}`, flexShrink: 0 }}>
+          <div style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textMid, letterSpacing: '0.1em', marginBottom: 4 }}>SESSION RECEIPT</div>
+          <div style={{ fontFamily: nd.doto, fontSize: 22, color: nd.textDisplay, letterSpacing: '0.04em' }}>
+            {fmtDate(sessionStart)}
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div style={{ padding: '16px 24px', borderBottom: `1px solid ${nd.border}`, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 0', flexShrink: 0 }}>
+          {[
+            { k: 'FOCUS SESSIONS', v: String(focusBlocks.length) },
+            { k: 'FOCUSED TIME',   v: fmtDur(totalFocus) },
+            { k: 'BREAK TIME',     v: fmtDur(totalBreak) },
+            { k: 'TOTAL ELAPSED',  v: fmtDur(sessionEnd - sessionStart) },
+          ].map(({ k, v }) => (
+            <div key={k}>
+              <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.08em', marginBottom: 3 }}>{k}</div>
+              <div style={{ fontFamily: nd.doto, fontSize: 18, color: nd.textDisplay, letterSpacing: '0.04em' }}>{v}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Timeline strip */}
+        <div style={{ padding: '16px 24px', borderBottom: `1px solid ${nd.border}`, flexShrink: 0 }}>
+          <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.08em', marginBottom: 10 }}>TIMELINE — 1 CELL PER MINUTE</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+            {cells.map((c, i) => (
+              <div key={i} style={{
+                width: 8, height: 16,
+                background: c.color,
+                border: `1px solid ${c.border}`,
+                opacity: c.color === 'transparent' ? 0.3 : 1,
+              }} />
+            ))}
+          </div>
+          {/* Legend */}
+          <div style={{ display: 'flex', gap: 16, marginTop: 10 }}>
+            {[
+              { color: nd.success, label: 'FOCUS' },
+              { color: nd.textSecondary, label: 'BREAK' },
+            ].map(({ color, label }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <div style={{ width: 8, height: 8, background: color }} />
+                <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.06em' }}>{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Block log */}
+        <div style={{ padding: '16px 24px', flexShrink: 0 }}>
+          <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.08em', marginBottom: 10 }}>BLOCK LOG</div>
+          {/* Header */}
+          <div style={{ display: 'grid', gridTemplateColumns: '48px 48px 52px 1fr', gap: 4, marginBottom: 6 }}>
+            {['START','END','DUR','TYPE'].map(h => (
+              <div key={h} style={{ fontFamily: nd.mono, fontSize: 8, color: nd.textDisabled, letterSpacing: '0.07em' }}>{h}</div>
+            ))}
+          </div>
+          {/* Rows */}
+          {blocks.map((b, i) => (
+            <div key={i} style={{
+              display: 'grid', gridTemplateColumns: '48px 48px 52px 1fr', gap: 4,
+              padding: '5px 0', borderTop: `1px solid ${nd.border}`,
+            }}>
+              <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textMid }}>{fmtTime(b.startedAt)}</div>
+              <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textMid }}>{fmtTime(b.endedAt)}</div>
+              <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textPrimary }}>{fmtDur(b.endedAt - b.startedAt)}</div>
+              <div style={{
+                fontFamily: nd.mono, fontSize: 9, letterSpacing: '0.05em',
+                color: b.phase === 'focus' ? nd.success : nd.textMid,
+              }}>{typeLabel[b.phase]}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div style={{ padding: '16px 24px', borderTop: `1px solid ${nd.border}`, display: 'flex', gap: 8, flexShrink: 0 }}>
+          <button onClick={onNew} style={{
+            flex: 1, padding: '10px 0',
+            background: nd.textDisplay, color: nd.black, border: 'none',
+            fontFamily: nd.mono, fontSize: 10, letterSpacing: '0.07em', textTransform: 'uppercase',
+            cursor: 'pointer', transition: 'opacity 150ms',
+          }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+          >NEW SESSION</button>
+          <button onClick={onClose} style={{
+            flex: 1, padding: '10px 0',
+            background: 'transparent', color: nd.textMid,
+            border: `1px solid ${nd.border}`,
+            fontFamily: nd.mono, fontSize: 10, letterSpacing: '0.07em', textTransform: 'uppercase', cursor: 'pointer',
+          }}>CLOSE</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ── SIDEBAR ── */
+const Sidebar = ({ settings, setSettings, phase, blocks, onViewReceipt, notifStatus, onRequestNotif }) => {
+  const set = (k, v) => setSettings(s => ({ ...s, [k]: v }));
+  const NumInput = ({ label, k, min, max }) => (
+    <div>
+      <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', marginBottom: 6 }}>{label}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <input type="number" min={min} max={max} value={settings[k]}
+          onChange={e => set(k, Math.max(min, Math.min(max, Number(e.target.value))))}
+        />
+        <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, whiteSpace: 'nowrap' }}>min</span>
+      </div>
+    </div>
+  );
+  const notifColors = { granted: nd.success, denied: nd.accent, default: nd.textSecondary };
+  const notifLabels = { granted: 'ENABLED', denied: 'DENIED', default: 'NOT SET' };
+
+  return (
+    <aside style={{
+      width: 260, flexShrink: 0,
+      borderRight: `1px solid ${nd.border}`,
+      display: 'flex', flexDirection: 'column',
+      background: nd.bg, overflow: 'hidden',
+    }}>
+      {/* Header */}
+      <div style={{ padding: '20px 20px 16px', borderBottom: `1px solid ${nd.border}`, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+          <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.accent }}>{'>'}</span>
+          <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary, letterSpacing: '0.06em' }}>./session</span>
+        </div>
+        <div style={{ fontFamily: nd.grotesk, fontSize: 16, fontWeight: 600, color: nd.textDisplay }}>Session</div>
+        <div style={{ fontFamily: nd.grotesk, fontSize: 12, color: nd.textSecondary, marginTop: 4, lineHeight: 1.5 }}>
+          Keyboard-first Pomodoro timer with session receipts.
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+        {/* Durations */}
+        <div>
+          <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.08em', marginBottom: 12 }}>DURATIONS</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <NumInput label="FOCUS" k="focusDuration" min={1} max={90} />
+            <NumInput label="SHORT BREAK" k="shortBreak" min={1} max={30} />
+            <NumInput label="LONG BREAK" k="longBreak" min={1} max={60} />
+          </div>
+        </div>
+
+        {/* Sequence */}
+        <div>
+          <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.08em', marginBottom: 10 }}>SEQUENCE</div>
+          <div>
+            <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', marginBottom: 6 }}>LONG BREAK EVERY</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <input type="number" min={2} max={10} value={settings.longBreakInterval}
+                onChange={e => set('longBreakInterval', Math.max(2, Math.min(10, Number(e.target.value))))}
+              />
+              <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, whiteSpace: 'nowrap' }}>sessions</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Auto-advance */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', marginBottom: 2 }}>AUTO-ADVANCE</div>
+            <div style={{ fontFamily: nd.grotesk, fontSize: 11, color: nd.textSecondary, lineHeight: 1.4 }}>Skip phase transitions</div>
+          </div>
+          <div onClick={() => set('autoAdvance', !settings.autoAdvance)} style={{
+            width: 32, height: 16,
+            background: settings.autoAdvance ? nd.success : nd.border,
+            position: 'relative', cursor: 'pointer',
+            transition: 'background 200ms ease-out',
+            flexShrink: 0, marginLeft: 12,
+          }}>
+            <div style={{
+              position: 'absolute', top: 3, width: 10, height: 10,
+              left: settings.autoAdvance ? 18 : 3,
+              background: nd.textDisplay,
+              transition: 'left 200ms ease-out',
+            }} />
+          </div>
+        </div>
+
+        {/* Notifications */}
+        <div>
+          <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.08em', marginBottom: 10 }}>NOTIFICATIONS</div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: notifColors[notifStatus] || nd.textSecondary,
+                animation: notifStatus === 'granted' ? 'pulseGreen 2s ease-in-out infinite' : 'none',
+              }} />
+              <span style={{ fontFamily: nd.mono, fontSize: 9, color: notifColors[notifStatus], letterSpacing: '0.06em' }}>
+                {notifLabels[notifStatus]}
+              </span>
+            </div>
+            {notifStatus === 'default' && (
+              <button onClick={onRequestNotif} style={{
+                fontFamily: nd.mono, fontSize: 9, letterSpacing: '0.06em', textTransform: 'uppercase',
+                padding: '4px 10px', border: `1px solid ${nd.border}`,
+                background: 'transparent', color: nd.textMid, cursor: 'pointer',
+                transition: 'border-color 150ms',
+              }}
+                onMouseEnter={e => e.currentTarget.style.borderColor = nd.borderVisible}
+                onMouseLeave={e => e.currentTarget.style.borderColor = nd.border}
+              >ENABLE</button>
+            )}
+          </div>
+          {notifStatus === 'denied' && (
+            <div style={{ fontFamily: nd.grotesk, fontSize: 11, color: nd.textSecondary, lineHeight: 1.5 }}>
+              Notifications blocked. In-page banner will be used instead.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* View receipt */}
+      <div style={{ padding: '14px 20px', borderTop: `1px solid ${nd.border}`, flexShrink: 0 }}>
+        <button onClick={onViewReceipt} style={{
+          width: '100%', padding: '10px 0',
+          background: blocks.length > 0 ? nd.textDisplay : 'transparent',
+          color: blocks.length > 0 ? nd.black : nd.textSecondary,
+          border: `1px solid ${blocks.length > 0 ? nd.textDisplay : nd.border}`,
+          fontFamily: nd.mono, fontSize: 10, letterSpacing: '0.07em', textTransform: 'uppercase',
+          cursor: 'pointer', transition: 'all 150ms',
+        }}>
+          {blocks.length > 0 ? `VIEW RECEIPT (${blocks.length} BLOCKS)` : 'NO BLOCKS YET'}
+        </button>
+      </div>
+    </aside>
+  );
+};
+
+/* ── NAV ── */
+const Nav = () => (
+  <nav style={{
+    height: 48, borderBottom: `1px solid ${nd.border}`,
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '0 20px', background: 'rgba(10,10,10,0.96)', flexShrink: 0, zIndex: 10,
+  }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <a href="#" style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary, letterSpacing: '0.06em', transition: 'color 150ms' }}
+        onMouseEnter={e => e.currentTarget.style.color = nd.textPrimary}
+        onMouseLeave={e => e.currentTarget.style.color = nd.textSecondary}
+      >← BACK</a>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary }}>
+          <span style={{ color: nd.accent }}>{'>'}</span> jcatterall
+        </span>
+        <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary }}>/</span>
+        <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textPrimary, letterSpacing: '0.06em' }}>session</span>
+      </div>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.06em' }}>SHORTCUTS</span>
+      <kbd style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, border: `1px solid ${nd.border}`, padding: '2px 6px', background: nd.surface }}>?</kbd>
+    </div>
+  </nav>
+);
+
+/* ── KEYBOARD LEGEND ── */
+const KeyLegend = ({ visible }) => {
+  if (!visible) return null;
+  const keys = [
+    ['SPACE','Start / Pause'],['R','Reset block (×2)'],['S','Skip block (×2)'],
+    ['N','New session (×2)'],['1','Jump → Focus'],['2','Jump → Short break'],
+    ['3','Jump → Long break'],['?','Toggle this legend'],
+  ];
+  return (
+    <div style={{ animation: 'fadeIn 200ms ease-out both', display: 'flex', flexWrap: 'wrap', gap: '6px 24px', justifyContent: 'center' }}>
+      {keys.map(([k, a]) => (
+        <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+          <kbd style={{
+            fontFamily: nd.mono, fontSize: 9, color: nd.textMid,
+            border: `1px solid ${nd.border}`, background: nd.surface,
+            padding: '2px 8px', letterSpacing: '0.04em',
+            minWidth: 36, textAlign: 'center',
+          }}>{k}</kbd>
+          <span style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.04em' }}>{a}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+/* ── SESSION PIPS ── */
+const SessionPips = ({ count, interval, phase }) => {
+  const pips = Array.from({ length: interval }, (_, i) => i < count % interval);
+  return (
+    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+      {pips.map((filled, i) => (
+        <div key={i} style={{
+          width: 16, height: 16,
+          background: filled ? nd.success : 'transparent',
+          border: `1px solid ${filled ? nd.success : nd.borderVisible}`,
+          transition: 'all 300ms ease-out',
+        }} />
+      ))}
+      <span style={{ fontFamily: nd.mono, fontSize: 12, color: nd.textSecondary, marginLeft: 8, letterSpacing: '0.06em' }}>
+        {count % interval} / {interval}
+      </span>
+    </div>
+  );
+};
+
+/* ── NOTIFICATION BANNER ── */
+const NotifBanner = ({ message, onDismiss }) => {
+  if (!message) return null;
+  return (
+    <div style={{
+      position: 'absolute', top: 0, left: 0, right: 0, zIndex: 50,
+      background: nd.surface, borderBottom: `1px solid ${nd.borderVisible}`,
+      padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 10,
+      animation: 'fadeIn 200ms ease-out both',
+    }}>
+      <div style={{ width: 6, height: 6, borderRadius: '50%', background: nd.interactive, animation: 'pulseGreen 2s ease-in-out infinite' }} />
+      <span style={{ fontFamily: nd.mono, fontSize: 10, color: nd.textPrimary, letterSpacing: '0.04em', flex: 1 }}>{message}</span>
+      <button onClick={onDismiss} style={{
+        fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary, background: 'none', border: 'none', cursor: 'pointer',
+      }}>✕</button>
+    </div>
+  );
+};
+
+/* ── MAIN TIMER AREA ── */
+const TimerArea = ({
+  phase, remaining, running, sessionCount, settings,
+  onToggle, onReset, onSkip, showLegend, setShowLegend,
+  confirm, notifMsg, onDismissNotif, phaseAnim,
+}) => {
+  const meta = PHASE_META[phase];
+  const progress = (() => {
+    const total = phase === 'focus' ? totalSec(settings.focusDuration)
+      : phase === 'short_break' ? totalSec(settings.shortBreak)
+      : phase === 'long_break' ? totalSec(settings.longBreak)
+      : totalSec(settings.focusDuration);
+    return 1 - remaining / total;
+  })();
+
+  return (
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden',
+      background: meta.bg, position: 'relative',
+      transition: 'background 600ms ease-out',
+    }}>
+      <NotifBanner message={notifMsg} onDismiss={onDismissNotif} />
+
+      {/* Progress line — top */}
+      <div style={{ height: 2, background: nd.border, flexShrink: 0, position: 'relative' }}>
+        <div style={{
+          position: 'absolute', left: 0, top: 0, bottom: 0,
+          width: `${progress * 100}%`,
+          background: meta.color,
+          transition: 'width 1s linear, background 600ms ease-out',
+        }} />
+      </div>
+
+      {/* Center content */}
+      <div style={{
+        flex: 1, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        padding: '40px 24px',
+        gap: 0,
+      }}>
+        {/* Phase label */}
+        <div key={phase + phaseAnim} style={{
+          fontFamily: nd.mono, fontSize: 11,
+          color: meta.color,
+          letterSpacing: '0.12em', textTransform: 'uppercase',
+          marginBottom: 20,
+          animation: phaseAnim ? 'flashPhase 500ms ease-out both' : 'none',
+        }}>{meta.label}</div>
+
+        {/* Countdown */}
+        <div style={{
+          display: 'flex', alignItems: 'flex-end',
+          marginBottom: 28,
+          opacity: running || phase === 'idle' ? 1 : 0.5,
+          transition: 'opacity 300ms ease-out',
+          gap: 12,
+        }}>
+          <span style={{
+            fontFamily: nd.doto, fontSize: 'clamp(96px, 14vw, 160px)',
+            fontWeight: 400, color: nd.textDisplay,
+            lineHeight: 1, letterSpacing: '0.02em',
+          }}>{fmt(remaining).slice(0,2)}</span>
+          <span style={{
+            fontFamily: nd.doto, fontSize: 'clamp(40px, 5.5vw, 64px)',
+            fontWeight: 400, color: nd.textMid,
+            lineHeight: 1.15, letterSpacing: '0.02em',
+            paddingBottom: '0.08em',
+            color: nd.textDisplay,
+          }}>{fmt(remaining).slice(3,5)}</span>
+        </div>
+
+        {/* Session pips */}
+        <div style={{ marginBottom: 36 }}>
+          <SessionPips count={sessionCount} interval={settings.longBreakInterval} phase={phase} />
+        </div>
+
+        {/* Controls */}
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 8 }}>
+          {/* Reset */}
+          <button onClick={onReset} style={{
+            width: 44, height: 44, background: 'transparent',
+            border: `1px solid ${nd.border}`, color: confirm === 'reset' ? nd.accent : nd.textSecondary,
+            fontFamily: nd.mono, fontSize: 16, cursor: 'pointer',
+            transition: 'border-color 150ms, color 150ms',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = nd.borderVisible; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = nd.border; }}
+            title="Reset (R)"
+          >↺</button>
+
+          {/* Play/Pause — primary */}
+          <button onClick={onToggle} style={{
+            width: 64, height: 64,
+            background: running ? 'transparent' : nd.textDisplay,
+            border: `1px solid ${running ? nd.borderVisible : nd.textDisplay}`,
+            color: running ? nd.textDisplay : nd.black,
+            fontFamily: nd.mono, fontSize: 20, cursor: 'pointer',
+            transition: 'all 200ms ease-out',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }} title="Start/Pause (Space)">
+            {running ? '⏸' : '▶'}
+          </button>
+
+          {/* Skip */}
+          <button onClick={onSkip} style={{
+            width: 44, height: 44, background: 'transparent',
+            border: `1px solid ${nd.border}`, color: confirm === 'skip' ? nd.warning : nd.textSecondary,
+            fontFamily: nd.mono, fontSize: 16, cursor: 'pointer',
+            transition: 'border-color 150ms, color 150ms',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = nd.borderVisible; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = nd.border; }}
+            title="Skip (S)"
+          >⏭</button>
+        </div>
+
+        {/* Double-press confirmation hint */}
+        {confirm && (
+          <div style={{
+            fontFamily: nd.mono, fontSize: 9, color: nd.warning,
+            letterSpacing: '0.07em', animation: 'fadeIn 150ms ease-out both',
+            marginBottom: 8,
+          }}>
+            PRESS {confirm.toUpperCase()} AGAIN TO CONFIRM
+          </div>
+        )}
+
+        {/* Idle hint */}
+        {phase === 'idle' && !running && (
+          <div style={{
+            fontFamily: nd.mono, fontSize: 10, color: nd.textSecondary,
+            letterSpacing: '0.07em', animation: 'fadeIn 400ms ease-out both',
+          }}>PRESS SPACE TO START</div>
+        )}
+      </div>
+
+      {/* Keyboard legend */}
+      <div style={{
+        borderTop: `1px solid ${nd.border}`,
+        padding: showLegend ? '16px 24px' : '12px 24px',
+        flexShrink: 0, transition: 'padding 200ms ease-out',
+      }}>
+        {showLegend
+          ? <KeyLegend visible={true} />
+          : (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <button onClick={() => setShowLegend(true)} style={{
+                fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary,
+                letterSpacing: '0.07em', background: 'none', border: 'none', cursor: 'pointer',
+                transition: 'color 150ms',
+              }}
+                onMouseEnter={e => e.currentTarget.style.color = nd.textPrimary}
+                onMouseLeave={e => e.currentTarget.style.color = nd.textSecondary}
+              >? KEYBOARD SHORTCUTS</button>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  );
+};
+
+/* ── APP ── */
+const App = () => {
+  const saved = loadState() || makeDefault();
+  const [st, setSt] = React.useState(saved);
+  const [showLegend, setShowLegend] = React.useState(false);
+  const [showReceipt, setShowReceipt] = React.useState(false);
+  const [confirm, setConfirm] = React.useState(null); // 'reset'|'skip'|'new'
+  const [confirmTimer, setConfirmTimer] = React.useState(null);
+  const [notifStatus, setNotifStatus] = React.useState('default');
+  const [notifMsg, setNotifMsg] = React.useState(null);
+  const [phaseAnim, setPhaseAnim] = React.useState(false);
+  const [tweakOpen, setTweakOpen] = React.useState(false);
+  const intervalRef = React.useRef(null);
+
+  // Persist
+  React.useEffect(() => { saveState(st); }, [st]);
+
+  // Tweaks messaging
+  React.useEffect(() => {
+    const h = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweakOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweakOpen(false);
+    };
+    window.addEventListener('message', h);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', h);
+  }, []);
+
+  // Timer tick
+  React.useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (!st.running) return;
+    intervalRef.current = setInterval(() => {
+      setSt(prev => {
+        if (!prev.running) return prev;
+        if (prev.remaining <= 0) return prev;
+        const next = prev.remaining - 1;
+        if (next <= 0) {
+          // Phase complete
+          const block = {
+            phase: prev.phase,
+            startedAt: Date.now() - totalSec(
+              prev.phase === 'focus' ? prev.settings.focusDuration
+              : prev.phase === 'short_break' ? prev.settings.shortBreak
+              : prev.settings.longBreak
+            ) * 1000,
+            endedAt: Date.now(),
+            completed: true,
+          };
+          const newBlocks = [...prev.blocks, block];
+          const newSessionCount = prev.phase === 'focus' ? prev.sessionCount + 1 : prev.sessionCount;
+          const nextPhase = getNextPhase(prev.phase, newSessionCount, prev.settings.longBreakInterval);
+          setPhaseAnim(p => !p);
+          const msg = prev.phase === 'focus'
+            ? `Session ${newSessionCount} complete — time for a break`
+            : 'Break over — back to work';
+          setNotifMsg(msg);
+          const nextDur = nextPhase === 'focus' ? totalSec(prev.settings.focusDuration)
+            : nextPhase === 'short_break' ? totalSec(prev.settings.shortBreak)
+            : totalSec(prev.settings.longBreak);
+          return {
+            ...prev,
+            phase: prev.settings.autoAdvance ? nextPhase : 'idle',
+            remaining: prev.settings.autoAdvance ? nextDur : totalSec(prev.settings.focusDuration),
+            running: false,
+            sessionCount: newSessionCount,
+            blockCount: prev.blockCount + 1,
+            blocks: newBlocks,
+          };
+        }
+        return { ...prev, remaining: next };
+      });
+    }, 1000);
+    return () => clearInterval(intervalRef.current);
+  }, [st.running]);
+
+  const getNextPhase = (cur, sesCount, interval) => {
+    if (cur === 'focus') return sesCount % interval === 0 ? 'long_break' : 'short_break';
+    return 'focus';
+  };
+
+  const toggle = () => setSt(p => {
+    if (p.phase === 'idle') {
+      return { ...p, phase: 'focus', remaining: totalSec(p.settings.focusDuration), running: true };
+    }
+    return { ...p, running: !p.running };
+  });
+
+  const doublePress = (action, key) => {
+    if (confirm === key) {
+      clearTimeout(confirmTimer);
+      setConfirm(null);
+      action();
+    } else {
+      setConfirm(key);
+      clearTimeout(confirmTimer);
+      const t = setTimeout(() => setConfirm(null), 2000);
+      setConfirmTimer(t);
+    }
+  };
+
+  const doReset = () => setSt(p => ({
+    ...p, running: false,
+    remaining: p.phase === 'focus' ? totalSec(p.settings.focusDuration)
+      : p.phase === 'short_break' ? totalSec(p.settings.shortBreak)
+      : totalSec(p.settings.longBreak),
+  }));
+
+  const doSkip = () => setSt(p => {
+    const newSes = p.phase === 'focus' ? p.sessionCount + 1 : p.sessionCount;
+    const next = getNextPhase(p.phase, newSes, p.settings.longBreakInterval);
+    setPhaseAnim(v => !v);
+    return {
+      ...p, running: false, phase: next,
+      sessionCount: newSes,
+      remaining: next === 'focus' ? totalSec(p.settings.focusDuration)
+        : next === 'short_break' ? totalSec(p.settings.shortBreak)
+        : totalSec(p.settings.longBreak),
+    };
+  });
+
+  const doNew = () => {
+    setShowReceipt(false);
+    setSt(makeDefault());
+  };
+
+  // Keyboard shortcuts
+  React.useEffect(() => {
+    const h = (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.code === 'Space') { e.preventDefault(); toggle(); }
+      else if (e.key === '?') setShowLegend(v => !v);
+      else if (e.key.toLowerCase() === 'r') doublePress(doReset, 'reset');
+      else if (e.key.toLowerCase() === 's') doublePress(doSkip, 'skip');
+      else if (e.key.toLowerCase() === 'n') doublePress(() => { setShowReceipt(true); }, 'new');
+      else if (e.key === '1') {
+        setPhaseAnim(v => !v);
+        setSt(p => ({ ...p, phase: 'focus', running: false, remaining: totalSec(p.settings.focusDuration) }));
+      }
+      else if (e.key === '2') {
+        setPhaseAnim(v => !v);
+        setSt(p => ({ ...p, phase: 'short_break', running: false, remaining: totalSec(p.settings.shortBreak) }));
+      }
+      else if (e.key === '3') {
+        setPhaseAnim(v => !v);
+        setSt(p => ({ ...p, phase: 'long_break', running: false, remaining: totalSec(p.settings.longBreak) }));
+      }
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [confirm, st]);
+
+  const requestNotif = () => {
+    if (typeof Notification !== 'undefined') {
+      Notification.requestPermission().then(p => setNotifStatus(p));
+    }
+  };
+
+  return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: nd.bg, overflow: 'hidden' }}>
+      <Nav />
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <Sidebar
+          settings={st.settings}
+          setSettings={fn => setSt(p => ({ ...p, settings: fn(p.settings) }))}
+          phase={st.phase}
+          blocks={st.blocks}
+          onViewReceipt={() => setShowReceipt(true)}
+          notifStatus={notifStatus}
+          onRequestNotif={requestNotif}
+        />
+        <TimerArea
+          phase={st.phase}
+          remaining={st.remaining}
+          running={st.running}
+          sessionCount={st.sessionCount}
+          settings={st.settings}
+          onToggle={toggle}
+          onReset={() => doublePress(doReset, 'reset')}
+          onSkip={() => doublePress(doSkip, 'skip')}
+          showLegend={showLegend}
+          setShowLegend={setShowLegend}
+          confirm={confirm}
+          notifMsg={notifMsg}
+          onDismissNotif={() => setNotifMsg(null)}
+          phaseAnim={phaseAnim}
+        />
+      </div>
+
+      {showReceipt && (
+        <Receipt
+          blocks={st.blocks.length > 0 ? st.blocks : DEMO_BLOCKS}
+          onClose={() => setShowReceipt(false)}
+          onNew={doNew}
+        />
+      )}
+
+      {/* Tweaks */}
+      {tweakOpen && (
+        <div style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
+          background: nd.surface, border: `1px solid ${nd.borderVisible}`,
+          padding: 20, width: 220, display: 'flex', flexDirection: 'column', gap: 14,
+        }}>
+          <div style={{ fontFamily: nd.mono, fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.08em', color: nd.textMid }}>Tweaks</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', marginBottom: 4 }}>JUMP TO PHASE</div>
+            {['idle','focus','short_break','long_break'].map(ph => (
+              <button key={ph} onClick={() => {
+                setPhaseAnim(v => !v);
+                setSt(p => ({
+                  ...p, running: false, phase: ph,
+                  remaining: ph === 'focus' ? totalSec(p.settings.focusDuration)
+                    : ph === 'short_break' ? totalSec(p.settings.shortBreak)
+                    : ph === 'long_break' ? totalSec(p.settings.longBreak)
+                    : totalSec(p.settings.focusDuration),
+                }));
+              }} style={{
+                fontFamily: nd.mono, fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.06em',
+                padding: '6px 10px', border: `1px solid ${st.phase === ph ? nd.textPrimary : nd.border}`,
+                background: 'transparent', color: st.phase === ph ? nd.textPrimary : nd.textSecondary, cursor: 'pointer',
+              }}>{ph.replace('_',' ')}</button>
+            ))}
+          </div>
+          <div>
+            <div style={{ fontFamily: nd.mono, fontSize: 9, color: nd.textSecondary, letterSpacing: '0.07em', marginBottom: 8 }}>DEMO RECEIPT</div>
+            <button onClick={() => setShowReceipt(true)} style={{
+              width: '100%', fontFamily: nd.mono, fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.06em',
+              padding: '7px', border: `1px solid ${nd.border}`,
+              background: 'transparent', color: nd.textMid, cursor: 'pointer',
+            }}>OPEN RECEIPT</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

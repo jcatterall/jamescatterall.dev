@@ -1,6 +1,6 @@
 .grid {
   display: flex;
-  gap: var(--nd-space-sm);
+  gap: var(--nd-space-2);
   flex-wrap: wrap;
 }
 

@@ -1,7 +1,7 @@
 .divider {
   border: none;
   border-top: var(--nd-border-width) solid var(--nd-border);
-  margin: var(--nd-space-lg) 0;
+  margin: var(--nd-space-5) 0;
 }
 
 .thin {

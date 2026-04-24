@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dot Matrix — Design System</title>
+<link rel="stylesheet" href="dot-matrix.css">
+<style>
+
+/* ── Layout shell ──────────────────────────────────────────── */
+html, body { margin: 0; padding: 0; height: 100%; }
+
+.shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 56px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Top bar ───────────────────────────────────────────────── */
+.topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--nd-border-subtle);
+  background: var(--nd-black);
+  position: relative;
+  z-index: 10;
+}
+.topbar-logo {
+  font-family: var(--nd-font-display);
+  font-size: 20px;
+  color: var(--nd-text-display);
+  letter-spacing: 0.02em;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────── */
+.sidebar {
+  border-right: 1px solid var(--nd-border-subtle);
+  overflow-y: auto;
+  padding: 24px 0;
+  background: var(--nd-black);
+}
+.sidebar::-webkit-scrollbar { width: 0; }
+
+.sidebar-section-label {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nd-text-disabled);
+  padding: 12px 24px 6px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 24px;
+  font-family: var(--nd-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nd-text-tertiary);
+  cursor: pointer;
+  transition: color 150ms ease-out, background 150ms ease-out;
+  border: none;
+  background: none;
+  text-align: left;
+  width: 100%;
+}
+.sidebar-link:hover  { color: var(--nd-text-primary); }
+.sidebar-link.active { color: var(--nd-text-display); background: var(--nd-surface); }
+.sidebar-link-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: currentColor; flex-shrink: 0; opacity: 0.5;
+}
+.sidebar-link.active .sidebar-link-dot { opacity: 1; }
+
+/* ── Main content ──────────────────────────────────────────── */
+.main {
+  overflow-y: auto;
+  background: var(--nd-black);
+}
+.main::-webkit-scrollbar { width: 4px; }
+.main::-webkit-scrollbar-track { background: var(--nd-black); }
+.main::-webkit-scrollbar-thumb { background: var(--nd-border-visible); border-radius: 2px; }
+
+/* ── Section ───────────────────────────────────────────────── */
+.section {
+  padding: 56px 64px;
+  border-bottom: 1px solid var(--nd-border-subtle);
+  max-width: 1000px;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+.section-number {
+  font-family: var(--nd-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nd-text-disabled);
+  flex-shrink: 0;
+}
+.section-title {
+  font-family: var(--nd-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nd-text-display);
+  letter-spacing: 0.02em;
+}
+.section-title-line {
+  flex: 1;
+  height: 1px;
+  background: var(--nd-border-subtle);
+}
+
+/* ── Specimen row ──────────────────────────────────────────── */
+.specimen {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  gap: 48px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--nd-border-subtle);
+}
+.specimen:last-child { border-bottom: none; }
+.specimen-meta {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nd-text-disabled);
+  line-height: 1.8;
+}
+.specimen-meta strong {
+  display: block;
+  color: var(--nd-text-tertiary);
+  font-weight: 400;
+  margin-bottom: 2px;
+}
+
+/* ── Colour grid ───────────────────────────────────────────── */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+.color-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.color-block {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+}
+.color-name {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--nd-text-tertiary);
+  line-height: 1.6;
+}
+.color-value {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  color: var(--nd-text-disabled);
+}
+.color-token {
+  font-family: var(--nd-font-mono);
+  font-size: 8px;
+  color: var(--nd-border-strong);
+  line-height: 1.4;
+}
+
+/* ── Colour group label ────────────────────────────────────── */
+.color-group-label {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nd-text-disabled);
+  margin-bottom: 16px;
+  margin-top: 36px;
+}
+.color-group-label:first-child { margin-top: 0; }
+
+/* ── Spacing scale ─────────────────────────────────────────── */
+.spacing-grid {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.spacing-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.spacing-bar {
+  width: 28px;
+  background: var(--nd-border-visible);
+  border-radius: 2px;
+}
+.spacing-label {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nd-text-disabled);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ── Radius row ────────────────────────────────────────────── */
+.radius-row {
+  display: flex;
+  gap: 32px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.radius-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.radius-box {
+  width: 72px;
+  height: 72px;
+  background: var(--nd-surface);
+  border: 1px solid var(--nd-border-visible);
+}
+
+/* ── Token table ───────────────────────────────────────────── */
+.token-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.token-table th {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--nd-text-disabled);
+  text-align: left;
+  padding: 8px 16px 8px 0;
+  border-bottom: 1px solid var(--nd-border-subtle);
+  font-weight: 400;
+}
+.token-table td {
+  font-family: var(--nd-font-mono);
+  font-size: 11px;
+  color: var(--nd-text-secondary);
+  padding: 10px 16px 10px 0;
+  border-bottom: 1px solid var(--nd-border-subtle);
+  vertical-align: middle;
+}
+.token-table td:first-child { color: var(--nd-interactive); }
+.token-table td:last-child  { color: var(--nd-text-tertiary); font-size: 10px; }
+.token-preview-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* ── Component section inner label ────────────────────────── */
+.comp-label {
+  font-family: var(--nd-font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--nd-text-disabled);
+  margin-bottom: 14px;
+}
+
+.comp-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+/* ── Animation preview ─────────────────────────────────────── */
+.anim-row {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.anim-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.anim-box {
+  width: 48px; height: 48px;
+  background: var(--nd-surface);
+  border: 1px solid var(--nd-border-visible);
+  border-radius: 8px;
+}
+
+</style>
+</head>
+<body class="nd-root">
+<div class="shell">
+
+  <!-- ── TOP BAR ─────────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="topbar-logo">DOT MATRIX</div>
+    <div class="topbar-right">
+      <span class="nd-label nd-label-sm nd-text-tertiary">Design System</span>
+      <span class="nd-badge nd-badge-success"><span class="nd-badge-dot nd-badge-dot-blink"></span>v1.0.0</span>
+    </div>
+  </header>
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <div class="sidebar-section-label">Foundations</div>
+    <button class="sidebar-link active" onclick="scrollTo('colors')"><span class="sidebar-link-dot"></span>Colors</button>
+    <button class="sidebar-link" onclick="scrollTo('typography')"><span class="sidebar-link-dot"></span>Typography</button>
+    <button class="sidebar-link" onclick="scrollTo('spacing')"><span class="sidebar-link-dot"></span>Spacing</button>
+    <button class="sidebar-link" onclick="scrollTo('radius')"><span class="sidebar-link-dot"></span>Border Radius</button>
+    <button class="sidebar-link" onclick="scrollTo('animation')"><span class="sidebar-link-dot"></span>Animation</button>
+    <button class="sidebar-link" onclick="scrollTo('tokens')"><span class="sidebar-link-dot"></span>Token Reference</button>
+
+    <div class="sidebar-section-label">Components</div>
+    <button class="sidebar-link" onclick="scrollTo('badge')"><span class="sidebar-link-dot"></span>Badge</button>
+    <button class="sidebar-link" onclick="scrollTo('button')"><span class="sidebar-link-dot"></span>Button</button>
+    <button class="sidebar-link" onclick="scrollTo('card')"><span class="sidebar-link-dot"></span>Card</button>
+    <button class="sidebar-link" onclick="scrollTo('input')"><span class="sidebar-link-dot"></span>Input</button>
+    <button class="sidebar-link" onclick="scrollTo('segmented')"><span class="sidebar-link-dot"></span>Segmented</button>
+    <button class="sidebar-link" onclick="scrollTo('tag')"><span class="sidebar-link-dot"></span>Tag / Chip</button>
+    <button class="sidebar-link" onclick="scrollTo('nav')"><span class="sidebar-link-dot"></span>Nav Bar</button>
+    <button class="sidebar-link" onclick="scrollTo('stat')"><span class="sidebar-link-dot"></span>Stat Row</button>
+    <button class="sidebar-link" onclick="scrollTo('progress')"><span class="sidebar-link-dot"></span>Progress Bar</button>
+    <button class="sidebar-link" onclick="scrollTo('empty')"><span class="sidebar-link-dot"></span>Empty State</button>
+    <button class="sidebar-link" onclick="scrollTo('skeleton')"><span class="sidebar-link-dot"></span>Skeleton</button>
+    <button class="sidebar-link" onclick="scrollTo('misc')"><span class="sidebar-link-dot"></span>Tooltip / Code</button>
+  </nav>
+
+  <!-- ── MAIN ────────────────────────────────────────────── -->
+  <main class="main" id="main-scroll">
+
+    <!-- ════════════════════════════════════════════════════
+         COLORS
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="colors" data-section>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <span class="section-title">Colors</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="color-group-label">Backgrounds &amp; Surfaces</div>
+      <div class="color-grid" style="margin-bottom:40px">
+        <div class="color-swatch">
+          <div class="color-block" style="background:#000;border:1px solid #222"></div>
+          <div class="color-name">Black</div>
+          <div class="color-value">#000000</div>
+          <div class="color-token">--nd-black</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#111;border:1px solid #222"></div>
+          <div class="color-name">Surface</div>
+          <div class="color-value">#111111</div>
+          <div class="color-token">--nd-surface</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#1a1a1a;border:1px solid #222"></div>
+          <div class="color-name">Surface Raised</div>
+          <div class="color-value">#1A1A1A</div>
+          <div class="color-token">--nd-surface-raised</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#222"></div>
+          <div class="color-name">Border</div>
+          <div class="color-value">#222222</div>
+          <div class="color-token">--nd-border</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#333"></div>
+          <div class="color-name">Border Visible</div>
+          <div class="color-value">#333333</div>
+          <div class="color-token">--nd-border-visible</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#666"></div>
+          <div class="color-name">Border Strong</div>
+          <div class="color-value">#666666</div>
+          <div class="color-token">--nd-border-strong</div>
+        </div>
+      </div>
+
+      <div class="color-group-label">Text Scale</div>
+      <div class="color-grid" style="margin-bottom:40px">
+        <div class="color-swatch">
+          <div class="color-block" style="background:#444"></div>
+          <div class="color-name">Disabled</div>
+          <div class="color-value">#444444</div>
+          <div class="color-token">--nd-text-disabled</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#666"></div>
+          <div class="color-name">Tertiary</div>
+          <div class="color-value">#666666</div>
+          <div class="color-token">--nd-text-tertiary</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#999"></div>
+          <div class="color-name">Secondary</div>
+          <div class="color-value">#999999</div>
+          <div class="color-token">--nd-text-secondary</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#e8e8e8"></div>
+          <div class="color-name">Primary</div>
+          <div class="color-value">#E8E8E8</div>
+          <div class="color-token">--nd-text-primary</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#fff"></div>
+          <div class="color-name">Display</div>
+          <div class="color-value">#FFFFFF</div>
+          <div class="color-token">--nd-text-display</div>
+        </div>
+      </div>
+
+      <div class="color-group-label">Accent &amp; Semantic — never decorative</div>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-block" style="background:#d71921"></div>
+          <div class="color-name">Accent</div>
+          <div class="color-value">#D71921</div>
+          <div class="color-token">--nd-accent</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:rgba(215,25,33,0.12);border:1px solid #333"></div>
+          <div class="color-name">Accent Subtle</div>
+          <div class="color-value">rgba(215,25,33,.12)</div>
+          <div class="color-token">--nd-accent-subtle</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#4a9e5c"></div>
+          <div class="color-name">Success</div>
+          <div class="color-value">#4A9E5C</div>
+          <div class="color-token">--nd-success</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:rgba(74,158,92,0.12);border:1px solid #333"></div>
+          <div class="color-name">Success Subtle</div>
+          <div class="color-value">rgba(74,158,92,.12)</div>
+          <div class="color-token">--nd-success-subtle</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#d4a843"></div>
+          <div class="color-name">Warning</div>
+          <div class="color-value">#D4A843</div>
+          <div class="color-token">--nd-warning</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:rgba(212,168,67,0.12);border:1px solid #333"></div>
+          <div class="color-name">Warning Subtle</div>
+          <div class="color-value">rgba(212,168,67,.12)</div>
+          <div class="color-token">--nd-warning-subtle</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#5b9bf6"></div>
+          <div class="color-name">Interactive</div>
+          <div class="color-value">#5B9BF6</div>
+          <div class="color-token">--nd-interactive</div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:rgba(91,155,246,0.12);border:1px solid #333"></div>
+          <div class="color-name">Interactive Subtle</div>
+          <div class="color-value">rgba(91,155,246,.12)</div>
+          <div class="color-token">--nd-interactive-subtle</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         TYPOGRAPHY
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="typography" data-section>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <span class="section-title">Typography</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <!-- Display -->
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Doto</strong>
+          96px / Display 2XL<br>
+          --nd-font-display<br>
+          --nd-display-2xl
+        </div>
+        <div class="nd-display" style="font-size:clamp(48px,7vw,96px);line-height:1">96</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Doto</strong>
+          48px / Display LG<br>
+          --nd-display-lg
+        </div>
+        <div class="nd-display nd-display-lg">HELLO WORLD</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Doto</strong>
+          36px / Display MD<br>
+          --nd-display-md
+        </div>
+        <div class="nd-display nd-display-md">PORTFOLIO 2026</div>
+      </div>
+
+      <!-- Headings -->
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Grotesk</strong>
+          32px / 600 / H1<br>
+          --nd-text-h1<br>
+          --nd-weight-semibold
+        </div>
+        <div class="nd-h1">Selected Work</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Grotesk</strong>
+          24px / 500 / H2<br>
+          --nd-text-h2
+        </div>
+        <div class="nd-h2">Open Source Projects</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Grotesk</strong>
+          20px / 500 / H3<br>
+          --nd-text-h3
+        </div>
+        <div class="nd-h3">A systems-level approach</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Grotesk</strong>
+          17px / 500 / H4<br>
+          --nd-text-h4
+        </div>
+        <div class="nd-h4">Built with Rust and WebAssembly</div>
+      </div>
+
+      <!-- Body -->
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Grotesk</strong>
+          16px / 300 / Body LG<br>
+          --nd-text-body-lg
+        </div>
+        <div class="nd-body-lg" style="max-width:520px">Compiled to 400ms, shipped to production. No framework overhead. Reads like documentation, works like infrastructure.</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Grotesk</strong>
+          15px / 400 / Body<br>
+          --nd-text-body
+        </div>
+        <div class="nd-body" style="max-width:520px">Building low-level systems in Rust and Go. Compilers, runtimes, and infrastructure that disappears into the background.</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Grotesk</strong>
+          13px / 300 / Body SM<br>
+          --nd-text-body-sm
+        </div>
+        <div class="nd-body-sm" style="max-width:520px">Built in Rust. Compiles in 400ms. Reads like documentation.</div>
+      </div>
+
+      <!-- Labels -->
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Mono</strong>
+          13px / Label LG<br>
+          --nd-text-label-lg<br>
+          Always ALL CAPS
+        </div>
+        <div class="nd-label nd-label-lg">AVAILABLE FOR WORK</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Mono</strong>
+          11px / Label MD<br>
+          --nd-text-label
+        </div>
+        <div class="nd-label">01 — SELECTED WORK</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Mono</strong>
+          10px / Label SM<br>
+          --nd-text-label-sm
+        </div>
+        <div class="nd-label nd-label-sm nd-text-tertiary">LAST UPDATED 2026-04-24</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Mono</strong>
+          11px / Data value<br>
+          Mixed case OK<br>
+          --nd-data
+        </div>
+        <div class="nd-data">2026-04-24T09:41:00Z</div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Space Mono</strong>
+          Semantic colours
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="nd-label nd-text-accent">ERROR — BUILD FAILED</div>
+          <div class="nd-label nd-text-success">DEPLOYED — PRODUCTION</div>
+          <div class="nd-label nd-text-warning">UNSTABLE — CANARY</div>
+          <div class="nd-label nd-text-link" style="text-transform:none;letter-spacing:0">github.com/alexkern ↗</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         SPACING
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="spacing" data-section>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <span class="section-title">Spacing</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="spacing-grid">
+        <div class="spacing-item"><div class="spacing-bar" style="height:4px"></div><div class="spacing-label">space-1<br>4px<br>Tight</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:8px"></div><div class="spacing-label">space-2<br>8px<br>Belongs</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:12px"></div><div class="spacing-label">space-3<br>12px</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:16px"></div><div class="spacing-label">space-4<br>16px<br>Group</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:24px"></div><div class="spacing-label">space-5<br>24px</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:32px"></div><div class="spacing-label">space-6<br>32px<br>Section</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:48px"></div><div class="spacing-label">space-7<br>48px</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:64px"></div><div class="spacing-label">space-8<br>64px<br>Context</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:96px"></div><div class="spacing-label">space-9<br>96px<br>Vast</div></div>
+        <div class="spacing-item"><div class="spacing-bar" style="height:128px"></div><div class="spacing-label">space-10<br>128px</div></div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         BORDER RADIUS
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="radius" data-section>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <span class="section-title">Border Radius</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="radius-row">
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:4px"></div>
+          <div class="spacing-label">radius-sm<br>4px<br>Input / Code</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:8px"></div>
+          <div class="spacing-label">radius-md<br>8px<br>Tooltip / Dropdown</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:12px"></div>
+          <div class="spacing-label">radius-lg<br>12px<br>Card / Panel</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:999px"></div>
+          <div class="spacing-label">radius-pill<br>999px<br>Button / Tag</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         ANIMATION
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="animation" data-section>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <span class="section-title">Animation</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Duration</strong>
+          Fast: 150ms<br>
+          Default: 200ms<br>
+          Slow: 350ms
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="nd-label nd-label-sm nd-text-disabled">Only animate opacity and border-color.</div>
+          <div class="nd-label nd-label-sm nd-text-disabled">Never transform, scale, or spring.</div>
+          <div class="nd-label nd-label-sm nd-text-disabled">Easing: ease-out on all transitions.</div>
+        </div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>nd-blink</strong>
+          Status dots<br>
+          2s ease-in-out<br>
+          infinite
+        </div>
+        <div style="display:flex;gap:24px;align-items:center">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--nd-success);animation:nd-blink 2s ease-in-out infinite"></span>
+            <span class="nd-label nd-text-success">Available</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--nd-accent);animation:nd-blink 2s ease-in-out infinite;animation-delay:0.5s"></span>
+            <span class="nd-label nd-text-accent">Offline</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--nd-warning);animation:nd-blink 2s ease-in-out infinite;animation-delay:1s"></span>
+            <span class="nd-label nd-text-warning">Unstable</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>nd-pulse</strong>
+          Skeleton loaders<br>
+          1.8s ease-in-out<br>
+          infinite
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;width:280px">
+          <div class="nd-skel nd-skel-title" style="width:55%"></div>
+          <div class="nd-skel nd-skel-text" style="width:100%"></div>
+          <div class="nd-skel nd-skel-text nd-delay-1" style="width:75%"></div>
+        </div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>nd-fade-in</strong>
+          Page transitions<br>
+          nd-animate-fade-in
+        </div>
+        <button class="nd-btn nd-btn-sm" onclick="triggerFade()">Preview ↺</button>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>nd-slide-up</strong>
+          Overlays / toasts<br>
+          nd-animate-slide-up
+        </div>
+        <button class="nd-btn nd-btn-sm" onclick="triggerSlide()">Preview ↺</button>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         TOKEN REFERENCE
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="tokens" data-section>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <span class="section-title">Token Reference</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th style="width:260px">Token</th>
+            <th style="width:180px">Value</th>
+            <th>Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>--nd-black</td><td><span class="token-preview-dot" style="background:#000;border:1px solid #333"></span>#000000</td><td>Page canvas only</td></tr>
+          <tr><td>--nd-surface</td><td><span class="token-preview-dot" style="background:#111;border:1px solid #333"></span>#111111</td><td>Cards, panels, inputs</td></tr>
+          <tr><td>--nd-surface-raised</td><td><span class="token-preview-dot" style="background:#1a1a1a;border:1px solid #333"></span>#1A1A1A</td><td>Hover state, dropdowns</td></tr>
+          <tr><td>--nd-border</td><td>#222222</td><td>Structural, subtle</td></tr>
+          <tr><td>--nd-border-visible</td><td>#333333</td><td>Interactive default border</td></tr>
+          <tr><td>--nd-border-strong</td><td>#666666</td><td>Hover/emphasis border</td></tr>
+          <tr><td>--nd-border-focus</td><td><span class="token-preview-dot" style="background:#5b9bf6"></span>#5B9BF6</td><td>2px focus ring</td></tr>
+          <tr><td>--nd-border-error</td><td><span class="token-preview-dot" style="background:#d71921"></span>#D71921</td><td>Error state border</td></tr>
+          <tr><td>--nd-text-display</td><td>#FFFFFF</td><td>Display, H1</td></tr>
+          <tr><td>--nd-text-primary</td><td>#E8E8E8</td><td>Default body copy</td></tr>
+          <tr><td>--nd-text-secondary</td><td>#999999</td><td>Supporting text, labels</td></tr>
+          <tr><td>--nd-text-tertiary</td><td>#666666</td><td>Placeholders, disabled copy</td></tr>
+          <tr><td>--nd-accent</td><td><span class="token-preview-dot" style="background:#d71921"></span>#D71921</td><td>Interrupt only — never decorative</td></tr>
+          <tr><td>--nd-success</td><td><span class="token-preview-dot" style="background:#4a9e5c"></span>#4A9E5C</td><td>Positive status</td></tr>
+          <tr><td>--nd-warning</td><td><span class="token-preview-dot" style="background:#d4a843"></span>#D4A843</td><td>Caution / degraded</td></tr>
+          <tr><td>--nd-interactive</td><td><span class="token-preview-dot" style="background:#5b9bf6"></span>#5B9BF6</td><td>Links, focus, interactive chrome</td></tr>
+          <tr><td>--nd-font-display</td><td>'Doto'</td><td>Hero text ≥36px only</td></tr>
+          <tr><td>--nd-font-body</td><td>'Space Grotesk'</td><td>All UI, headings, body</td></tr>
+          <tr><td>--nd-font-mono</td><td>'Space Mono'</td><td>Labels, data, captions</td></tr>
+          <tr><td>--nd-tracking-mono</td><td>0.07em</td><td>All Space Mono text</td></tr>
+          <tr><td>--nd-duration-fast</td><td>150ms</td><td>Hover micro-transitions</td></tr>
+          <tr><td>--nd-duration-default</td><td>200ms</td><td>Most transitions</td></tr>
+          <tr><td>--nd-easing</td><td>ease-out</td><td>All transitions</td></tr>
+          <tr><td>--nd-radius-sm</td><td>4px</td><td>Inputs, code</td></tr>
+          <tr><td>--nd-radius-md</td><td>8px</td><td>Tooltips, dropdowns</td></tr>
+          <tr><td>--nd-radius-lg</td><td>12px</td><td>Cards — maximum</td></tr>
+          <tr><td>--nd-radius-pill</td><td>999px</td><td>Buttons, tags, badges</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         BADGE
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="badge" data-section>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <span class="section-title">Badge</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-badge</strong>
+          Default states
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <span class="nd-badge">Rust</span>
+          <span class="nd-badge" style="border-color:var(--nd-border-strong);color:var(--nd-text-primary)">Hover</span>
+          <span class="nd-badge nd-badge-active">Active</span>
+          <span class="nd-badge nd-badge-disabled">Deprecated</span>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Semantic variants</strong>
+          nd-badge-{variant}
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <span class="nd-badge nd-badge-accent">Breaking</span>
+          <span class="nd-badge nd-badge-success"><span class="nd-badge-dot nd-badge-dot-blink"></span>Deployed</span>
+          <span class="nd-badge nd-badge-warning">Unstable</span>
+          <span class="nd-badge nd-badge-info">Beta</span>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>With status dot</strong>
+          .nd-badge-dot<br>
+          .nd-badge-dot-blink
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <span class="nd-badge nd-badge-success"><span class="nd-badge-dot nd-badge-dot-blink"></span>Available</span>
+          <span class="nd-badge nd-badge-accent"><span class="nd-badge-dot"></span>Offline</span>
+          <span class="nd-badge nd-badge-warning"><span class="nd-badge-dot nd-badge-dot-blink"></span>Degraded</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         BUTTON
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="button" data-section>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <span class="section-title">Button</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-btn-primary</strong>
+          White fill, black text<br>Default / Hover /<br>Disabled
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="nd-btn nd-btn-primary">View Work</button>
+          <button class="nd-btn nd-btn-primary" style="opacity:0.88">Hover</button>
+          <button class="nd-btn nd-btn-primary" disabled>Disabled</button>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-btn</strong>
+          Secondary — border<br>Default / Hover /<br>Disabled
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="nd-btn">Download CV</button>
+          <button class="nd-btn" style="border-color:var(--nd-border-strong)">Hover</button>
+          <button class="nd-btn" disabled>Disabled</button>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-btn-ghost</strong>
+          No border / chrome
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="nd-btn nd-btn-ghost">Learn More</button>
+          <button class="nd-btn nd-btn-ghost" style="color:var(--nd-text-primary)">Hover</button>
+          <button class="nd-btn nd-btn-ghost" disabled>Disabled</button>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-btn-destructive</strong>
+          Red border + text
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="nd-btn nd-btn-destructive">Delete Project</button>
+          <button class="nd-btn nd-btn-destructive" style="background:var(--nd-accent-subtle)">Hover</button>
+          <button class="nd-btn nd-btn-destructive" disabled>Disabled</button>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>Sizes</strong>
+          SM / Default / LG
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="nd-btn nd-btn-primary nd-btn-sm">Small</button>
+          <button class="nd-btn nd-btn-primary">Default</button>
+          <button class="nd-btn nd-btn-primary nd-btn-lg">Large</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         CARD
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="card" data-section>
+      <div class="section-header">
+        <span class="section-number">09</span>
+        <span class="section-title">Card</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-card</strong>
+          .nd-card-interactive<br>
+          Hover: border brightens<br>
+          No shadow. No blur.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%">
+          <div class="nd-card nd-card-interactive">
+            <div>
+              <div class="nd-card-title">Oxide Compiler</div>
+              <div class="nd-card-desc">A systems-level compiler targeting WebAssembly with zero-cost abstractions.</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span class="nd-tag">Rust</span>
+              <span class="nd-tag">WASM</span>
+              <span class="nd-tag">Compiler</span>
+            </div>
+            <div class="nd-card-footer">
+              <span class="nd-label nd-label-sm nd-text-disabled">2024 — MIT</span>
+              <span class="nd-badge nd-badge-success" style="font-size:10px"><span class="nd-badge-dot"></span>Deployed</span>
+            </div>
+          </div>
+          <div class="nd-card nd-card-interactive" style="border-color:var(--nd-border-strong)">
+            <div>
+              <div class="nd-card-title">Signal Protocol</div>
+              <div class="nd-card-desc">Minimal pub/sub for embedded systems. no_std Rust, zero heap allocation.</div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <span class="nd-tag">Embedded</span>
+              <span class="nd-tag">No-std</span>
+            </div>
+            <div class="nd-card-footer">
+              <span class="nd-label nd-label-sm nd-text-disabled">2023 — MIT</span>
+              <span class="nd-badge nd-badge-warning" style="font-size:10px"><span class="nd-badge-dot"></span>WIP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         INPUT
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="input" data-section>
+      <div class="section-header">
+        <span class="section-number">10</span>
+        <span class="section-title">Input</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-input</strong>
+          Full border variant<br>
+          States: default,<br>focus, error,<br>disabled
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:520px">
+          <div class="nd-field">
+            <label class="nd-field-label">Default</label>
+            <input class="nd-input" placeholder="Enter value…">
+          </div>
+          <div class="nd-field">
+            <label class="nd-field-label">Focus</label>
+            <input class="nd-input" style="border-color:var(--nd-border-focus)" value="oxide-compiler">
+          </div>
+          <div class="nd-field">
+            <label class="nd-field-label">Error</label>
+            <input class="nd-input nd-input-error" value="invalid@">
+            <span class="nd-field-hint nd-field-error">Invalid format</span>
+          </div>
+          <div class="nd-field">
+            <label class="nd-field-label">Disabled</label>
+            <input class="nd-input" value="read-only" disabled>
+          </div>
+        </div>
+      </div>
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-input-underline</strong>
+          Borderless except<br>bottom edge
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:520px">
+          <div class="nd-field">
+            <label class="nd-field-label">Default</label>
+            <input class="nd-input nd-input-underline" placeholder="Enter value…">
+          </div>
+          <div class="nd-field">
+            <label class="nd-field-label">Focus</label>
+            <input class="nd-input nd-input-underline" style="border-bottom-color:var(--nd-border-focus)" value="hello-world">
+          </div>
+        </div>
+      </div>
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-select</strong>
+          Dropdown with chevron
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:520px">
+          <div class="nd-field">
+            <label class="nd-field-label">Select</label>
+            <select class="nd-input nd-select">
+              <option>All Projects</option>
+              <option>Rust</option>
+              <option>Go</option>
+              <option>Embedded</option>
+            </select>
+          </div>
+          <div class="nd-field">
+            <label class="nd-field-label">Textarea</label>
+            <textarea class="nd-input nd-textarea" placeholder="Describe your project…" style="min-height:80px"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         SEGMENTED CONTROL
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="segmented" data-section>
+      <div class="section-header">
+        <span class="section-number">11</span>
+        <span class="section-title">Segmented Control</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-seg</strong>
+          3-option<br>Active = white fill
+        </div>
+        <div class="nd-seg" role="group">
+          <button class="nd-seg-item nd-seg-item-active">Work</button>
+          <button class="nd-seg-item">Writing</button>
+          <button class="nd-seg-item">About</button>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-seg</strong>
+          2-option / toggle
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <div class="nd-seg" role="group">
+            <button class="nd-seg-item">Grid</button>
+            <button class="nd-seg-item nd-seg-item-active">List</button>
+          </div>
+          <div class="nd-seg" role="group">
+            <button class="nd-seg-item nd-seg-item-active">2024</button>
+            <button class="nd-seg-item">2023</button>
+            <button class="nd-seg-item">2022</button>
+            <button class="nd-seg-item">All</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         TAG
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="tag" data-section>
+      <div class="section-header">
+        <span class="section-number">12</span>
+        <span class="section-title">Tag / Chip</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-tag</strong>
+          Static / removable
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span class="nd-tag">Rust</span>
+          <span class="nd-tag">WebAssembly<button class="nd-tag-remove">×</button></span>
+          <span class="nd-tag">Embedded<button class="nd-tag-remove">×</button></span>
+          <span class="nd-tag">2024</span>
+        </div>
+      </div>
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>States</strong>
+          Active / Accent /<br>Success
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span class="nd-tag nd-tag-active">Systems<button class="nd-tag-remove">×</button></span>
+          <span class="nd-tag nd-tag-accent">Breaking</span>
+          <span class="nd-tag nd-tag-success">Deployed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         NAV BAR
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="nav" data-section>
+      <div class="section-header">
+        <span class="section-number">13</span>
+        <span class="section-title">Navigation Bar</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-nav</strong>
+          Sticky, 56px height<br>
+          Active: white + 2px<br>border-bottom
+        </div>
+        <div style="width:100%;border:1px solid var(--nd-border-visible);border-radius:8px;overflow:hidden">
+          <header style="display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;background:var(--nd-black);border-bottom:1px solid var(--nd-border-subtle)">
+            <div style="font-family:var(--nd-font-display);font-size:20px;color:var(--nd-text-display)">DEV_OS</div>
+            <nav style="display:flex;gap:32px;align-items:center">
+              <a class="nd-nav-link nd-nav-link-active">Work</a>
+              <a class="nd-nav-link">Writing</a>
+              <a class="nd-nav-link">About</a>
+              <a class="nd-nav-link">Contact</a>
+            </nav>
+            <button class="nd-btn nd-btn-primary nd-btn-sm">Hire Me</button>
+          </header>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         STAT ROW
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="stat" data-section>
+      <div class="section-header">
+        <span class="section-number">14</span>
+        <span class="section-title">Stat Row</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-stats</strong>
+          .nd-stat<br>
+          .nd-stat-label<br>
+          .nd-stat-value<br>
+          .nd-stat-unit
+        </div>
+        <dl class="nd-stats" style="width:100%;max-width:480px">
+          <div class="nd-stat"><dt class="nd-stat-label">Experience</dt><dd class="nd-stat-value">7 <span class="nd-stat-unit">yrs</span></dd></div>
+          <div class="nd-stat"><dt class="nd-stat-label">Projects Shipped</dt><dd class="nd-stat-value">42</dd></div>
+          <div class="nd-stat"><dt class="nd-stat-label">Compile Time</dt><dd class="nd-stat-value nd-text-success">400 <span class="nd-stat-unit">ms</span></dd></div>
+          <div class="nd-stat"><dt class="nd-stat-label">Bundle Size</dt><dd class="nd-stat-value nd-text-warning">2.1 <span class="nd-stat-unit">mb</span></dd></div>
+          <div class="nd-stat"><dt class="nd-stat-label">Status</dt><dd class="nd-stat-value nd-text-success"><span style="width:6px;height:6px;border-radius:50%;background:var(--nd-success);animation:nd-blink 2s ease-in-out infinite"></span>Available</dd></div>
+          <div class="nd-stat"><dt class="nd-stat-label">Last Deploy</dt><dd class="nd-stat-value nd-text-tertiary">2026-04-24 <span class="nd-stat-unit">UTC</span></dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         PROGRESS BAR
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="progress" data-section>
+      <div class="section-header">
+        <span class="section-number">15</span>
+        <span class="section-title">Progress Bar</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-progress-track</strong>
+          Segmented — 10 blocks<br>
+          Colours: filled,<br>success, warning,<br>accent
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:480px">
+          <div class="nd-progress">
+            <div class="nd-progress-label"><span class="nd-label-sm nd-text-secondary">Rust</span><span class="nd-data">9/10</span></div>
+            <div class="nd-progress-track">
+              <div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg"></div>
+            </div>
+          </div>
+          <div class="nd-progress">
+            <div class="nd-progress-label"><span class="nd-label-sm nd-text-secondary">Go</span><span class="nd-data">7/10</span></div>
+            <div class="nd-progress-track">
+              <div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg nd-progress-filled"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div>
+            </div>
+          </div>
+          <div class="nd-progress">
+            <div class="nd-progress-label"><span class="nd-label-sm nd-text-secondary">C / C++</span><span class="nd-data nd-text-warning">3/10</span></div>
+            <div class="nd-progress-track">
+              <div class="nd-progress-seg nd-progress-warning"></div><div class="nd-progress-seg nd-progress-warning"></div><div class="nd-progress-seg nd-progress-warning"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div>
+            </div>
+          </div>
+          <div class="nd-progress">
+            <div class="nd-progress-label"><span class="nd-label-sm nd-text-secondary">Build</span><span class="nd-data nd-text-accent">Failed</span></div>
+            <div class="nd-progress-track">
+              <div class="nd-progress-seg nd-progress-accent"></div><div class="nd-progress-seg nd-progress-accent"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div><div class="nd-progress-seg"></div>
+            </div>
+          </div>
+          <div class="nd-progress">
+            <div class="nd-progress-label"><span class="nd-label-sm nd-text-secondary">Deployed</span><span class="nd-data nd-text-success">10/10</span></div>
+            <div class="nd-progress-track">
+              <div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div><div class="nd-progress-seg nd-progress-success"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         EMPTY STATE
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="empty" data-section>
+      <div class="section-header">
+        <span class="section-number">16</span>
+        <span class="section-title">Empty State</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-empty</strong>
+          Dot-grid background<br>
+          .nd-empty-headline<br>
+          .nd-empty-desc
+        </div>
+        <div class="nd-empty" style="width:100%">
+          <p class="nd-empty-headline">No Results</p>
+          <p class="nd-empty-desc">No projects match the selected filters. Try adjusting your criteria.</p>
+          <button class="nd-btn nd-btn-primary nd-btn-sm">Clear Filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         SKELETON
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="skeleton" data-section>
+      <div class="section-header">
+        <span class="section-number">17</span>
+        <span class="section-title">Skeleton Loader</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-skel</strong>
+          nd-pulse animation<br>
+          Types: text, title,<br>pill, block, circle<br>
+          .nd-skel-group<br>for stagger delays
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%">
+          <!-- Card skeleton -->
+          <div class="nd-card">
+            <div class="nd-skel-group" style="display:flex;flex-direction:column;gap:10px">
+              <div class="nd-skel nd-skel-title" style="width:55%"></div>
+              <div class="nd-skel nd-skel-text"></div>
+              <div class="nd-skel nd-skel-text" style="width:75%"></div>
+              <div style="display:flex;gap:6px;margin-top:4px">
+                <div class="nd-skel nd-skel-pill" style="width:52px"></div>
+                <div class="nd-skel nd-skel-pill nd-delay-1" style="width:68px"></div>
+                <div class="nd-skel nd-skel-pill nd-delay-2" style="width:44px"></div>
+              </div>
+              <div class="nd-skel nd-skel-text nd-delay-2" style="width:35%"></div>
+            </div>
+          </div>
+          <!-- Stat rows skeleton -->
+          <div style="border-top:1px solid var(--nd-border-subtle)">
+            <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--nd-border-subtle)">
+              <div class="nd-skel nd-skel-text" style="width:30%"></div>
+              <div class="nd-skel nd-skel-text" style="width:15%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--nd-border-subtle)">
+              <div class="nd-skel nd-skel-text nd-delay-1" style="width:25%"></div>
+              <div class="nd-skel nd-skel-text nd-delay-1" style="width:20%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--nd-border-subtle)">
+              <div class="nd-skel nd-skel-text nd-delay-2" style="width:35%"></div>
+              <div class="nd-skel nd-skel-text nd-delay-2" style="width:12%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:12px 0">
+              <div class="nd-skel nd-skel-text nd-delay-3" style="width:20%"></div>
+              <div class="nd-skel nd-skel-text nd-delay-3" style="width:25%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         MISC: TOOLTIP / DIVIDER / CODE
+    ════════════════════════════════════════════════════ -->
+    <section class="section" id="misc" data-section>
+      <div class="section-header">
+        <span class="section-number">18</span>
+        <span class="section-title">Tooltip · Divider · Code</span>
+        <div class="section-title-line"></div>
+      </div>
+
+      <div class="specimen">
+        <div class="specimen-meta">
+          <strong>.nd-tooltip</strong>
+          data-tooltip attr<br>
+          Pure CSS, hover only<br>
+          .nd-tooltip-bottom
+        </div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <span class="nd-tooltip nd-badge" data-tooltip="View repository on GitHub">GitHub ↗</span>
+          <span class="nd-tooltip nd-badge nd-badge-success" data-tooltip="Deployed to production">Live</span>
+          <button class="nd-btn nd-btn-sm nd-tooltip" data-tooltip="Download as PDF">Download CV</button>
+        </div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-divider</strong>
+          .nd-divider-visible<br>
+          .nd-divider-label
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;width:100%">
+          <hr class="nd-divider">
+          <hr class="nd-divider nd-divider-visible">
+          <div class="nd-divider-label">Or</div>
+        </div>
+      </div>
+
+      <div class="specimen" style="align-items:flex-start">
+        <div class="specimen-meta">
+          <strong>.nd-pre</strong>
+          Code block<br>
+          Space Mono<br>
+          Surface bg
+        </div>
+        <pre class="nd-pre" style="width:100%"><code>// Quick start
+&lt;link rel="stylesheet" href="dot-matrix.css"&gt;
+&lt;body class="nd-root"&gt;
+
+// Badge
+&lt;span class="nd-badge nd-badge-success"&gt;
+  &lt;span class="nd-badge-dot nd-badge-dot-blink"&gt;&lt;/span&gt;
+  Deployed
+&lt;/span&gt;
+
+// Token usage
+background: var(--nd-surface);
+border:     var(--nd-ring-visible);
+color:      var(--nd-text-primary);</code></pre>
+      </div>
+    </section>
+
+    <!-- spacer -->
+    <div style="height:96px"></div>
+
+  </main>
+</div>
+
+<script>
+  function scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ block: 'start' });
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+
+  // Sidebar active tracking
+  const main = document.getElementById('main-scroll');
+  const sections = document.querySelectorAll('[data-section]');
+  const links = document.querySelectorAll('.sidebar-link');
+
+  main.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (s.offsetTop - 80 <= main.scrollTop) current = s.id;
+    });
+    links.forEach(l => {
+      const fn = l.getAttribute('onclick') || '';
+      const match = fn.match(/'(\w+)'/);
+      if (match) l.classList.toggle('active', match[1] === current);
+    });
+  }, { passive: true });
+
+  // Animation previews
+  let fadeEl, slideEl;
+
+  function triggerFade() {
+    if (!fadeEl) {
+      fadeEl = document.createElement('div');
+      fadeEl.style.cssText = 'width:120px;height:40px;background:var(--nd-surface);border:1px solid var(--nd-border-visible);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--nd-font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--nd-text-secondary);margin-left:16px';
+      fadeEl.textContent = 'Fade In';
+      event.currentTarget.parentNode.appendChild(fadeEl);
+    }
+    fadeEl.style.animation = 'none';
+    fadeEl.offsetHeight;
+    fadeEl.style.animation = 'nd-fade-in 200ms ease-out both';
+  }
+
+  function triggerSlide() {
+    if (!slideEl) {
+      slideEl = document.createElement('div');
+      slideEl.style.cssText = 'width:120px;height:40px;background:var(--nd-surface);border:1px solid var(--nd-border-visible);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--nd-font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--nd-text-secondary);margin-left:16px';
+      slideEl.textContent = 'Slide Up';
+      event.currentTarget.parentNode.appendChild(slideEl);
+    }
+    slideEl.style.animation = 'none';
+    slideEl.offsetHeight;
+    slideEl.style.animation = 'nd-slide-up 200ms ease-out both';
+  }
+</script>
+</body>
+</html>

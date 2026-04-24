@@ -1,7 +1,7 @@
 .layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--nd-space-xl);
+  gap: var(--nd-space-6);
 }
 
 @media (min-width: 768px) {
@@ -14,53 +14,11 @@
 .controls {
   display: flex;
   flex-direction: column;
-  gap: var(--nd-space-lg);
-  padding: var(--nd-space-lg);
+  gap: var(--nd-space-5);
+  padding: var(--nd-space-5);
   background-color: var(--nd-surface);
   border: var(--nd-border-width) solid var(--nd-border-visible);
-  border-radius: var(--nd-radius-xl);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--nd-space-sm);
-}
-
-.label {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-base);
-  letter-spacing: var(--nd-tracking-widest);
-  text-transform: uppercase;
-  color: var(--nd-text-secondary);
-}
-
-.input {
-  height: 40px;
-  width: 100%;
-  background-color: var(--nd-surface-raised);
-  border: var(--nd-border-width) solid var(--nd-border-visible);
-  border-radius: var(--nd-radius-md);
-  padding: 0 calc(var(--nd-space-sm) + var(--nd-space-xs));
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-xl);
-  color: var(--nd-text-primary);
-  outline: none;
-  transition: border-color var(--nd-duration-fast);
-}
-
-.input:focus {
-  border-color: var(--nd-text-secondary);
-}
-
-.input::placeholder {
-  color: var(--nd-text-disabled);
-}
-
-.hint {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-base);
-  color: var(--nd-text-disabled);
+  border-radius: var(--nd-radius-lg);
 }
 
 .downloadBtn {

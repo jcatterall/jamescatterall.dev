@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react";
 
 const KONAMI = [
   "ArrowUp",
@@ -13,47 +13,54 @@ const KONAMI = [
   "ArrowRight",
   "KeyB",
   "KeyA",
-]
+];
 
 function isKonami(buf: string[]): boolean {
-  if (buf.length < KONAMI.length) return false
-  const tail = buf.slice(-KONAMI.length)
-  return KONAMI.every((code, i) => tail[i] === code)
+  if (buf.length < KONAMI.length) return false;
+  const tail = buf.slice(-KONAMI.length);
+  return KONAMI.every((code, i) => tail[i] === code);
 }
 
 export function useGlobalKeyboard(
   onToggle: () => void,
   onKonami: () => void,
-  isOpen: boolean
+  isOpen: boolean,
+  konamiActive: boolean = false,
+  onKonamiDismiss?: () => void,
 ): void {
-  const bufferRef = useRef<string[]>([])
+  const bufferRef = useRef<string[]>([]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement
-      const inInput = target.matches("input, textarea, [contenteditable]")
+      if (konamiActive) {
+        onKonamiDismiss?.();
+        return;
+      }
 
-      bufferRef.current = [...bufferRef.current.slice(-9), e.code]
+      const target = e.target as HTMLElement;
+      const inInput = target.matches("input, textarea, [contenteditable]");
+
+      bufferRef.current = [...bufferRef.current.slice(-9), e.code];
 
       if (isKonami(bufferRef.current)) {
-        bufferRef.current = []
-        onKonami()
-        return
+        bufferRef.current = [];
+        onKonami();
+        return;
       }
 
       if (e.key === "/" && !inInput && !isOpen) {
-        e.preventDefault()
-        onToggle()
-        return
+        e.preventDefault();
+        onToggle();
+        return;
       }
 
       if (e.key === "Escape" && isOpen) {
-        e.preventDefault()
-        onToggle()
+        e.preventDefault();
+        onToggle();
       }
-    }
+    };
 
-    window.addEventListener("keydown", handler)
-    return () => window.removeEventListener("keydown", handler)
-  }, [isOpen, onToggle, onKonami])
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, konamiActive, onToggle, onKonami, onKonamiDismiss]);
 }

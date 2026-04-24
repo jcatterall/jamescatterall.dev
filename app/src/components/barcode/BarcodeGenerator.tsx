@@ -1,72 +1,82 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import { Download } from "lucide-react"
+import { useState, useMemo } from "react";
+import { Download } from "lucide-react";
 
-import { encodeEan13, encodeForPreview, getDisplayDigits } from "@/lib/barcode/encode"
-import { generateSvg } from "@/lib/barcode/svg"
-import { type ShapeId } from "@/lib/barcode/shapes"
-import { type ColorId, getColorHex } from "@/lib/barcode/colors"
+import {
+  encodeEan13,
+  encodeForPreview,
+  getDisplayDigits,
+} from "@/lib/barcode/encode";
+import { generateSvg } from "@/lib/barcode/svg";
+import { type ShapeId } from "@/lib/barcode/shapes";
+import { type ColorId, getColorHex } from "@/lib/barcode/colors";
 
-import { Button } from "@/design-system"
-import { BarcodePreview } from "./BarcodePreview"
-import { ShapeSelector } from "./ShapeSelector"
-import { ColorSelector } from "./ColorSelector"
+import { Button, Field, Input } from "@/design-system";
+import { BarcodePreview } from "./BarcodePreview";
+import { ShapeSelector } from "./ShapeSelector";
+import { ColorSelector } from "./ColorSelector";
 
-import styles from "./BarcodeGenerator.module.css"
+import styles from "./BarcodeGenerator.module.css";
 
-const DEFAULT_VALUE = ""
-const DEFAULT_SHAPE: ShapeId = "tree"
-const DEFAULT_COLOR: ColorId = "black"
+const DEFAULT_VALUE = "";
+const DEFAULT_SHAPE: ShapeId = "tree";
+const DEFAULT_COLOR: ColorId = "black";
 
 export function BarcodeGenerator() {
-  const [value, setValue] = useState(DEFAULT_VALUE)
-  const [shape, setShape] = useState<ShapeId>(DEFAULT_SHAPE)
-  const [color, setColor] = useState<ColorId>(DEFAULT_COLOR)
+  const [value, setValue] = useState(DEFAULT_VALUE);
+  const [shape, setShape] = useState<ShapeId>(DEFAULT_SHAPE);
+  const [color, setColor] = useState<ColorId>(DEFAULT_COLOR);
 
-  const encoded = useMemo(() => encodeEan13(value), [value])
-  const previewEncoded = useMemo(() => encodeForPreview(value), [value])
+  const encoded = useMemo(() => encodeEan13(value), [value]);
+  const previewEncoded = useMemo(() => encodeForPreview(value), [value]);
 
   const handleDownload = () => {
-    if (!encoded) return
-    const svg = generateSvg(encoded, shape, getColorHex(color), getDisplayDigits(value))
-    const blob = new Blob([svg], { type: "image/svg+xml" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `barcode-${value.replace(/\D/g, "")}.svg`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+    if (!encoded) return;
+    const svg = generateSvg(
+      encoded,
+      shape,
+      getColorHex(color),
+      getDisplayDigits(value),
+    );
+    const blob = new Blob([svg], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `barcode-${value.replace(/\D/g, "")}.svg`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className={styles.layout}>
       <div className={styles.controls}>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="barcode-input">Barcode number</label>
-          <input
+        <Field label="Barcode number" hint={`${value.length}/12`}>
+          <Input
             id="barcode-input"
-            className={styles.input}
             value={value}
-            onChange={(e) => setValue(e.target.value.replace(/\D/g, "").slice(0, 12))}
+            onChange={(e) =>
+              setValue(e.target.value.replace(/\D/g, "").slice(0, 12))
+            }
             placeholder="12 digits"
             maxLength={12}
             inputMode="numeric"
           />
-          <p className={styles.hint}>{value.length}/12</p>
-        </div>
+        </Field>
 
-        <div className={styles.field}>
-          <label className={styles.label}>Shape</label>
+        <Field label="Shape">
           <ShapeSelector value={shape} onChange={setShape} />
-        </div>
+        </Field>
 
-        <div className={styles.field}>
-          <label className={styles.label}>Colour</label>
+        <Field label="Colour">
           <ColorSelector value={color} onChange={setColor} />
-        </div>
+        </Field>
 
-        <Button onClick={handleDownload} disabled={!encoded} className={styles.downloadBtn}>
+        <Button
+          onClick={handleDownload}
+          disabled={!encoded}
+          className={styles.downloadBtn}
+        >
           <Download />
           Download SVG
         </Button>
@@ -81,5 +91,5 @@ export function BarcodeGenerator() {
         />
       </div>
     </div>
-  )
+  );
 }

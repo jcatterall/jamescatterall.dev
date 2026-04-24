@@ -1,0 +1,220 @@
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── ROOT LAYOUT — mirrors SessionTimer.module.css ── */
+
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebarHeader {
+  padding: var(--nd-space-5) var(--nd-space-5) var(--nd-space-4);
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-1);
+  flex-shrink: 0;
+}
+
+.sidebarBody {
+  flex: 1;
+  overflow: hidden;
+  padding: var(--nd-space-4) var(--nd-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-5);
+}
+
+.sidebarFooter {
+  padding: 14px var(--nd-space-5);
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+/* ── TIMER AREA ── */
+
+.timerArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.progressLine {
+  height: 2px;
+  background: var(--nd-border);
+  flex-shrink: 0;
+}
+
+.timerCenter {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--nd-space-5);
+  padding: var(--nd-space-8) var(--nd-space-5);
+}
+
+.legendBar {
+  height: 44px;
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+}
+
+/* ── SKELETON SHAPES ── */
+
+.skeletonPrompt,
+.skeletonTitle,
+.skeletonSubtitle,
+.skeletonSectionLabel,
+.skeletonFieldLabel,
+.skeletonInput,
+.skeletonToggle,
+.skeletonNotifRow,
+.skeletonReceiptButton,
+.skeletonPhaseLabel,
+.skeletonCountdown,
+.skeletonPip,
+.skeletonBtnSm,
+.skeletonBtnLg {
+  background-color: var(--nd-surface-raised);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.skeletonPrompt {
+  height: 11px;
+  width: 80px;
+}
+
+.skeletonTitle {
+  height: 20px;
+  width: 100px;
+  animation-delay: 0.05s;
+}
+
+.skeletonSubtitle {
+  height: 11px;
+  width: 160px;
+  animation-delay: 0.08s;
+}
+
+.skeletonSectionLabel {
+  height: 10px;
+  width: 72px;
+  animation-delay: 0.1s;
+}
+
+.skeletonField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-1);
+}
+
+.skeletonFieldLabel {
+  height: 10px;
+  width: 56px;
+  animation-delay: 0.12s;
+}
+
+.skeletonInput {
+  height: 32px;
+  width: 100%;
+  animation-delay: 0.15s;
+}
+
+.skeletonToggleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skeletonToggleLabel {
+  height: 10px;
+  width: 80px;
+  background-color: var(--nd-surface-raised);
+  animation: pulse 1.8s ease-in-out infinite;
+  animation-delay: 0.18s;
+}
+
+.skeletonToggle {
+  width: 32px;
+  height: 16px;
+  animation-delay: 0.2s;
+}
+
+.skeletonNotifRow {
+  height: 24px;
+  width: 100%;
+  animation-delay: 0.22s;
+}
+
+.skeletonReceiptButton {
+  height: 38px;
+  width: 100%;
+  animation-delay: 0.25s;
+}
+
+/* timer area shapes */
+
+.skeletonPhaseLabel {
+  height: 12px;
+  width: 72px;
+  animation-delay: 0.05s;
+}
+
+.skeletonCountdown {
+  height: clamp(96px, 14vw, 160px);
+  width: clamp(200px, 30vw, 340px);
+  animation-delay: 0.08s;
+}
+
+.skeletonPips {
+  display: flex;
+  gap: var(--nd-space-2);
+  align-items: center;
+}
+
+.skeletonPip {
+  width: 16px;
+  height: 16px;
+}
+
+.skeletonControls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.skeletonBtnSm {
+  width: 44px;
+  height: 44px;
+  animation-delay: 0.15s;
+}
+
+.skeletonBtnLg {
+  width: 64px;
+  height: 64px;
+  animation-delay: 0.1s;
+}
