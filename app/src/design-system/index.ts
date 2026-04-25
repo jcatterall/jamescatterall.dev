@@ -13,6 +13,7 @@ export { StatusRow } from "./StatusRow";
 export { ContactLink } from "./ContactLink";
 export { Divider } from "./Divider";
 export { SectionPrompt } from "./SectionPrompt";
+export { SectionLabel } from "./SectionLabel";
 export { WorkRow } from "./WorkRow";
 export { Field, Input, Textarea, Select } from "./Input";
 export { Segmented } from "./Segmented";

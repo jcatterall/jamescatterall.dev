@@ -156,9 +156,9 @@ export function linePoints(
   y1: number,
 ): [number, number][] {
   const pts: [number, number][] = [];
-  let dx = Math.abs(x1 - x0),
+  const dx = Math.abs(x1 - x0),
     sx = x0 < x1 ? 1 : -1;
-  let dy = -Math.abs(y1 - y0),
+  const dy = -Math.abs(y1 - y0),
     sy = y0 < y1 ? 1 : -1;
   let err = dx + dy;
   while (true) {

@@ -1,3 +1,4 @@
+import { Skeleton } from "@/design-system"
 import styles from "./loading.module.css"
 
 export default function AsciiLoading() {
@@ -5,73 +6,66 @@ export default function AsciiLoading() {
     <div className={styles.layout}>
       {/* Sidebar skeleton */}
       <aside className={styles.sidebar}>
-        {/* Header */}
         <div className={styles.sidebarHeader}>
-          <div className={`${styles.skel} ${styles.skelPrompt}`} style={{ animationDelay: "0ms" }} />
-          <div className={`${styles.skel} ${styles.skelTitle}`} style={{ animationDelay: "50ms" }} />
-          <div className={`${styles.skel} ${styles.skelSubtitle}`} style={{ animationDelay: "100ms" }} />
-          <div className={`${styles.skel} ${styles.skelSubtitleShort}`} style={{ animationDelay: "130ms" }} />
+          <Skeleton width={72} height={12} style={{ animationDelay: "0ms" }} />
+          <Skeleton variant="title" width={120} style={{ animationDelay: "50ms" }} />
+          <Skeleton width="100%" height={12} style={{ animationDelay: "100ms" }} />
+          <Skeleton width="70%" height={12} style={{ animationDelay: "130ms" }} />
         </div>
 
-        {/* Body */}
         <div className={styles.sidebarBody}>
           {/* Source section */}
           <div className={styles.section}>
-            <div className={`${styles.skel} ${styles.skelLabel}`} style={{ animationDelay: "80ms" }} />
-            <div className={`${styles.skel} ${styles.skelBtn}`} style={{ animationDelay: "100ms" }} />
-            <div className={`${styles.skel} ${styles.skelBtn}`} style={{ animationDelay: "130ms" }} />
+            <Skeleton width={64} height={10} style={{ animationDelay: "80ms" }} />
+            <Skeleton height={36} style={{ animationDelay: "100ms" }} />
+            <Skeleton height={36} style={{ animationDelay: "130ms" }} />
           </div>
 
           {/* Resolution section */}
           <div className={styles.section}>
             <div className={styles.sliderHeader}>
-              <div className={`${styles.skel} ${styles.skelLabel}`} style={{ animationDelay: "110ms" }} />
-              <div className={`${styles.skel} ${styles.skelSliderVal}`} style={{ animationDelay: "120ms" }} />
+              <Skeleton width={64} height={10} style={{ animationDelay: "110ms" }} />
+              <Skeleton width={48} height={10} style={{ animationDelay: "120ms" }} />
             </div>
-            <div className={`${styles.skel} ${styles.skelSlider}`} style={{ animationDelay: "140ms" }} />
+            <Skeleton height={1} style={{ animationDelay: "140ms" }} />
           </div>
 
           {/* Char set section */}
           <div className={styles.section}>
-            <div className={`${styles.skel} ${styles.skelLabel}`} style={{ animationDelay: "150ms" }} />
+            <Skeleton width={64} height={10} style={{ animationDelay: "150ms" }} />
             <div className={styles.pills}>
-              {["72px", "64px", "72px", "60px", "60px"].map((w, i) => (
-                <div
-                  key={i}
-                  className={`${styles.skel} ${styles.skelPill}`}
-                  style={{ width: w, animationDelay: `${150 + i * 30}ms` }}
-                />
+              {(["72px-0", "64px-1", "72px-2", "60px-3", "60px-4"] as const).map((wk, i) => (
+                <Skeleton key={wk} variant="pill" width={wk.split("-")[0]} style={{ animationDelay: `${150 + i * 30}ms` }} />
               ))}
             </div>
-            <div className={`${styles.skel} ${styles.skelCharPreview}`} style={{ animationDelay: "300ms" }} />
+            <Skeleton height={24} style={{ animationDelay: "300ms" }} />
           </div>
 
           {/* Mode section */}
           <div className={styles.section}>
-            <div className={`${styles.skel} ${styles.skelLabel}`} style={{ animationDelay: "180ms" }} />
+            <Skeleton width={64} height={10} style={{ animationDelay: "180ms" }} />
             {[0, 1, 2].map((i) => (
               <div key={i} className={styles.toggleRow}>
-                <div className={`${styles.skel} ${styles.skelToggleLabel}`} style={{ animationDelay: `${190 + i * 20}ms` }} />
-                <div className={`${styles.skel} ${styles.skelToggle}`} style={{ animationDelay: `${200 + i * 20}ms` }} />
+                <Skeleton width={48} height={10} style={{ animationDelay: `${190 + i * 20}ms` }} />
+                <Skeleton width={32} height={16} style={{ animationDelay: `${200 + i * 20}ms` }} />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Footer */}
         <div className={styles.sidebarFooter}>
-          <div className={`${styles.skel} ${styles.skelExportBtn}`} style={{ animationDelay: "250ms" }} />
+          <Skeleton height={40} style={{ animationDelay: "250ms" }} />
         </div>
       </aside>
 
       {/* Canvas area skeleton */}
       <div className={styles.main}>
         <div className={styles.canvasWrap}>
-          <div className={`${styles.skel} ${styles.skelDotGrid}`} style={{ animationDelay: "200ms" }} />
-          <div className={`${styles.skel} ${styles.skelBadge}`} style={{ animationDelay: "220ms" }} />
+          <Skeleton style={{ position: "absolute", inset: 0, animationDelay: "200ms" }} />
+          <Skeleton width={80} height={18} style={{ position: "absolute", top: 12, left: 12, animationDelay: "220ms" }} />
         </div>
         <div className={styles.statusBar}>
-          <div className={`${styles.skel} ${styles.skelStatus}`} style={{ animationDelay: "260ms" }} />
+          <Skeleton width={120} height={10} style={{ animationDelay: "260ms" }} />
         </div>
       </div>
     </div>

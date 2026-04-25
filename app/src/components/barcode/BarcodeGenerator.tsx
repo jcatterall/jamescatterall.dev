@@ -1,21 +1,16 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Download } from "lucide-react";
-
+import { useMemo, useState } from "react";
+import { type ColorId, getColorHex } from "@/lib/barcode/colors";
 import {
   encodeEan13,
   encodeForPreview,
   getDisplayDigits,
 } from "@/lib/barcode/encode";
-import { generateSvg } from "@/lib/barcode/svg";
 import { type ShapeId } from "@/lib/barcode/shapes";
-import { type ColorId, getColorHex } from "@/lib/barcode/colors";
-
-import { Button, Field, Input } from "@/design-system";
+import { generateSvg } from "@/lib/barcode/svg";
+import { BarcodeSidebar } from "./BarcodeSidebar";
 import { BarcodePreview } from "./BarcodePreview";
-import { ShapeSelector } from "./ShapeSelector";
-import { ColorSelector } from "./ColorSelector";
 
 import styles from "./BarcodeGenerator.module.css";
 
@@ -50,38 +45,16 @@ export function BarcodeGenerator() {
 
   return (
     <div className={styles.layout}>
-      <div className={styles.controls}>
-        <Field label="Barcode number" hint={`${value.length}/12`}>
-          <Input
-            id="barcode-input"
-            value={value}
-            onChange={(e) =>
-              setValue(e.target.value.replace(/\D/g, "").slice(0, 12))
-            }
-            placeholder="12 digits"
-            maxLength={12}
-            inputMode="numeric"
-          />
-        </Field>
-
-        <Field label="Shape">
-          <ShapeSelector value={shape} onChange={setShape} />
-        </Field>
-
-        <Field label="Colour">
-          <ColorSelector value={color} onChange={setColor} />
-        </Field>
-
-        <Button
-          onClick={handleDownload}
-          disabled={!encoded}
-          className={styles.downloadBtn}
-        >
-          <Download />
-          Download SVG
-        </Button>
-      </div>
-
+      <BarcodeSidebar
+        value={value}
+        onValueChange={setValue}
+        shape={shape}
+        onShapeChange={setShape}
+        color={color}
+        onColorChange={setColor}
+        canDownload={!!encoded}
+        onDownload={handleDownload}
+      />
       <div className={styles.preview}>
         <BarcodePreview
           encoded={previewEncoded}

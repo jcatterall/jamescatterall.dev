@@ -16,7 +16,7 @@
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--nd-tracking-widest);
   color: var(--nd-text-secondary);
 }
 
@@ -55,7 +55,7 @@
 
 .addLabel {
   font-size: var(--nd-text-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--nd-tracking-widest);
   text-transform: uppercase;
 }
 
@@ -65,5 +65,5 @@
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
   color: var(--nd-text-disabled);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--nd-tracking-wide);
 }

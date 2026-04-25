@@ -1,40 +1,3 @@
-.sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  border-right: var(--nd-border-width) solid var(--nd-border);
-  display: flex;
-  flex-direction: column;
-  background: var(--nd-black);
-  overflow: hidden;
-}
-
-.header {
-  padding: var(--nd-space-4) var(--nd-space-4) var(--nd-space-3);
-  border-bottom: var(--nd-border-width) solid var(--nd-border);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.breadcrumbAccent {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-label-sm);
-  color: var(--nd-accent);
-}
-
-.breadcrumbPath {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-label-sm);
-  color: var(--nd-text-secondary);
-  letter-spacing: 0.06em;
-}
-
 .title {
   font-family: var(--font-space-grotesk), sans-serif;
   font-size: var(--nd-text-body);
@@ -49,27 +12,10 @@
   line-height: 1.5;
 }
 
-.body {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--nd-space-3) var(--nd-space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--nd-space-5);
-}
-
 .section {
   display: flex;
   flex-direction: column;
   gap: var(--nd-space-2);
-}
-
-.label {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--nd-text-secondary);
 }
 
 /* Tools */
@@ -84,12 +30,12 @@
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  border: 1px solid transparent;
+  border: var(--nd-border-width) solid transparent;
   background: transparent;
   color: var(--nd-text-tertiary);
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-label-sm);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--nd-tracking-wide);
   cursor: pointer;
   width: 100%;
   transition: color 120ms ease-out, border-color 120ms ease-out;
@@ -133,7 +79,7 @@
   padding: 5px 0;
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--nd-tracking-normal);
   border: var(--nd-border-width) solid var(--nd-border);
   background: transparent;
   color: var(--nd-text-secondary);
@@ -184,7 +130,7 @@
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
   color: var(--nd-text-secondary);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--nd-tracking-normal);
 }
 
 .resetBtn {
@@ -195,7 +141,7 @@
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--nd-tracking-normal);
   text-transform: uppercase;
   cursor: pointer;
   transition: border-color 120ms, color 120ms;
@@ -237,11 +183,6 @@
 }
 
 /* Footer */
-.footer {
-  padding: var(--nd-space-3) var(--nd-space-4);
-  border-top: var(--nd-border-width) solid var(--nd-border);
-}
-
 .newBtn {
   width: 100%;
   padding: 8px 0;
@@ -250,7 +191,7 @@
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--nd-tracking-wide);
   text-transform: uppercase;
   cursor: pointer;
   transition: all 150ms;

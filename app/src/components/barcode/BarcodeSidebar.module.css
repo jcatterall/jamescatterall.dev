@@ -1,0 +1,52 @@
+.title {
+  font-family: var(--font-doto), monospace;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: var(--nd-leading-none);
+  color: var(--nd-text-display);
+}
+
+.subtitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label-sm);
+  letter-spacing: var(--nd-tracking-wide);
+  color: var(--nd-text-secondary);
+  line-height: var(--nd-leading-relaxed);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.exportBtn {
+  width: 100%;
+  padding: 11px 0;
+  background: var(--nd-text-display);
+  color: var(--nd-black);
+  border: none;
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-label);
+  letter-spacing: var(--nd-tracking-widest);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity var(--nd-duration-fast);
+}
+
+.exportBtn:hover {
+  opacity: 0.85;
+}
+
+.exportBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.exportHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: var(--nd-text-xs);
+  color: var(--nd-text-disabled);
+  text-align: center;
+  letter-spacing: var(--nd-tracking-wide);
+}

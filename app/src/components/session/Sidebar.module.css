@@ -1,80 +1,23 @@
-.sidebar {
-  width: 260px;
-  flex-shrink: 0;
-  border-right: var(--nd-border-width) solid var(--nd-border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* ── Header ── */
-
-.header {
-  padding: var(--nd-space-5) var(--nd-space-5) var(--nd-space-4);
-  border-bottom: var(--nd-border-width) solid var(--nd-border);
-  flex-shrink: 0;
-}
-
-.prompt {
-  display: flex;
-  align-items: center;
-  gap: var(--nd-space-1);
-  margin-bottom: var(--nd-space-1);
-}
-
-.promptCaret {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-label-sm);
-  color: var(--nd-accent);
-}
-
-.promptPath {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-label-sm);
-  color: var(--nd-text-secondary);
-  letter-spacing: var(--nd-tracking-wide);
-}
-
 .title {
   font-family: var(--font-space-grotesk), sans-serif;
   font-size: var(--nd-text-h4);
   font-weight: var(--nd-weight-semibold);
   color: var(--nd-text-display);
-  margin-top: var(--nd-space-1);
 }
 
 .subtitle {
   font-family: var(--font-space-grotesk), sans-serif;
   font-size: var(--nd-text-body-sm);
   color: var(--nd-text-secondary);
-  margin-top: var(--nd-space-1);
   line-height: var(--nd-leading-normal);
 }
 
 /* ── Body ── */
 
-.body {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--nd-space-4) var(--nd-space-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--nd-space-5);
-}
-
 .section {
   display: flex;
   flex-direction: column;
   gap: var(--nd-space-2);
-}
-
-.sectionLabel {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-xs);
-  color: var(--nd-text-secondary);
-  letter-spacing: var(--nd-tracking-widest);
-  text-transform: uppercase;
-  margin-bottom: var(--nd-space-1);
 }
 
 /* ── Number field ── */
@@ -106,60 +49,6 @@
   white-space: nowrap;
 }
 
-/* ── Toggle ── */
-
-.toggleRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--nd-space-3);
-}
-
-.toggleLabel {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-xs);
-  color: var(--nd-text-secondary);
-  letter-spacing: var(--nd-tracking-wider);
-  text-transform: uppercase;
-  margin-bottom: 2px;
-}
-
-.toggleDesc {
-  font-family: var(--font-space-grotesk), sans-serif;
-  font-size: var(--nd-text-body-sm);
-  color: var(--nd-text-secondary);
-  line-height: var(--nd-leading-compact);
-}
-
-.toggle {
-  width: 32px;
-  height: 16px;
-  background: var(--nd-border);
-  border: none;
-  position: relative;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: background var(--nd-duration-default);
-  padding: 0;
-}
-
-.toggle[data-checked] {
-  background: var(--nd-success);
-}
-
-.toggleThumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 10px;
-  height: 10px;
-  background: var(--nd-text-display);
-  transition: left var(--nd-duration-default);
-}
-
-.toggle[data-checked] .toggleThumb {
-  left: 19px;
-}
 
 /* ── Notifications ── */
 
@@ -221,12 +110,6 @@
 }
 
 /* ── Footer ── */
-
-.footer {
-  padding: 14px var(--nd-space-5);
-  border-top: var(--nd-border-width) solid var(--nd-border);
-  flex-shrink: 0;
-}
 
 .receiptBtn {
   width: 100%;

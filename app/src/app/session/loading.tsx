@@ -1,71 +1,62 @@
+import { Skeleton } from "@/design-system";
 import styles from "./loading.module.css";
 
 export default function SessionLoading() {
   return (
     <div className={styles.layout}>
-      {/* Sidebar skeleton */}
+      {/* Sidebar */}
       <div className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
-          <div className={styles.skeletonPrompt} />
-          <div className={styles.skeletonTitle} />
-          <div className={styles.skeletonSubtitle} />
+          <Skeleton height={11} width={80} />
+          <Skeleton variant="title" width={100} style={{ animationDelay: "0.05s" }} />
+          <Skeleton height={11} width={160} style={{ animationDelay: "0.08s" }} />
         </div>
         <div className={styles.sidebarBody}>
           <div className={styles.section}>
-            <div className={styles.skeletonSectionLabel} />
-            <div className={styles.skeletonField}>
-              <div className={styles.skeletonFieldLabel} />
-              <div className={styles.skeletonInput} />
-            </div>
-            <div className={styles.skeletonField}>
-              <div className={styles.skeletonFieldLabel} />
-              <div className={styles.skeletonInput} />
-            </div>
-            <div className={styles.skeletonField}>
-              <div className={styles.skeletonFieldLabel} />
-              <div className={styles.skeletonInput} />
-            </div>
+            <Skeleton height={10} width={72} style={{ animationDelay: "0.1s" }} />
+            {(["focus","short","long"] as const).map((k) => (
+              <div key={k} className={styles.field}>
+                <Skeleton height={10} width={56} style={{ animationDelay: "0.12s" }} />
+                <Skeleton height={32} style={{ animationDelay: "0.15s" }} />
+              </div>
+            ))}
           </div>
           <div className={styles.section}>
-            <div className={styles.skeletonSectionLabel} />
-            <div className={styles.skeletonField}>
-              <div className={styles.skeletonFieldLabel} />
-              <div className={styles.skeletonInput} />
+            <Skeleton height={10} width={72} style={{ animationDelay: "0.1s" }} />
+            <div className={styles.field}>
+              <Skeleton height={10} width={56} style={{ animationDelay: "0.12s" }} />
+              <Skeleton height={32} style={{ animationDelay: "0.15s" }} />
             </div>
           </div>
-          <div className={styles.skeletonToggleRow}>
-            <div className={styles.skeletonToggleLabel} />
-            <div className={styles.skeletonToggle} />
+          <div className={styles.toggleRow}>
+            <Skeleton height={10} width={80} style={{ animationDelay: "0.18s" }} />
+            <Skeleton width={32} height={16} style={{ animationDelay: "0.2s" }} />
           </div>
           <div className={styles.section}>
-            <div className={styles.skeletonSectionLabel} />
-            <div className={styles.skeletonNotifRow} />
+            <Skeleton height={10} width={72} style={{ animationDelay: "0.1s" }} />
+            <Skeleton height={24} style={{ animationDelay: "0.22s" }} />
           </div>
         </div>
         <div className={styles.sidebarFooter}>
-          <div className={styles.skeletonReceiptButton} />
+          <Skeleton height={38} style={{ animationDelay: "0.25s" }} />
         </div>
       </div>
 
-      {/* Timer area skeleton */}
+      {/* Timer area */}
       <div className={styles.timerArea}>
         <div className={styles.progressLine} />
         <div className={styles.timerCenter}>
-          <div className={styles.skeletonPhaseLabel} />
-          <div className={styles.skeletonCountdown} />
-          <div className={styles.skeletonPips}>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className={styles.skeletonPip}
-                style={{ animationDelay: `${i * 60}ms` }}
-              />
+          <Skeleton height={12} width={72} style={{ animationDelay: "0.05s" }} />
+          <Skeleton height="clamp(96px, 14vw, 160px)" width="clamp(200px, 30vw, 340px)" style={{ animationDelay: "0.08s" }} />
+          <div className={styles.pips}>
+            {(["p0","p1","p2","p3"] as const).map((k, i) => (
+              <Skeleton key={k} width={16} height={16} style={{ animationDelay: `${i * 60}ms` }} />
             ))}
           </div>
-          <div className={styles.skeletonControls}>
-            <div className={styles.skeletonBtnSm} />
-            <div className={styles.skeletonBtnLg} />
-            <div className={styles.skeletonBtnSm} />
+          <div className={styles.controls}>
+            <Skeleton width={44} height={44} style={{ animationDelay: "0.15s" }} />
+            <Skeleton width={64} height={64} style={{ animationDelay: "0.1s" }} />
+            <Skeleton width={44} height={44} style={{ animationDelay: "0.15s" }} />
           </div>
         </div>
         <div className={styles.legendBar} />

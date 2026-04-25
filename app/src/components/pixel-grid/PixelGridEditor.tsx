@@ -24,11 +24,22 @@ import { EditorCanvas } from "./EditorCanvas";
 import { PixelGridSidebar } from "./PixelGridSidebar";
 import { PreviewPanel } from "./PreviewPanel";
 import { FrameStrip } from "./FrameStrip";
-import { KeyboardLegend } from "./KeyboardLegend";
+import { KeyboardLegend } from "../KeyboardLegend";
 import { Modal } from "@/design-system";
 import styles from "./PixelGridEditor.module.css";
 
 const CANVAS_SIZE = 600;
+
+const KEY_LEGEND: [string, string][] = [
+  ["[ / ]", "Prev / next colour"],
+  [", / .", "Prev / next frame"],
+  ["X", "Clear frame"],
+  ["N", "New empty frame"],
+  ["D", "Duplicate frame"],
+  ["Delete", "Delete frame"],
+  ["Ctrl+Z", "Undo"],
+  ["Ctrl+Shift+Z", "Redo"],
+];
 
 export function PixelGridEditor() {
   const [st, setStRaw] = useState<PixelGridState>(
@@ -550,6 +561,7 @@ export function PixelGridEditor() {
             onReorder={handleReorderFrames}
           />
           <KeyboardLegend
+            entries={KEY_LEGEND}
             open={showLegend}
             onToggle={() => setShowLegend((v) => !v)}
           />

@@ -1,31 +1,6 @@
 .page {
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: var(--nd-space-8) var(--nd-space-5);
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  gap: var(--nd-space-7);
-}
-
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.title {
-  font-family: var(--font-doto), monospace;
-  font-size: 48px; /* display heading — outside --nd-text-* monospace label scale */
-  font-weight: 400;
-  line-height: var(--nd-leading-none);
-  letter-spacing: -0.02em; /* display tuning for Doto font */
-  color: var(--nd-text-display);
-}
-
-.subtitle {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-label);
-  letter-spacing: var(--nd-tracking-widest);
-  text-transform: uppercase;
-  color: var(--nd-text-secondary);
+  overflow: hidden;
 }

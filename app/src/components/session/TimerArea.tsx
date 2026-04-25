@@ -2,6 +2,7 @@
 
 import type { Phase, Settings } from "./SessionTimer";
 import { durationForPhase } from "./SessionTimer";
+import { KeyboardLegend } from "../KeyboardLegend";
 import styles from "./TimerArea.module.css";
 
 /* ── Helpers ── */
@@ -45,7 +46,7 @@ const PHASE_META: Record<Phase, PhaseMeta> = {
 
 /* ── Keyboard legend ── */
 
-const KEY_LEGEND = [
+const KEY_LEGEND: [string, string][] = [
   ["SPACE", "Start / Pause"],
   ["R", "Reset block (×2)"],
   ["S", "Skip block (×2)"],
@@ -235,31 +236,11 @@ export function TimerArea({
       </div>
 
       {/* Legend */}
-      <div className={styles.legendBar}>
-        {showLegend ? (
-          <div className={styles.legend}>
-            {KEY_LEGEND.map(([key, action]) => (
-              <div key={key} className={styles.legendItem}>
-                <kbd className={styles.legendKey}>{key}</kbd>
-                <span className={styles.legendAction}>{action}</span>
-              </div>
-            ))}
-            <button
-              className={styles.legendToggle}
-              onClick={() => onSetShowLegend(false)}
-            >
-              HIDE
-            </button>
-          </div>
-        ) : (
-          <button
-            className={styles.legendToggle}
-            onClick={() => onSetShowLegend(true)}
-          >
-            ? KEYBOARD SHORTCUTS
-          </button>
-        )}
-      </div>
+      <KeyboardLegend
+        entries={KEY_LEGEND}
+        open={showLegend}
+        onToggle={() => onSetShowLegend(!showLegend)}
+      />
     </div>
   );
 }

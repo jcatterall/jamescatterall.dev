@@ -23,13 +23,6 @@
   gap: var(--nd-space-2);
 }
 
-.label {
-  font-family: var(--font-space-mono), monospace;
-  font-size: var(--nd-text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--nd-text-secondary);
-}
 
 .previewWrap {
   position: relative;
@@ -55,7 +48,7 @@
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--nd-tracking-normal);
   cursor: pointer;
   transition: all 150ms;
 }
@@ -123,7 +116,7 @@
   color: var(--nd-text-secondary);
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
-  letter-spacing: 0.05em;
+  letter-spacing: var(--nd-tracking-normal);
   text-transform: uppercase;
   cursor: pointer;
   transition: all 120ms;
@@ -138,7 +131,7 @@
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
   color: var(--nd-success);
-  letter-spacing: 0.04em;
+  letter-spacing: var(--nd-tracking-normal);
   line-height: 1.5;
   animation: fadeIn 150ms ease-out both;
 }
@@ -157,7 +150,7 @@
   font-family: var(--font-space-mono), monospace;
   font-size: var(--nd-text-xs);
   color: var(--nd-text-secondary);
-  letter-spacing: 0.07em;
+  letter-spacing: var(--nd-tracking-wider);
 }
 
 .statusVal {

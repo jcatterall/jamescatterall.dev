@@ -10,6 +10,7 @@ import {
   exportAnimatedSVG,
   copyAsCSS,
 } from "@/lib/pixel-grid/export";
+import { SectionLabel } from "@/design-system";
 import styles from "./PreviewPanel.module.css";
 
 type Props = {
@@ -111,7 +112,7 @@ export function PreviewPanel({
     <div className={styles.panel}>
       {/* Preview canvas */}
       <section className={styles.section}>
-        <span className={styles.label}>Preview</span>
+        <SectionLabel>Preview</SectionLabel>
         <div className={styles.previewWrap}>
           <canvas
             ref={canvasRef}
@@ -129,7 +130,7 @@ export function PreviewPanel({
           {playing ? "■ Stop" : "▶ Play"}
         </button>
         <div className={styles.fpsRow}>
-          <span className={styles.label}>FPS</span>
+          <SectionLabel>FPS</SectionLabel>
           <input
             type="range"
             min={1}
@@ -144,7 +145,7 @@ export function PreviewPanel({
 
       {/* Export */}
       <section className={styles.section}>
-        <span className={styles.label}>Export</span>
+        <SectionLabel>Export</SectionLabel>
         <div className={styles.exportList}>
           {exportActions.map(({ label, action }) => (
             <button key={label} className={styles.exportBtn} onClick={action}>

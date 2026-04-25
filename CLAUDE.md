@@ -11,6 +11,7 @@
 ## Workflow
 
 - Unstage changed on `main` — no pull requests, no worktrees, no feature branches.
+- Before starting the dev server to verify changes, check if one is already running on port 3000 and kill it first: `npx kill-port 3000 2>/dev/null || true`, then start the server.
 
 ## CSS
 

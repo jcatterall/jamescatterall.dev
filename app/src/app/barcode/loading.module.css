@@ -1,117 +1,79 @@
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* shared pulse */
-.skeletonLabel,
-.skeletonInput,
-.skeletonHint,
-.skeletonChip,
-.skeletonSwatch,
-.skeletonButton,
-.skeletonSvg,
-.skeletonDigits {
-  background-color: var(--nd-surface-raised);
-  animation: pulse 1.8s ease-in-out infinite;
-}
-
-/* ── LAYOUT ── mirrors BarcodeGenerator.module.css */
-
 .layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--nd-space-6);
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) {
-  .layout {
-    grid-template-columns: 280px 1fr;
-    align-items: start;
-  }
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* ── CONTROLS PANEL ── */
+/* ── Sidebar — mirrors SidebarShell structure ── */
 
-.controls {
+.sidebar {
+  width: var(--nd-sidebar-width);
+  flex-shrink: 0;
+  border-right: var(--nd-border-width) solid var(--nd-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebarHeader {
+  padding: var(--nd-space-5) var(--nd-space-5) var(--nd-space-4);
+  border-bottom: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--nd-space-2);
+}
+
+.sidebarBody {
+  flex: 1;
+  overflow: hidden;
+  padding: var(--nd-space-4) var(--nd-space-5);
   display: flex;
   flex-direction: column;
   gap: var(--nd-space-5);
-  padding: var(--nd-space-5);
-  background-color: var(--nd-surface);
-  border: var(--nd-border-width) solid var(--nd-border-visible);
-  border-radius: var(--nd-radius-lg);
 }
 
-.field {
+.sidebarFooter {
+  padding: var(--nd-space-4) var(--nd-space-5);
+  border-top: var(--nd-border-width) solid var(--nd-border);
+  flex-shrink: 0;
+}
+
+.section {
   display: flex;
   flex-direction: column;
   gap: var(--nd-space-2);
 }
 
-.skeletonLabel {
-  height: 11px;
-  width: 80px;
-  border-radius: var(--nd-radius-sm);
-}
-
-.skeletonInput {
-  height: 40px;
-  width: 100%;
-  border-radius: var(--nd-radius-sm);
-  animation-delay: 0.1s;
-}
-
-.skeletonHint {
-  height: 11px;
-  width: 24px;
-  border-radius: var(--nd-radius-sm);
-  animation-delay: 0.12s;
-}
-
-.skeletonChips {
+.pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--nd-space-1);
 }
 
-.skeletonChip {
-  height: 27px;
-  border-radius: var(--nd-radius-pill);
-  flex-shrink: 0;
-  animation-delay: 0.15s;
-}
-
-.skeletonSwatches {
+.swatches {
   display: flex;
   gap: var(--nd-space-2);
   flex-wrap: wrap;
 }
 
-.skeletonSwatch {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--nd-radius-sm);
-  flex-shrink: 0;
-  animation-delay: 0.2s;
-}
+/* ── Preview area ── */
 
-.skeletonButton {
-  min-height: 44px;
-  width: 100%;
-  border-radius: var(--nd-radius-pill);
-  animation-delay: 0.25s;
-}
-
-/* ── PREVIEW ── mirrors BarcodePreview.module.css */
-
-.preview {
+.previewArea {
+  flex: 1;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 }
 
-.skeletonPreviewCard {
+.previewCard {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,22 +81,4 @@
   padding: var(--nd-space-6);
   width: 100%;
   max-width: 350px;
-  background-color: white;
-  border: var(--nd-border-width-thick) solid var(--nd-border-visible);
-  border-radius: var(--nd-radius-lg);
-  box-shadow: var(--nd-shadow-card);
-}
-
-.skeletonSvg {
-  width: 100%;
-  aspect-ratio: 285 / 430;
-  border-radius: var(--nd-radius-sm);
-  animation-delay: 0.05s;
-}
-
-.skeletonDigits {
-  height: 13px;
-  width: 180px;
-  border-radius: var(--nd-radius-sm);
-  animation-delay: 0.08s;
 }

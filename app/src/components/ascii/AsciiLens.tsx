@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { AsciiSidebar } from "./AsciiSidebar"
 import { AsciiCanvas, type AsciiCanvasHandle } from "./AsciiCanvas"
 import styles from "./AsciiLens.module.css"
@@ -97,7 +97,7 @@ function IdleScreen({
         </p>
         <div className={styles.idleActions}>
           <button className={styles.idleBtnPrimary} onClick={onAllow}>
-            ALLOW CAMERA
+            ENABLE CAMERA
           </button>
           <button className={styles.idleBtnSecondary} onClick={onUpload}>
             USE IMAGE INSTEAD
@@ -171,7 +171,20 @@ export function AsciiLens() {
 
   const handleAllow = useCallback(() => {
     setPageState("requesting")
-    canvasRef.current?.startWebcam()
+  }, [])
+
+  useEffect(() => {
+    if (pageState === "requesting") {
+      canvasRef.current?.startWebcam()
+    }
+  }, [pageState])
+
+  // Auto-start if permission was already granted in a previous session
+  useEffect(() => {
+    if (typeof navigator.permissions === "undefined") return
+    navigator.permissions.query({ name: "camera" as PermissionName }).then((status) => {
+      if (status.state === "granted") setPageState("requesting")
+    }).catch(() => { /* API not supported */ })
   }, [])
 
   const handleUpload = useCallback(() => {
@@ -217,7 +230,6 @@ export function AsciiLens() {
         {pageState === "upload" && (
           <UploadZone onFile={handleFile} />
         )}
-        {/* AsciiCanvas is always mounted when live or upload-processing */}
         <AsciiCanvas
           ref={canvasRef}
           settings={settings}

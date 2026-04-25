@@ -101,8 +101,10 @@ export function SessionTimer() {
   const [showReceipt, setShowReceipt] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
   const [confirm, setConfirm] = useState<"reset" | "skip" | "new" | null>(null);
-  const [notifStatus, setNotifStatus] =
-    useState<NotificationPermission>("default");
+  const [notifStatus, setNotifStatus] = useState<NotificationPermission>(
+    () =>
+      typeof Notification !== "undefined" ? Notification.permission : "default",
+  );
   const [notifMsg, setNotifMsg] = useState<string | null>(null);
   const [phaseKey, setPhaseKey] = useState(0);
 
@@ -113,13 +115,6 @@ export function SessionTimer() {
   useEffect(() => {
     saveState(st);
   }, [st]);
-
-  // Sync notification permission
-  useEffect(() => {
-    if (typeof Notification !== "undefined") {
-      setNotifStatus(Notification.permission);
-    }
-  }, []);
 
   // beforeunload warning
   useEffect(() => {

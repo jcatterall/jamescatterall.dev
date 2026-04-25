@@ -143,6 +143,15 @@
   /* ── Border widths ───────────────────────────────────────── */
   --nd-border-width:       1px;
   --nd-border-width-thick: 2px;
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  --nd-sidebar-width:    260px;   /* ascii, session sidebars              */
+  --nd-sidebar-width-sm: 220px;   /* pixel-grid sidebar, preview panel    */
+}
+
+@keyframes nd-skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
 *, *::before, *::after {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import type { Block } from "./SessionTimer";
 import styles from "./Receipt.module.css";
 
@@ -109,8 +109,9 @@ export function Receipt({ blocks, onClose, onNew }: Props) {
     (a, b) => a + (b.endedAt - b.startedAt),
     0,
   );
-  const sessionStart = blocks[0]?.startedAt ?? Date.now();
-  const sessionEnd = blocks[blocks.length - 1]?.endedAt ?? Date.now();
+  const [now] = useState(() => Date.now());
+  const sessionStart = blocks[0]?.startedAt ?? now;
+  const sessionEnd = blocks[blocks.length - 1]?.endedAt ?? now;
   const cells = buildCells(blocks);
 
   const stats = [
