@@ -1,7 +1,7 @@
 ## Generative / Visual Tools
 
 - Colour palette extractor — upload image, extract dominant palette, export as CSS variables / Tailwind config / hex codes and swatch SVG
-- QR Code Studio — styled QR codes with dot shapes, colours, and embedded logos (sibling to Barcode Studio)
+- QR Code Studio — styled QR codes with dot shapes, colours, and embedded logos (sibling to Barcode)
 - ASCII art generator — convert uploaded images to ASCII/Unicode block art, adjustable density and character sets, export as SVG or plain text
 - Font specimen maker — paste a Google Font name, preview across weights and sizes with live type-scale controls, export specimen card as SVG
 

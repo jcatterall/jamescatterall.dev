@@ -73,7 +73,7 @@ export function AsciiSidebar({
             className={styles.sourceDot}
             data-live={isLive ? "" : undefined}
           />
-          {isLive ? "STOP WEBCAM" : "ENABLE WEBCAM"}
+          {isLive ? "STOP CAMERA" : "ENABLE CAMERA"}
         </button>
         <button
           className={styles.sourceBtn}

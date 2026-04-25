@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 
 const projects = [
   {
-    title: "Barcode Studio",
+    title: "Barcode",
     desc: "Generate artistic EAN-13 barcodes clipped to custom shapes and export as SVG.",
     tags: ["SVG", "TypeScript"],
     year: "2025",

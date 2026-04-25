@@ -45,7 +45,7 @@ export const HELP_TEXT = [
   "",
   "DESTINATIONS",
   "  home  /              homepage",
-  "  barcode  /barcode    barcode studio",
+  "  barcode  /barcode    barcode",
   "  session  /session    session timer",
   "  ascii  /ascii        ascii lens",
   "  pixel-grid  /pixel-grid  pixel grid",
@@ -54,7 +54,7 @@ export const HELP_TEXT = [
 export const LS_TEXT = [
   "PAGES",
   "  /          homepage",
-  "  /barcode   barcode studio",
+  "  /barcode   barcode",
   "  /session   session timer",
   "  /ascii     ascii lens",
   "  /pixel-grid  pixel grid",

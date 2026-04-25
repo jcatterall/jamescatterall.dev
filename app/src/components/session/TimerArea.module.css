@@ -4,6 +4,9 @@
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  background: var(--nd-black);
+  background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
+  background-size: 16px 16px;
   transition: background 600ms ease-out;
 }
 
@@ -125,13 +128,6 @@
   letter-spacing: var(--nd-tracking-tight);
 }
 
-.countdownSeparator {
-  font-family: var(--font-doto), monospace;
-  font-size: clamp(40px, 5.5vw, 64px);
-  color: var(--nd-text-secondary);
-  line-height: 1.2;
-  padding-bottom: 0.08em;
-}
 
 .countdownSeconds {
   font-family: var(--font-doto), monospace;

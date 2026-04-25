@@ -1,12 +1,12 @@
 "use client"
 
 import {
+  useCallback,
+  useEffect,
   forwardRef,
   useImperativeHandle,
   useRef,
-  useEffect,
   useState,
-  useCallback,
 } from "react"
 import type { Settings, PageState, CharSetId } from "./AsciiLens"
 import { CHAR_SETS } from "./AsciiLens"
@@ -50,19 +50,20 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
   { settings, active, onStateChange, style },
   ref,
 ) {
-  const containerRef  = useRef<HTMLDivElement>(null)
-  const canvasRef     = useRef<HTMLCanvasElement>(null)
-  const offRef        = useRef<HTMLCanvasElement | null>(null)
-  const videoRef      = useRef<HTMLVideoElement>(null)
-  const rafRef        = useRef<number | null>(null)
-  const streamRef     = useRef<MediaStream | null>(null)
-  const imageRef      = useRef<HTMLImageElement | null>(null)
-  const settingsRef   = useRef(settings)
-  const lastFrameRef  = useRef<FrameSnapshot | null>(null)
-  const frameHistory  = useRef<{ bitmap: ImageBitmap; snap: FrameSnapshot }[]>([])
-  const tickCount     = useRef(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const preRef       = useRef<HTMLPreElement>(null)
+  const offRef       = useRef<HTMLCanvasElement | null>(null)
+  const snapRef      = useRef<HTMLCanvasElement | null>(null)
+  const videoRef     = useRef<HTMLVideoElement>(null)
+  const rafRef       = useRef<number | null>(null)
+  const streamRef    = useRef<MediaStream | null>(null)
+  const imageRef     = useRef<HTMLImageElement | null>(null)
+  const settingsRef  = useRef(settings)
+  const lastFrameRef = useRef<FrameSnapshot | null>(null)
+  const frameHistory = useRef<{ id: number; bitmap: ImageBitmap; snap: FrameSnapshot }[]>([])
+  const tickCount    = useRef(0)
 
-  const [historyTick, setHistoryTick] = useState(0)
+  const [, setHistoryTick] = useState(0)
 
   /* Keep settingsRef in sync so the rAF closure always reads latest values */
   useEffect(() => { settingsRef.current = settings }, [settings])
@@ -70,17 +71,19 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
   /* ── Core render loop ── */
 
   const renderLoop = useCallback(() => {
-    const canvas = canvasRef.current
-    const off    = offRef.current
-    const video  = videoRef.current
-    if (!canvas || !off) return
+    const pre   = preRef.current
+    const off   = offRef.current
+    const snap  = snapRef.current
+    const video = videoRef.current
+    if (!pre || !off) return
 
-    const ctx    = canvas.getContext("2d")
     const offCtx = off.getContext("2d")
-    if (!ctx || !offCtx) return
+    if (!offCtx) return
 
-    const W = canvas.width
-    const H = canvas.height
+    const container = containerRef.current
+    const W = container?.clientWidth  ?? 800
+    const H = container?.clientHeight ?? 600
+
     const { cols, charSetId, colorMode, invert, mirror } = settingsRef.current
     const chars  = CHAR_SETS[charSetId] ?? CHAR_SETS.classic
     const len    = chars.length
@@ -107,7 +110,7 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
     offCtx.drawImage(source as CanvasImageSource, 0, 0, cols, rows)
     const imageData = offCtx.getImageData(0, 0, cols, rows)
 
-    const snap: FrameSnapshot = {
+    const snapData: FrameSnapshot = {
       imageData,
       cols,
       rows,
@@ -118,42 +121,100 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
       colorMode,
       invert,
     }
-    lastFrameRef.current = snap
+    lastFrameRef.current = snapData
 
-    ctx.fillStyle = "#0a0a0a"
-    ctx.fillRect(0, 0, W, H)
-    ctx.font = `${fontSize}px 'Space Mono', monospace`
-    ctx.textBaseline = "top"
+    pre.style.fontSize  = `${fontSize}px`
+    pre.style.lineHeight = `${charH / fontSize}`
 
+    /* ── Render to <pre> ── */
     const { data } = imageData
-    for (let row = 0; row < rows; row++) {
-      for (let col = 0; col < cols; col++) {
-        const srcCol = mirror ? cols - 1 - col : col
-        const i = (row * cols + srcCol) * 4
-        const r = data[i]
-        const g = data[i + 1]
-        const b = data[i + 2]
-        let lum = luma(r, g, b)
-        if (invert) lum = 1 - lum
-        const ch = chars[Math.min(len - 1, Math.floor(lum * len))]
-        if (!ch || ch === " ") continue
-        ctx.fillStyle = colorMode ? `rgb(${r},${g},${b})` : "#e8e8e8"
-        ctx.fillText(ch, col * charW, row * charH)
+
+    if (colorMode) {
+      const parts: string[] = []
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const srcCol = mirror ? cols - 1 - col : col
+          const i = (row * cols + srcCol) * 4
+          const r = data[i]
+          const g = data[i + 1]
+          const b = data[i + 2]
+          let lum = luma(r, g, b)
+          if (invert) lum = 1 - lum
+          const ch = chars[Math.min(len - 1, Math.floor(lum * len))]
+          if (!ch || ch === " ") {
+            parts.push(" ")
+          } else {
+            parts.push(`<span style="color:rgb(${r},${g},${b})">${ch}</span>`)
+          }
+        }
+        parts.push("\n")
       }
+      pre.innerHTML = parts.join("")
+    } else {
+      const lines: string[] = []
+      for (let row = 0; row < rows; row++) {
+        let line = ""
+        for (let col = 0; col < cols; col++) {
+          const srcCol = mirror ? cols - 1 - col : col
+          const i = (row * cols + srcCol) * 4
+          const r = data[i]
+          const g = data[i + 1]
+          const b = data[i + 2]
+          let lum = luma(r, g, b)
+          if (invert) lum = 1 - lum
+          line += chars[Math.min(len - 1, Math.floor(lum * len))]
+        }
+        lines.push(line)
+      }
+      pre.textContent = lines.join("\n")
     }
 
-    /* Snapshot every 30 ticks → filmstrip */
+    /* ── Snapshot every 30 ticks → filmstrip canvas ── */
     tickCount.current++
-    if (tickCount.current % 30 === 0 && off.width > 0 && off.height > 0) {
-      createImageBitmap(canvas).then((bitmap) => {
-        const hist = frameHistory.current
-        if (hist.length >= 10) {
-          hist[0].bitmap.close()
-          hist.shift()
+    if (tickCount.current % 30 === 0 && snap) {
+      const snapCtx = snap.getContext("2d")
+      if (snapCtx) {
+        snap.width  = cols * charW
+        snap.height = rows * charH
+        snapCtx.fillStyle = "#0a0a0a"
+        snapCtx.fillRect(0, 0, snap.width, snap.height)
+        snapCtx.font = `${fontSize}px 'Space Mono', monospace`
+        snapCtx.textBaseline = "top"
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const srcCol = mirror ? cols - 1 - col : col
+            const i = (row * cols + srcCol) * 4
+            const r = data[i]
+            const g = data[i + 1]
+            const b = data[i + 2]
+            let lum = luma(r, g, b)
+            if (invert) lum = 1 - lum
+            const ch = chars[Math.min(len - 1, Math.floor(lum * len))]
+            if (!ch || ch === " ") continue
+            snapCtx.fillStyle = colorMode ? `rgb(${r},${g},${b})` : "#e8e8e8"
+            snapCtx.fillText(ch, col * charW, row * charH)
+          }
         }
-        hist.push({ bitmap, snap })
-        setHistoryTick((t) => t + 1)
-      }).catch(() => { /* ignore */ })
+        createImageBitmap(snap).then((bitmap) => {
+          const hist = frameHistory.current
+          if (hist.length >= 10) {
+            hist[0].bitmap.close()
+            hist.shift()
+          }
+          const id = tickCount.current
+          hist.push({ id, bitmap, snap: snapData })
+          // Draw into each filmstrip cell immediately
+          hist.forEach((entry, i) => {
+            const cell = filmCellRefs.current[i]
+            if (!cell) return
+            const ctx = cell.getContext("2d")
+            if (!ctx) return
+            ctx.clearRect(0, 0, cell.width, cell.height)
+            ctx.drawImage(entry.bitmap, 0, 0, cell.width, cell.height)
+          })
+          setHistoryTick((t) => t + 1)
+        }).catch(() => { /* ignore */ })
+      }
     }
 
     rafRef.current = requestAnimationFrame(renderLoop)
@@ -176,7 +237,7 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
   const stopWebcam = useCallback(() => {
     stopLoop()
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop())
+      streamRef.current.getTracks().forEach((t) => { t.stop() })
       streamRef.current = null
     }
     if (videoRef.current) {
@@ -191,7 +252,8 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
         video: { facingMode: "user" },
       })
       streamRef.current = stream
-      const video = videoRef.current!
+      const video = videoRef.current
+      if (!video) return
       video.srcObject = stream
       video.playsInline = true
       await video.play().catch(() => { /* autoplay policy */ })
@@ -275,27 +337,11 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
     exportSvg,
   }), [startWebcam, stopWebcam, loadImage, exportSvg])
 
-  /* ── ResizeObserver ── */
+  /* ── Offscreen canvases (created once) ── */
 
   useEffect(() => {
-    const container = containerRef.current
-    const canvas    = canvasRef.current
-    if (!container || !canvas) return
-    const ro = new ResizeObserver((entries) => {
-      const entry = entries[0]
-      if (!entry) return
-      const { width, height } = entry.contentRect
-      canvas.width  = Math.floor(width)
-      canvas.height = Math.floor(height)
-    })
-    ro.observe(container)
-    return () => ro.disconnect()
-  }, [])
-
-  /* ── Offscreen canvas (created once) ── */
-
-  useEffect(() => {
-    offRef.current = document.createElement("canvas")
+    offRef.current  = document.createElement("canvas")
+    snapRef.current = document.createElement("canvas")
   }, [])
 
   /* ── Visibility pause/resume ── */
@@ -315,52 +361,34 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
   useEffect(() => {
     return () => {
       stopWebcam()
-      frameHistory.current.forEach((f) => f.bitmap.close())
+      frameHistory.current.forEach((f) => { f.bitmap.close() })
       frameHistory.current = []
     }
   }, [stopWebcam])
 
-  /* ── Draw filmstrip cells ── */
-
   const filmCellRefs = useRef<(HTMLCanvasElement | null)[]>([])
-
-  useEffect(() => {
-    const hist = frameHistory.current
-    hist.forEach((entry, i) => {
-      const cell = filmCellRefs.current[i]
-      if (!cell) return
-      const ctx = cell.getContext("2d")
-      if (!ctx) return
-      ctx.clearRect(0, 0, cell.width, cell.height)
-      ctx.drawImage(entry.bitmap, 0, 0, cell.width, cell.height)
-    })
-  }, [historyTick])
 
   const hist = frameHistory.current
   const showFilmstrip = hist.length > 0
-
-  /* ── Status info ── */
 
   const { cols, charSetId } = settings
 
   return (
     <div className={styles.container} style={style}>
-      {/* Hidden video element for webcam */}
       <video ref={videoRef} className={styles.hiddenVideo} muted playsInline />
 
-      <div ref={containerRef} className={styles.canvasWrap}>
-        <canvas ref={canvasRef} className={styles.canvas} />
+      <div ref={containerRef} className={styles.textWrap}>
+        <pre ref={preRef} className={styles.text} aria-live="off" />
         <div className={styles.badge}>
           {cols}c · {charSetId.toUpperCase()}
         </div>
       </div>
 
-      {/* Filmstrip */}
       {showFilmstrip && (
         <div className={styles.filmstrip}>
           {hist.map((entry, i) => (
             <canvas
-              key={i}
+              key={entry.id}
               ref={(el) => { filmCellRefs.current[i] = el }}
               className={styles.filmCell}
               data-latest={i === hist.length - 1 ? "" : undefined}
@@ -373,7 +401,6 @@ export const AsciiCanvas = forwardRef<AsciiCanvasHandle, Props>(function AsciiCa
         </div>
       )}
 
-      {/* Status bar */}
       <div className={styles.statusBar}>
         <span className={styles.statusItem}>COLS {cols}</span>
         <span className={styles.statusDivider}>·</span>

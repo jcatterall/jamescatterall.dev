@@ -10,18 +10,27 @@
   display: none;
 }
 
-/* ── Canvas area ── */
+/* ── Text area ── */
 
-.canvasWrap {
+.textWrap {
   flex: 1;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
+.text {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-space-mono), monospace;
+  color: #e8e8e8;
+  background: var(--nd-black);
+  white-space: pre;
+  user-select: text;
+  cursor: text;
 }
 
 .badge {

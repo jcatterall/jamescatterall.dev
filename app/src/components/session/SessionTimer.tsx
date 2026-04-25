@@ -334,7 +334,12 @@ export function SessionTimer() {
       <Sidebar
         settings={st.settings}
         onSettingsChange={(fn) =>
-          setSt((p) => ({ ...p, settings: fn(p.settings) }))
+          setSt((p) => {
+            const next = fn(p.settings)
+            const newDur = durationForPhase(p.phase === "idle" ? "focus" : p.phase, next)
+            const remaining = p.phase === "idle" ? newDur : Math.min(p.remaining, newDur)
+            return { ...p, settings: next, remaining }
+          })
         }
         blocks={st.blocks}
         onViewReceipt={() => setShowReceipt(true)}

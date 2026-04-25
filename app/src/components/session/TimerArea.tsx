@@ -176,7 +176,6 @@ export function TimerArea({
           style={{ opacity: running || phase === "idle" ? 1 : 0.5 }}
         >
           <span className={styles.countdownMinutes}>{time.slice(0, 2)}</span>
-          <span className={styles.countdownSeparator}>:</span>
           <span className={styles.countdownSeconds}>{time.slice(3, 5)}</span>
         </div>
 
